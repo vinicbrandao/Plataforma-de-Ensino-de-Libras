@@ -1,0 +1,17 @@
+# Ambiente virtual e cache do Python
+.venv/
+__pycache__/
+*.pyc
+
+# Segredos locais: copie .env.example para .env
+.env
+
+# Arquivos gerados
+staticfiles/
+media/
+db.sqlite3
+
+# Editores e sistema
+.vscode/
+.idea/
+Thumbs.db
