@@ -2,7 +2,7 @@
 
 - **Status:** Aceito
 - **Data:** 2026-11-21
-- **Especificações:** [Spec 0001: Fundação e contas](../specs/0001-fundacao-e-contas.md), [Spec 0002: Dicionário de sinais](../specs/0002-dicionario.md), [Spec 0003: Trilha, vídeo-aula e progresso](../specs/0003-trilha.md), [Spec 0004: Questionários e conclusão da aula](../specs/0004-questionarios.md); a ordem das próximas está em [docs/state.md](../state.md).
+- **Especificações:** [Spec 0001: Fundação e contas](../specs/0001-fundacao-e-contas.md), [Spec 0002: Dicionário de sinais](../specs/0002-dicionario.md), [Spec 0003: Trilha, vídeo-aula e progresso](../specs/0003-trilha.md), [Spec 0004: Questionários e conclusão da aula](../specs/0004-questionarios.md), [Spec 0005: Conteúdo inicial para a demonstração](../specs/0005-conteudo-inicial.md); a ordem das próximas está em [docs/state.md](../state.md).
 - **Fonte:** [Documento de requisitos](../requisitos.md). Os IDs entre parênteses (RF001, RNF03, RS010…) são os desse documento.
 
 ## Objetivo

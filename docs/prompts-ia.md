@@ -222,3 +222,45 @@ Fiz o commit das mudanças. Prossiga.
 ```text
 Documente brevemente as alterações feitas no nosso projeto para eu enviar para analise do que ainda falta fazer.
 ```
+
+### 20. Entrega de Lab. BD e conteúdo inicial
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Execute esta tarefa do início ao fim, etapa por etapa, sem parar para pedir confirmação entre as etapas. Apresente um plano único no começo; depois de aprovado, só interrompa se um comando falhar duas vezes ou se precisar de algo que só eu posso fornecer. O que depender de mim (senha do postgres, arquivos de vídeo) fica para o relatório final, e você segue com as etapas seguintes.
+
+Leia AGENTS.md, docs/state.md, docs/arquitetura.md, docs/contexto-academico.md, o ADR 0006 e as specs 0002 a 0004.
+
+Etapa 1. Correções de documentação
+- docs/state.md: a spec 0004 já está na main; atualize.
+- docs/contexto-academico.md: troque "Usuario herda de AbstractUser" por "Usuario herda de AbstractBaseUser e PermissionsMixin (login por e-mail ou CPF)".
+- Mova "Plataforma de Ensino de Libras — andamento da versão 1.pdf" da raiz para docs/relatorios/.
+- Commit: "Atualiza estado do projeto e contexto acadêmico".
+
+Etapa 2. Entrega de Lab. de Banco de Dados (DDL com as 4 integridades, trigger, campo indexado, contas e permissões, view; trigger, índices e view já existem)
+- docs/banco/contas.sql, para o superusuário postgres rodar uma vez: plataforma_libras continua dona das tabelas e roda as migrations; libras_app com SELECT, INSERT, UPDATE e DELETE nas tabelas e USAGE nas sequences; libras_relatorio só com SELECT em vw_progresso_modulo; GRANTs e ALTER DEFAULT PRIVILEGES. Senhas como placeholder (troque_esta_senha), nunca reais.
+- docs/banco/verificacao.sql com consultas que provam as permissões (libras_relatorio lê a view e não lê contas_usuario; libras_app não cria tabela).
+- docs/banco/ddl.sql gerado com pg_dump --schema-only, usando as credenciais do .env.
+- docs/banco/entrega-lab-bd.md, que vai virar o PDF: tabela das 4 integridades (entidade, domínio, referencial, definida pelo usuário) com o nome de cada constraint e o trecho SQL; a trigger trg_progresso_conclusao; os índices sinal_termo_trgm e alternativa_correta_unica; a view vw_progresso_modulo; as contas e os GRANTs; e, no fim, a ferramenta, o modelo de IA e a lista dos prompts de docs/prompts-ia.md. Só os trechos relevantes, nunca arquivos inteiros.
+- Commit: "Adiciona a entrega de Lab. de Banco de Dados".
+
+Etapa 3. Conteúdo inicial para a demonstração
+- Comando python manage.py criar_conteudo_inicial, que pode rodar várias vezes sem duplicar: 3 módulos com 2 aulas publicadas cada, 3 questões por aula com alternativas e cerca de 15 sinais em 3 categorias, tudo pelos services, respeitando as regras de publicação.
+- Os vídeos e legendas vêm da pasta amostras/ na raiz. Crie amostras/LEIA-ME.md com a lista exata de arquivos e nomes esperados. Se faltar arquivo quando o comando rodar, ele cria o que der sem quebrar, deixa não publicada a aula sem vídeo ou legenda e lista no terminal o que falta.
+- Testes do comando sem depender dos arquivos reais. Documente no README.
+- Commit: "Adiciona o comando de conteúdo inicial".
+
+Etapa 4. Fechamento
+- Rode check, test e makemigrations --check e corrija o que falhar.
+- Atualize docs/state.md e registre este prompt em docs/prompts-ia.md. Commit: "Atualiza estado e registro de prompts".
+- Termine com um relatório curto: o que foi feito em cada etapa, os commits criados, o comando exato para eu rodar o contas.sql como postgres e depois o verificacao.sql, e quais arquivos colocar em amostras/.
+```
+
+### 21. Aprovação do plano da entrega
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Aprovado, execute
+```
