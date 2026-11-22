@@ -20,6 +20,7 @@
 
 # Outros documentos
 
+- Contexto acadêmico (disciplinas, critérios de avaliação e entregas): `docs/contexto-academico.md`. Leia antes de planejar qualquer tarefa.
 - Requisitos originais (RF, RNF e RS), convertidos do .docx da raiz: `docs/requisitos.md`. Cite os IDs dele.
 - Requisitos do produto: `docs/prd/`. Antes de criar ou alterar, leia `.agents/skills/prd/SKILL.md`.
 - Especificações: `docs/specs/`. Antes de criar ou alterar, leia `.agents/skills/spec/SKILL.md`.

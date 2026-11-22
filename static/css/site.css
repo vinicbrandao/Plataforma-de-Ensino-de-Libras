@@ -189,6 +189,70 @@ button.botao {
 
 .erro-geral ul { margin: 0; padding: 0; list-style: none; }
 
+/* Dicionário */
+
+.busca {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1rem;
+  align-items: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.busca .campo { flex: 1 1 14rem; }
+
+.busca input[type="search"],
+.busca select {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--borda);
+  border-radius: 0.4rem;
+  color: var(--texto);
+  background: var(--superficie);
+  font: inherit;
+}
+
+.busca .botao { margin-bottom: 1.25rem; }
+
+.resumo,
+.vazio { color: var(--suave); }
+
+.sinais {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sinal { padding: 1rem; }
+
+.sinal h2 { margin: 0 0 0.5rem; font-size: 1.2rem; }
+
+.sinal video {
+  display: block;
+  width: 100%;
+  border-radius: 0.4rem;
+  background: #000;
+  aspect-ratio: 4 / 3;
+}
+
+.sinal dl { margin: 0.75rem 0 0; }
+
+.sinal dt { color: var(--suave); font-size: 0.875rem; }
+
+.sinal dd { margin: 0 0 0.4rem; }
+
+.paginacao {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
 .termos { margin-bottom: 0.75rem; }
 
 .termos summary { cursor: pointer; color: var(--destaque); }

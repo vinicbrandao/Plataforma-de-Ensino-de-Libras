@@ -13,6 +13,7 @@
       <a class="marca" href="{% url 'inicio' %}">Libras<span> · Plataforma de Ensino</span></a>
       <nav class="menu" aria-label="Principal">
         {% if user.is_authenticated %}
+          <a href="{% url 'dicionario:busca' %}">Dicionário</a>
           <span class="menu-usuario">{{ user.nome_completo }}</span>
           {% if user.is_staff %}
             <a href="{% url 'admin:index' %}">Área administrativa</a>

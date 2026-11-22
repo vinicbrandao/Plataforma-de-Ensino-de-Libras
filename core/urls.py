@@ -16,6 +16,7 @@ urlpatterns = [
     # Provisória: a spec da trilha passa a rota "inicio" para a trilha.
     path("", InicioView.as_view(), name="inicio"),
     path("", include("contas.urls")),
+    path("dicionario/", include("dicionario.urls")),
 ]
 
 # Em desenvolvimento, o próprio Django serve os arquivos enviados (vídeos, legendas).

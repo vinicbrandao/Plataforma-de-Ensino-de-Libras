@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Dicionário · Plataforma de Ensino de Libras{% endblock %}
+
+{% block content %}
+<h1>Dicionário de sinais</h1>
+
+<form method="get" action="{% url 'dicionario:busca' %}" class="busca" role="search" novalidate>
+  <div class="campo{% if form.busca.errors %} campo-com-erro{% endif %}">
+    {{ form.busca.label_tag }}
+    {{ form.busca }}
+    {% if form.busca.errors %}
+      <div class="erro" id="{{ form.busca.auto_id }}_error">{% for erro in form.busca.errors %}<p>{{ erro }}</p>{% endfor %}</div>
+    {% endif %}
+  </div>
+  <div class="campo">
+    {{ form.categoria.label_tag }}
+    {{ form.categoria }}
+  </div>
+  <button type="submit" class="botao">Buscar</button>
+</form>
+
+{% if pagina is not None %}
+  {% if pagina.paginator.count %}
+    <p class="resumo" role="status">{{ pagina.paginator.count }} sina{{ pagina.paginator.count|pluralize:"l,is" }} encontrado{{ pagina.paginator.count|pluralize }}.</p>
+    <ul class="sinais">
+      {% for sinal in pagina %}
+        <li class="sinal cartao">
+          <h2>{{ sinal.termo }}</h2>
+          <video src="{{ sinal.video.url }}" controls loop muted playsinline preload="metadata"
+                 aria-label="Vídeo do sinal {{ sinal.termo }}"></video>
+          <dl>
+            {% if sinal.classe_gramatical %}<dt>Classe gramatical</dt><dd>{{ sinal.get_classe_gramatical_display }}</dd>{% endif %}
+            {% if sinal.categoria %}<dt>Categoria</dt><dd>{{ sinal.categoria.nome }}</dd>{% endif %}
+            {% if sinal.descricao_execucao %}<dt>Como fazer</dt><dd>{{ sinal.descricao_execucao }}</dd>{% endif %}
+          </dl>
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% if pagina.has_other_pages %}
+      <nav class="paginacao" aria-label="Páginas de resultados">
+        {% if pagina.has_previous %}
+          <a href="?{% if filtros %}{{ filtros }}&amp;{% endif %}pagina={{ pagina.previous_page_number }}">Anterior</a>
+        {% endif %}
+        <span>Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>
+        {% if pagina.has_next %}
+          <a href="?{% if filtros %}{{ filtros }}&amp;{% endif %}pagina={{ pagina.next_page_number }}">Próxima</a>
+        {% endif %}
+      </nav>
+    {% endif %}
+  {% else %}
+    <p class="vazio" role="status">Nenhum sinal encontrado. Revise o termo ou escolha outra categoria</p>
+  {% endif %}
+{% endif %}
+{% endblock %}
