@@ -182,3 +182,27 @@ Claude, preciso saber de onde paramos.
 ```text
 Sim, começar
 ```
+
+### 15. Aviso de commit feito
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Já fiz o commit.
+```
+
+### 16. Início do ADR das estruturas em SQL
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Sim, começar
+```
+
+### 17. Aceite do ADR 0006
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Aceito
+```

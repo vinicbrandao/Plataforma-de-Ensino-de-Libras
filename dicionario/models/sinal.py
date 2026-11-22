@@ -3,7 +3,8 @@ from uuid import uuid4
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 
-from ..validadores import VideoMp4Validator
+from core.validadores import VideoMp4Validator
+
 from .categoria import Categoria
 
 

@@ -4,7 +4,7 @@ O projeto segue MVT, com as regras de negócio concentradas em uma camada de ser
 
 ## Apps
 
-O pacote `core` guarda apenas a configuração (`settings.py`, `urls.py`, `wsgi.py`, `asgi.py`). Cada domínio é um app:
+O pacote `core` guarda a configuração (`settings.py`, `urls.py`, `wsgi.py`, `asgi.py`) e os validadores de arquivo compartilhados (`core/validadores.py`), que não têm regra de negócio. Cada domínio é um app:
 
 | App | Responsabilidade | Requisitos |
 |---|---|---|
@@ -29,6 +29,7 @@ flowchart LR
         Modulo --> Aula
         Aula --> MaterialComplementar
         ProgressoAula
+        ProgressoModulo["ProgressoModulo (view)"]
     end
 
     subgraph questionarios
@@ -38,6 +39,7 @@ flowchart LR
 
     ProgressoAula -->|aluno| Usuario
     ProgressoAula -->|aula| Aula
+    ProgressoModulo -.->|calculada de| ProgressoAula
     Questao -->|aula| Aula
     Questao -.->|sinal opcional| Sinal
     Tentativa -->|aluno| Usuario
@@ -47,6 +49,7 @@ flowchart LR
 
 ### Dependências entre apps
 
+- Todos os apps podem usar `core/validadores.py`.
 - `dicionario` não depende de nenhum outro app.
 - `trilha` depende de `contas` (o aluno do progresso).
 - `questionarios` depende de `trilha` (a aula) e de `dicionario` (o sinal da questão). Na aprovação, chama o service de progresso da `trilha` para concluir a aula ([ADR 0004](adr/0004-conclusao-da-aula-pelo-questionario.md)).
@@ -113,6 +116,13 @@ flowchart LR
 
 - Definem campos, relacionamentos, constraints, índices, `Meta` e `__str__`, sem regra de negócio.
 - As invariantes de dados ficam também no banco, com `UniqueConstraint` e `CheckConstraint` ([ADR 0002](adr/0002-postgresql-como-banco-de-dados.md)).
+
+### Banco de dados ([ADR 0006](adr/0006-estruturas-do-banco-em-sql.md))
+
+- **O service decide; o banco garante.** A regra e a mensagem ao usuário ficam no service. O banco repete a invariante como última barreira, para que nenhum caminho fora da aplicação a quebre.
+- Constraints e índices, inclusive os parciais, são declarados nos models. Só a trigger e a view usam `migrations.RunSQL`, sempre com `reverse_sql`, na migração do app dono da tabela.
+- Views do banco são lidas por models com `managed = False`.
+- As contas `libras_app` e `libras_relatorio` são criadas por `docs/banco/contas.sql`, executado pelo `postgres`, e não pelas migrações.
 
 ### Templates
 

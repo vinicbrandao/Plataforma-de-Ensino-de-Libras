@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if trilha.eh_aluno %}
+  <section class="cartao resumo-curso">
+    <h1>Olá, {{ user.nome_completo }}!</h1>
+    <p>Seu progresso no curso: <strong>{{ trilha.concluidas }} de {{ trilha.publicadas }} aulas · {{ trilha.percentual }}%</strong></p>
+    <progress max="100" value="{{ trilha.percentual }}" aria-label="Progresso no curso">{{ trilha.percentual }}%</progress>
+    {% if trilha.continuar %}
+      <p><a class="botao" href="{% url 'trilha:aula' trilha.continuar.pk %}">Continuar: {{ trilha.continuar.titulo }}</a></p>
+    {% endif %}
+  </section>
+{% else %}
+  <section class="cartao">
+    <h1>Aprenda Libras de forma prática</h1>
+    <p>Uma trilha de módulos com vídeo-aulas legendadas, questionários e um dicionário de sinais.</p>
+    {% if not user.is_authenticated %}
+      <p>Experimente a primeira aula agora. Para acessar todas, <a href="{% url 'contas:cadastro' %}">crie sua conta</a>.</p>
+    {% endif %}
+  </section>
+{% endif %}
+
+<h2 class="titulo-trilha">Trilha de aprendizagem</h2>
+
+{% for item in trilha.modulos %}
+  <section class="modulo cartao{% if item.recomendado %} modulo-recomendado{% endif %}" aria-labelledby="modulo-{{ item.modulo.pk }}">
+    {% if item.recomendado %}<p class="selo-recomendado">Comece pelo Módulo {{ item.ordem }}!</p>{% endif %}
+    <h3 id="modulo-{{ item.modulo.pk }}">Módulo {{ item.ordem }}: {{ item.modulo.titulo }}</h3>
+    <p class="descricao">{{ item.modulo.descricao }}</p>
+    {% if trilha.eh_aluno %}
+      <p class="progresso-texto">{{ item.concluidas }} de {{ item.publicadas }} aulas · {{ item.percentual }}%</p>
+      <progress max="100" value="{{ item.percentual }}" aria-label="Progresso no módulo {{ item.ordem }}">{{ item.percentual }}%</progress>
+    {% endif %}
+    <ol class="aulas">
+      {% for aula_item in item.aulas %}
+        <li class="aula status-{{ aula_item.status|lower }}">
+          <a href="{% url 'trilha:aula' aula_item.aula.pk %}">{{ aula_item.aula.titulo }}</a>
+          {% if trilha.eh_aluno %}
+            <span class="status"><span aria-hidden="true" class="icone-status"></span>{{ aula_item.rotulo_do_status }}</span>
+          {% elif not aula_item.liberada %}
+            <span class="status bloqueada"><span aria-hidden="true">🔒</span> faça login</span>
+          {% elif not user.is_authenticated %}
+            <span class="status liberada">aula gratuita</span>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  </section>
+{% empty %}
+  <p class="vazio">Nenhuma aula publicada ainda.</p>
+{% endfor %}
+{% endblock %}

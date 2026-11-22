@@ -3,11 +3,11 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import connection
 from django.test import SimpleTestCase, TestCase
 
+from core.validadores import VideoMp4Validator
 from dicionario.exceptions import CategoriaComSinaisAtivos, CategoriaJaCadastrada, TermoJaCadastrado
 from dicionario.models import Categoria, Sinal
 from dicionario.normalizacao import TextoNormalizado
 from dicionario.services import CategoriaService, SinalService
-from dicionario.validadores import VideoMp4Validator
 
 from .fabricas import MidiaTemporariaMixin, criar_categoria, criar_sinal, video_mp4
 

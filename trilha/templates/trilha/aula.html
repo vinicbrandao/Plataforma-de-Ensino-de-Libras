@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ aula_aberta.aula.titulo }} · Plataforma de Ensino de Libras{% endblock %}
+
+{% block content %}
+{% with aula=aula_aberta.aula %}
+<nav class="migalhas" aria-label="Você está em">
+  <a href="{% url 'inicio' %}">Trilha</a> › {{ aula.modulo.titulo }}
+</nav>
+
+<h1>{{ aula.titulo }}</h1>
+{% if not aula.publicada %}
+  <p class="aviso" role="status">Pré-visualização: esta aula ainda não está publicada.</p>
+{% endif %}
+{% if aula_aberta.eh_aluno %}
+  <p class="status-aula status-{{ aula_aberta.status|lower }}"><span aria-hidden="true" class="icone-status"></span>{{ aula_aberta.rotulo_do_status }}</p>
+{% elif aula_aberta.eh_visitante %}
+  <p class="aviso" role="status">Faça login para salvar seu progresso. <a href="{% url 'contas:entrar' %}?next={{ request.path|urlencode }}">Entrar</a></p>
+{% endif %}
+
+{% if aula_aberta.concluida %}
+  <div class="concluida cartao" role="status">
+    <p><strong>Aula concluída!</strong></p>
+    {% if aula_aberta.proxima %}<p><a class="botao" href="{% url 'trilha:aula' aula_aberta.proxima.pk %}">Próxima aula: {{ aula_aberta.proxima.titulo }}</a></p>{% endif %}
+  </div>
+{% endif %}
+
+<p class="descricao">{{ aula.descricao }}</p>
+
+{% if aula.video %}
+  <div class="video-aula">
+    <video id="video-aula" controls preload="metadata" playsinline aria-label="Vídeo da aula {{ aula.titulo }}">
+      <source src="{{ aula.video.url }}" type="video/mp4">
+      {% if aula.legenda %}
+        <track kind="subtitles" srclang="pt-BR" label="Português" src="{{ aula.legenda.url }}"{% if aula_aberta.legenda_ativa %} default{% endif %}>
+      {% endif %}
+    </video>
+    <div id="erro-video" class="erro-geral" role="alert" hidden>
+      <p>Não foi possível carregar o vídeo. Tente novamente</p>
+      <button type="button" id="tentar-video" class="botao">Tentar novamente</button>
+    </div>
+  </div>
+{% endif %}
+
+{% if aula.texto_apoio %}
+  <section class="cartao texto-apoio">
+    <h2>Texto de apoio</h2>
+    <p>{{ aula.texto_apoio|linebreaksbr }}</p>
+  </section>
+{% endif %}
+
+{% if aula_aberta.materiais %}
+  <section class="materiais">
+    <h2>Materiais complementares</h2>
+    <ul>
+      {% for material in aula_aberta.materiais %}
+        <li class="cartao">
+          {% if material.arquivo.name|slice:"-4:" == ".pdf" %}
+            <span aria-hidden="true">📄</span> {{ material.titulo }} (PDF)
+          {% else %}
+            <img src="{{ material.arquivo.url }}" alt="{{ material.titulo }}" loading="lazy">
+            {{ material.titulo }}
+          {% endif %}
+          <span class="acoes-material">
+            <a href="{{ material.arquivo.url }}" target="_blank" rel="noopener">Abrir</a>
+            <a href="{{ material.arquivo.url }}" download>Baixar</a>
+          </span>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+{% endif %}
+
+{% if aula_aberta.proxima and not aula_aberta.concluida %}
+  <p class="proxima">Próxima aula: <a href="{% url 'trilha:aula' aula_aberta.proxima.pk %}">{{ aula_aberta.proxima.titulo }}</a></p>
+{% endif %}
+{% endwith %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/aula.js' %}" defer></script>
+{% endblock %}
