@@ -31,9 +31,14 @@ def criar_aula(modulo: Modulo, posicao: int = 1, publicada: bool = True, titulo:
         titulo=titulo or f"Aula {modulo.posicao}.{posicao}",
         descricao="Descrição da aula",
         posicao=posicao,
-        publicada=publicada,
     )
     if publicada:
         aula.video = video()
         aula.legenda = legenda()
-    return AulaService.salvar(aula)
+    AulaService.salvar(aula)
+    if publicada:
+        # Publica sem passar pela exigência de questão (spec 0004), para que os testes da
+        # trilha não dependam do app questionarios. O banco ainda exige vídeo e legenda.
+        Aula.objects.filter(pk=aula.pk).update(publicada=True)
+        aula.publicada = True
+    return aula

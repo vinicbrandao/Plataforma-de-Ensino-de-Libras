@@ -53,7 +53,8 @@ flowchart LR
 - `dicionario` não depende de nenhum outro app.
 - `trilha` depende de `contas` (o aluno do progresso).
 - `questionarios` depende de `trilha` (a aula) e de `dicionario` (o sinal da questão). Na aprovação, chama o service de progresso da `trilha` para concluir a aula ([ADR 0004](adr/0004-conclusao-da-aula-pelo-questionario.md)).
-- `trilha` não importa `questionarios`. Para exigir ao menos uma questão antes de publicar (RF013), o service da trilha consulta a relação reversa da aula (`aula.questoes`), sem importar classes do outro app. Assim os imports não formam ciclo.
+- `trilha` e `dicionario` não importam `questionarios`. Para exigir ao menos uma questão antes de publicar (RF013) e para barrar a inativação de sinal em uso (RF015), eles consultam pelo nome reverso `questoes`, sem importar classes do outro app. Assim os imports não formam ciclo.
+- O questionário tem página própria (`questionarios:responder`). A tela da aula só aponta para ela com `{% url %}`, sem importar o app.
 - Todo model que aponta para o usuário usa `settings.AUTH_USER_MODEL`.
 
 ## Camadas

@@ -72,6 +72,12 @@
   </section>
 {% endif %}
 
+<section class="cartao chamada-questionario">
+  <h2>Questionário</h2>
+  <p>Acerte ao menos 70% das questões para concluir a aula.</p>
+  <p><a class="botao" href="{% url 'questionarios:responder' aula.pk %}">Responder questionário</a></p>
+</section>
+
 {% if aula_aberta.proxima and not aula_aberta.concluida %}
   <p class="proxima">Próxima aula: <a href="{% url 'trilha:aula' aula_aberta.proxima.pk %}">{{ aula_aberta.proxima.titulo }}</a></p>
 {% endif %}

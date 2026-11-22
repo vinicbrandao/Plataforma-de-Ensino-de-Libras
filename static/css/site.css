@@ -361,3 +361,45 @@ progress {
 .materiais img { display: block; width: 100%; margin-bottom: 0.5rem; border-radius: 0.4rem; }
 
 .acoes-material { display: flex; gap: 1rem; margin-top: 0.5rem; }
+
+/* Questionário */
+
+.chamada-questionario { margin: 1.5rem 0; }
+
+.questao { margin: 0 0 1rem; padding: 1rem 1.25rem; }
+
+.questao legend { padding: 0 0.25rem; font-weight: 600; }
+
+.questao video {
+  display: block;
+  width: 100%;
+  max-width: 22rem;
+  margin: 0.5rem 0 0.75rem;
+  border-radius: 0.4rem;
+  background: #000;
+}
+
+.questao .opcao {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.35rem 0;
+}
+
+.resultado h1 { font-size: 1.4rem; }
+
+.resultado-aprovado { border: 2px solid var(--sucesso); }
+
+.resultado-reprovado { border: 2px solid var(--perigo); }
+
+.acoes-resultado { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: center; }
+
+.correcoes { display: grid; gap: 0.75rem; padding: 0; list-style: none; }
+
+.correcoes li { padding: 0.75rem 1rem; }
+
+.correcoes .enunciado { margin-top: 0; font-weight: 600; }
+
+.correcao-certa { border-left: 4px solid var(--sucesso); }
+
+.correcao-errada { border-left: 4px solid var(--perigo); }

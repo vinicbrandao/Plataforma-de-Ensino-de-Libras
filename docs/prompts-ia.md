@@ -206,3 +206,11 @@ Sim, começar
 ```text
 Aceito
 ```
+
+### 18. Commit da spec 0003 e início da spec 0004
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Fiz o commit das mudanças. Prossiga.
+```

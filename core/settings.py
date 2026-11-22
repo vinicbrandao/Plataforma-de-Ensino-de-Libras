@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "contas",
     "dicionario",
     "trilha",
+    "questionarios",
 ]
 
 MIDDLEWARE = [

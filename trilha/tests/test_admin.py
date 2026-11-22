@@ -41,14 +41,22 @@ class TrilhaAdminTests(MidiaTemporariaMixin, TestCase):
         self.assertContains(resposta, "A aula precisa de vídeo, legenda e questões para ser publicada")
         self.assertFalse(Aula.objects.exists())
 
-    def test_cria_aula_publicada_com_video_e_legenda(self):
+    def test_aula_nova_com_video_e_legenda_nao_publica_sem_questao(self):
         resposta = self.client.post(
             reverse("admin:trilha_aula_add"),
             self._dados_aula(publicada="on", video=video(), legenda=legenda()),
         )
 
+        self.assertContains(resposta, "A aula precisa de vídeo, legenda e questões para ser publicada")
+        self.assertFalse(Aula.objects.exists())
+
+    def test_cria_aula_nao_publicada_com_video_e_legenda(self):
+        resposta = self.client.post(
+            reverse("admin:trilha_aula_add"), self._dados_aula(video=video(), legenda=legenda())
+        )
+
         self.assertRedirects(resposta, reverse("admin:trilha_aula_changelist"))
-        self.assertTrue(Aula.objects.get().publicada)
+        self.assertFalse(Aula.objects.get().publicada)
 
     def test_titulo_de_aula_repetido_no_modulo_mostra_mensagem(self):
         criar_aula(self.modulo, 1, titulo="Alfabeto")

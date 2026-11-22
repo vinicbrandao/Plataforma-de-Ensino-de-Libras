@@ -32,18 +32,27 @@ class ExibicaoAulaService:
     """Abre uma aula para o visitante, o aluno ou o administrador (RF006, RF007)."""
 
     @classmethod
-    def abrir(cls, aula_id: int, usuario) -> AulaAberta:
+    def verificar_acesso(cls, aula_id: int, usuario) -> Aula:
+        """Aplica as regras de acesso à aula sem registrar progresso.
+
+        Aula inexistente, ou não publicada para quem não é administrador: AulaNaoEncontrada.
+        Visitante fora da primeira aula da trilha: AulaRestritaAVisitante.
+        """
         aula = cls._buscar(aula_id)
         autenticado = usuario.is_authenticated
-        administrador = autenticado and usuario.is_staff
-        if not aula.publicada and not administrador:
+        if not aula.publicada and not (autenticado and usuario.is_staff):
             raise AulaNaoEncontrada
         if not autenticado:
             liberada = TrilhaService.aula_liberada_ao_visitante()
             if liberada is None or liberada.pk != aula.pk:
                 raise AulaRestritaAVisitante
+        return aula
 
-        eh_aluno = autenticado and not administrador
+    @classmethod
+    def abrir(cls, aula_id: int, usuario) -> AulaAberta:
+        aula = cls.verificar_acesso(aula_id, usuario)
+        autenticado = usuario.is_authenticated
+        eh_aluno = autenticado and not usuario.is_staff
         status = NAO_INICIADA
         if eh_aluno:
             status = ProgressoService.registrar_acesso(usuario, aula).status

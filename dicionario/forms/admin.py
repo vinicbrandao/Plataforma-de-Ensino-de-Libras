@@ -40,3 +40,11 @@ class SinalAdminForm(forms.ModelForm):
         except ErroDeDicionario as exc:
             raise ValidationError(exc.mensagem) from exc
         return termo
+
+    def clean_ativo(self) -> bool:
+        ativo = self.cleaned_data["ativo"]
+        try:
+            SinalService.validar_inativacao(self.instance.pk, ativo=ativo)
+        except ErroDeDicionario as exc:
+            raise ValidationError(exc.mensagem) from exc
+        return ativo

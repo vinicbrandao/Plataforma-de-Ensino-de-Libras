@@ -78,13 +78,22 @@ class AulaService(ConteudoOrdenadoService):
         return {"modulo_id": aula.modulo_id}
 
     @staticmethod
-    def validar_publicacao(publicada: bool, *, tem_video: bool, tem_legenda: bool) -> None:
-        # A exigência de ao menos uma questão entra na spec 0004.
-        if publicada and not (tem_video and tem_legenda):
+    def tem_questao(aula_id: int | None) -> bool:
+        # Consulta pelo nome reverso "questoes", sem importar o app questionarios.
+        return aula_id is not None and Aula.objects.filter(pk=aula_id, questoes__isnull=False).exists()
+
+    @staticmethod
+    def validar_publicacao(
+        publicada: bool, *, tem_video: bool, tem_legenda: bool, tem_questao: bool
+    ) -> None:
+        if publicada and not (tem_video and tem_legenda and tem_questao):
             raise AulaIncompletaParaPublicar
 
     @classmethod
     def validar_regras(cls, aula: Aula) -> None:
         cls.validar_publicacao(
-            aula.publicada, tem_video=bool(aula.video), tem_legenda=bool(aula.legenda)
+            aula.publicada,
+            tem_video=bool(aula.video),
+            tem_legenda=bool(aula.legenda),
+            tem_questao=cls.tem_questao(aula.pk),
         )

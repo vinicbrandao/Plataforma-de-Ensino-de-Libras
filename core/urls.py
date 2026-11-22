@@ -16,6 +16,7 @@ urlpatterns = [
     path("", TrilhaView.as_view(), name="inicio"),
     path("", include("contas.urls")),
     path("", include("trilha.urls")),
+    path("", include("questionarios.urls")),
     path("dicionario/", include("dicionario.urls")),
 ]
 

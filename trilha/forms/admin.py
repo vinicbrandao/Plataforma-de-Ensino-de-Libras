@@ -64,6 +64,7 @@ class AulaAdminForm(ConteudoOrdenadoAdminForm):
                     dados.get("publicada", False),
                     tem_video=bool(dados["video"]),
                     tem_legenda=bool(dados["legenda"]),
+                    tem_questao=AulaService.tem_questao(self.instance.pk),
                 ),
             )
         return dados

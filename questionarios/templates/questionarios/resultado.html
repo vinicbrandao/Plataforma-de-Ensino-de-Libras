@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Resultado · {{ resultado.aula.titulo }}{% endblock %}
+
+{% block content %}
+<nav class="migalhas" aria-label="Você está em">
+  <a href="{% url 'inicio' %}">Trilha</a> › <a href="{% url 'trilha:aula' resultado.aula.pk %}">{{ resultado.aula.titulo }}</a> › Resultado
+</nav>
+
+<section class="cartao resultado {% if resultado.aprovado %}resultado-aprovado{% else %}resultado-reprovado{% endif %}" role="status">
+  {% if resultado.aprovado %}
+    <h1><span aria-hidden="true">✓</span> Aprovado! Você acertou {{ resultado.acertos }} de {{ resultado.total }} questões</h1>
+  {% else %}
+    <h1>Você acertou {{ resultado.acertos }} de {{ resultado.total }} questões. É necessário acertar 70% para concluir. Tente novamente</h1>
+  {% endif %}
+  <p>Aproveitamento: <strong>{{ resultado.percentual }}%</strong></p>
+  {% if resultado.aula_concluida %}
+    <p><strong>Aula concluída!</strong></p>
+  {% elif resultado.eh_visitante %}
+    <p>Faça login para salvar seu progresso. <a href="{% url 'contas:entrar' %}?next={% url 'trilha:aula' resultado.aula.pk %}">Entrar</a></p>
+  {% endif %}
+  <p class="acoes-resultado">
+    {% if resultado.aprovado and resultado.proxima %}
+      <a class="botao" href="{% url 'trilha:aula' resultado.proxima.pk %}">Próxima aula: {{ resultado.proxima.titulo }}</a>
+    {% endif %}
+    <a href="{% url 'questionarios:responder' resultado.aula.pk %}">Responder de novo</a>
+    <a href="{% url 'inicio' %}">Voltar à trilha</a>
+  </p>
+</section>
+
+<h2>Correção</h2>
+<ol class="correcoes">
+  {% for correcao in resultado.correcoes %}
+    <li class="cartao {% if correcao.acertou %}correcao-certa{% else %}correcao-errada{% endif %}">
+      <p class="enunciado">{{ correcao.questao.enunciado }}</p>
+      {% if correcao.acertou %}
+        <p><span aria-hidden="true">✓</span> Certo: {{ correcao.escolhida.texto }}</p>
+      {% else %}
+        <p><span aria-hidden="true">✗</span> Sua resposta: {{ correcao.escolhida.texto }}</p>
+        {% if correcao.correta %}<p>Alternativa correta: <strong>{{ correcao.correta.texto }}</strong></p>{% endif %}
+      {% endif %}
+    </li>
+  {% endfor %}
+</ol>
+{% endblock %}

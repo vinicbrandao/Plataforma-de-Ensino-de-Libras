@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Questionário · {{ questionario.aula.titulo }}{% endblock %}
+
+{% block content %}
+<nav class="migalhas" aria-label="Você está em">
+  <a href="{% url 'inicio' %}">Trilha</a> › <a href="{% url 'trilha:aula' questionario.aula.pk %}">{{ questionario.aula.titulo }}</a> › Questionário
+</nav>
+
+<h1>Questionário: {{ questionario.aula.titulo }}</h1>
+<p>Acerte ao menos 70% das questões para concluir a aula. Você pode tentar quantas vezes quiser.</p>
+{% if questionario.eh_visitante %}
+  <p class="aviso" role="status">Faça login para salvar seu progresso. <a href="{% url 'contas:entrar' %}?next={{ request.path|urlencode }}">Entrar</a></p>
+{% endif %}
+
+{% if questionario.questoes %}
+  <form method="post" class="questionario" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="erro-geral" role="alert">{{ form.non_field_errors }}</div>
+    {% endif %}
+    {% for questao, campo in form.campos_por_questao %}
+      <fieldset class="questao cartao">
+        <legend>{{ forloop.counter }}. {{ questao.enunciado }}</legend>
+        {% if questao.sinal and questao.sinal.video %}
+          <video src="{{ questao.sinal.video.url }}" controls loop muted playsinline preload="metadata"
+                 aria-label="Vídeo do sinal da questão {{ forloop.counter }}"></video>
+        {% endif %}
+        {% for opcao in campo %}
+          <label class="opcao">{{ opcao.tag }} {{ opcao.choice_label }}</label>
+        {% endfor %}
+      </fieldset>
+    {% endfor %}
+    <button type="submit" class="botao">Enviar respostas</button>
+  </form>
+{% else %}
+  <p class="vazio">Esta aula ainda não tem questões.</p>
+{% endif %}
+{% endblock %}

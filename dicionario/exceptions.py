@@ -15,3 +15,7 @@ class CategoriaJaCadastrada(ErroDeDicionario):
 
 class CategoriaComSinaisAtivos(ErroDeDicionario):
     mensagem = "Existem sinais ativos nesta categoria"
+
+
+class SinalEmUso(ErroDeDicionario):
+    mensagem = "Este sinal é usado em aulas e não pode ser inativado ou excluído"
