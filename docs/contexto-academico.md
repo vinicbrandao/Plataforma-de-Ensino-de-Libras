@@ -20,7 +20,7 @@ Projeto em dupla do curso de Sistemas de Informação (Cesmac). A Plataforma de 
 Recomendação da equipe, não critério oficial. Como a disciplina avalia orientação a objetos, o código deve mostrar com clareza:
 - Classes com responsabilidade única: services por domínio, forms, models e views.
 - Encapsulamento: regras de negócio dentro dos services e dados acessados por métodos, não espalhados pelas views.
-- Herança: Usuario herda de AbstractUser, views herdam de django.views.View e exceções de domínio herdam de uma exceção base de cada app.
+- Herança: Usuario herda de AbstractBaseUser e PermissionsMixin (login por e-mail ou CPF), views herdam de django.views.View e exceções de domínio herdam de uma exceção base de cada app.
 - Polimorfismo: métodos sobrescritos (get, post, clean, save, métodos do Admin) e services com a mesma interface onde fizer sentido.
 - Nomes em português claros e testes automatizados que exercitem as classes.
 

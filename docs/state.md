@@ -6,7 +6,8 @@ Este arquivo guarda apenas o que não está em outro lugar. Mantenha-o com cerca
 
 ## Em andamento
 
-- As specs 0001 a 0003 estão na `main`. A [0004](specs/0004-questionarios.md) (questionários) está implementada e migrada no banco local, mas sem commit. Com ela, os 10 RFs do núcleo e do Admin da versão 1 estão implementados.
+- As specs 0001 a 0004 estão implementadas e na `main`: os 10 RFs do núcleo e do Admin da versão 1 funcionam.
+- O relatório de andamento enviado para análise está em `docs/relatorios/`.
 - Estruturas do Lab. BD prontas: índice `sinal_termo_trgm`, trigger `trg_progresso_conclusao`, view `vw_progresso_modulo` e índice único parcial `alternativa_correta_unica`.
 - Cada prompt enviado à IA é registrado em `docs/prompts-ia.md`.
 
@@ -21,5 +22,4 @@ Este arquivo guarda apenas o que não está em outro lugar. Mantenha-o com cerca
 - As skills citam Python 3.12, e a máquina atual usa Python 3.13. O Django 6.1 aceita os dois.
 - O documento de requisitos chama os não funcionais de NF003 dentro dos RFs e de RNF03 na tabela. São o mesmo requisito.
 - Os termos de uso exibidos no cadastro são provisórios até a equipe ter o texto final.
-- `docs/contexto-academico.md` diz que `Usuario` herda de `AbstractUser`, mas o código herda de `AbstractBaseUser` e `PermissionsMixin` (login por e-mail ou CPF). A equipe decide se ajusta o texto.
 - Antes de um deploy real: `DJANGO_DEBUG=False`, `ALLOWED_HOSTS`, HTTPS, SMTP real (ADR 0005), backup diário (RNF07) e `check --deploy`.
