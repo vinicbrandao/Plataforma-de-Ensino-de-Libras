@@ -11,6 +11,10 @@ staticfiles/
 media/
 db.sqlite3
 
+# Vídeos e legendas do conteúdo inicial (só o LEIA-ME é versionado)
+amostras/*
+!amostras/LEIA-ME.md
+
 # Editores e sistema
 .vscode/
 .idea/

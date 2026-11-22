@@ -58,6 +58,28 @@ python manage.py runserver
 
 Em desenvolvimento, os e-mails (como o de recuperação de senha) aparecem no terminal do `runserver`, e não são enviados de verdade.
 
+### 5. Conteúdo inicial para a demonstração (opcional)
+
+O comando abaixo cadastra 3 módulos com 2 aulas cada, 18 questões, 3 categorias e 15 sinais, pelas mesmas regras do Admin. Os vídeos e as legendas vêm da pasta `amostras/`, com os nomes listados em [amostras/LEIA-ME.md](amostras/LEIA-ME.md).
+
+```powershell
+python manage.py criar_conteudo_inicial
+```
+
+- Pode rodar várias vezes: nada é duplicado.
+- Se faltar arquivo, o comando cria o que der, deixa não publicada a aula sem vídeo ou legenda, não cria o sinal sem vídeo e lista no terminal o que falta. Depois de colocar os arquivos, rode de novo.
+- Outra pasta: `python manage.py criar_conteudo_inicial --pasta C:\caminho\das\amostras`.
+- As descrições da execução dos sinais ficam em branco, para a equipe completar pelo Admin.
+
+## Banco de dados: contas e entrega de Lab. BD
+
+O material de Laboratório de Banco de Dados está em [docs/banco/](docs/banco/entrega-lab-bd.md). As contas `libras_app` e `libras_relatorio` são criadas uma vez pelo superusuário `postgres`:
+
+```powershell
+psql -U postgres -h localhost -d plataforma_libras -f docs/banco/contas.sql
+psql -U postgres -h localhost -d plataforma_libras -f docs/banco/verificacao.sql
+```
+
 ## Verificações
 
 ```powershell
