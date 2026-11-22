@@ -1,8 +1,8 @@
 # PRD 0001: Plataforma de Ensino de Libras — versão 1
 
-- **Status:** Proposto
+- **Status:** Aceito
 - **Data:** 2026-11-21
-- **Especificações:** ainda não escritas; a ordem prevista está em [docs/state.md](../state.md).
+- **Especificações:** [Spec 0001: Fundação e contas](../specs/0001-fundacao-e-contas.md); a ordem das próximas está em [docs/state.md](../state.md).
 - **Fonte:** [Documento de requisitos](../requisitos.md). Os IDs entre parênteses (RF001, RNF03, RS010…) são os desse documento.
 
 ## Objetivo
@@ -30,6 +30,7 @@ A prática com câmera (RF008), os lembretes (RF011) e o histórico (RF012) fica
 - **RF-05:** O CPF e o telefone são aceitos com ou sem pontuação e gravados nos formatos XXX.XXX.XXX-XX e (XX) 9XXXX-XXXX. O e-mail é gravado em minúsculas, e os espaços extras do nome são removidos.
 - **RF-06:** A data e a hora do aceite dos termos ficam registradas.
 - **RF-07:** Após o cadastro, o sistema exibe "Cadastro realizado com sucesso".
+- **RF-61:** Enquanto o RF002 não for implementado, o cadastro de quem tem menos de 18 anos é recusado com a mensagem "O cadastro de menores de 18 anos ainda não está disponível". A idade é considerada completa na data do aniversário (RF001).
 
 ### Login e sessão (RF003)
 
@@ -86,7 +87,7 @@ A prática com câmera (RF008), os lembretes (RF011) e o histórico (RF012) fica
 
 - **RF-44:** Somente administradores acessam a área administrativa. Não existe cadastro público de administrador: as contas são criadas pela equipe na implantação (RS009).
 - **RF-45:** O administrador cadastra módulos com título único de até 100 caracteres, descrição de até 500 e posição inteira positiva, que também é única. A comparação de títulos ignora maiúsculas, minúsculas e espaços repetidos (RF013).
-- **RF-46:** O administrador cadastra aulas com módulo, título único dentro do módulo, descrição, posição única dentro do módulo, vídeo MP4, legenda em português, texto de apoio de até 2.000 caracteres e situação, que começa como Não publicada (RF013).
+- **RF-46:** O administrador cadastra aulas com módulo, título único dentro do módulo, descrição, posição única dentro do módulo, vídeo MP4, legenda em português no formato WebVTT (.vtt), texto de apoio de até 2.000 caracteres e situação, que começa como Não publicada (RF013).
 - **RF-47:** Uma aula só é publicada se tiver vídeo, legenda e ao menos uma questão. Caso contrário, aparece "A aula precisa de vídeo, legenda e questões para ser publicada". Os sinais da prática não são exigidos nesta versão (RF013).
 - **RF-48:** O administrador pode abrir uma aula não publicada para vê-la como o aluno a verá (RF013).
 - **RF-49:** Um módulo só é excluído se não tiver aulas. Uma aula com progresso registrado não é excluída, apenas despublicada, e despublicar preserva o progresso (RF013).
@@ -129,6 +130,8 @@ Entram simplificados, e cada um ganha uma spec antes de ser implementado:
 - O dicionário não sugere termos enquanto o aluno digita (RF010).
 - A publicação da aula exige vídeo, legenda e uma questão, sem exigir sinais da prática (RF013).
 - Os sinais não têm gabarito da câmera (RF015).
+- A legenda da aula aceita só WebVTT (.vtt), o formato lido pelo player nativo; SRT não é aceito (RF013).
+- Menores de 18 anos não conseguem se cadastrar até o RF002 ser implementado (RF-61).
 - A área administrativa usa a interface padrão do Django Admin. Comportamentos de tela do documento, como a confirmação ao clicar em Cancelar (RF013), seguem o padrão do Admin ([ADR 0003](../adr/0003-django-admin-como-area-administrativa.md)).
 
 ## Fora do escopo desta versão
@@ -139,13 +142,8 @@ Entram simplificados, e cada um ganha uma spec antes de ser implementado:
 - RF002, RF004 e RF005, se o bônus não for feito.
 - Envio real de e-mails, HTTPS, cópia de segurança diária (RNF07) e implantação em servidor.
 
-## Questões em aberto
-
-- **Menores de idade sem o RF002:** enquanto o RF002 não for feito, o cadastro de quem tem menos de 18 anos é recusado ou aceito sem responsável? A sugestão é recusar com mensagem, para não tratar dados de menores sem autorização (LGPD).
-- **Formato da legenda:** o player nativo só lê WebVTT (.vtt), mas o RF013 aceita SRT ou VTT. A sugestão é aceitar só VTT nesta versão, ou converter SRT para VTT ao salvar.
-
 ## Critérios de conclusão
 
-- Cada requisito RF-01 a RF-60 e RNF-01 a RNF-07 tem ao menos um teste automatizado ou uma verificação manual descrita na spec.
+- Cada requisito RF-01 a RF-61 e RNF-01 a RNF-07 tem ao menos um teste automatizado ou uma verificação manual descrita na spec.
 - `python manage.py check`, `python manage.py test` e `python manage.py makemigrations --check` passam.
 - O fluxo completo funciona no navegador: o administrador cadastra um módulo, uma aula com vídeo, legenda e questão, publica a aula e cadastra um sinal; o aluno cria a conta, entra, abre a aula, é aprovado no questionário, vê a aula concluída e o progresso atualizado e encontra o sinal no dicionário.

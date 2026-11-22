@@ -1,0 +1,19 @@
+<div class="campo{% if campo.errors %} campo-com-erro{% endif %}" id="campo-{{ campo.html_name }}">
+  {% if campo.widget_type == "checkbox" %}
+    <label class="opcao">{{ campo }} {{ campo.label }}</label>
+  {% elif campo.widget_type == "radioselect" %}
+    <fieldset>
+      <legend>{{ campo.label }}</legend>
+      {% for opcao in campo %}
+        <label class="opcao">{{ opcao.tag }} {{ opcao.choice_label }}</label>
+      {% endfor %}
+    </fieldset>
+  {% else %}
+    {{ campo.label_tag }}
+    {{ campo }}
+  {% endif %}
+  {% if campo.help_text %}<small class="ajuda" id="{{ campo.auto_id }}_helptext">{{ campo.help_text }}</small>{% endif %}
+  {% if campo.errors %}
+    <div class="erro" id="{{ campo.auto_id }}_error">{% for erro in campo.errors %}<p>{{ erro }}</p>{% endfor %}</div>
+  {% endif %}
+</div>

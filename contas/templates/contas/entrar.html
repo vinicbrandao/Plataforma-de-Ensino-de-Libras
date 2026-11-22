@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Entrar · Plataforma de Ensino de Libras{% endblock %}
+
+{% block content %}
+<section class="cartao cartao-estreito">
+  <h1>Entrar</h1>
+  <form method="post" action="{% url 'contas:entrar' %}" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="erro-geral" role="alert">{{ form.non_field_errors }}</div>
+    {% endif %}
+    {% for campo in form %}
+      {% include "contas/_campo.html" %}
+    {% endfor %}
+    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+    <button type="submit" class="botao">Entrar</button>
+  </form>
+  <p>Ainda não tem conta? <a href="{% url 'contas:cadastro' %}">Crie a sua</a>.</p>
+</section>
+{% endblock %}

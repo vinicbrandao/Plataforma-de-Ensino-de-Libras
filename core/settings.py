@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "contas",
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "contas.middleware.SemCacheParaAutenticadosMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -104,7 +106,24 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+    {"NAME": "contas.validadores.LetrasENumerosValidator"},
 ]
+
+
+# Autenticação e sessão (spec 0001)
+
+AUTH_USER_MODEL = "contas.Usuario"
+
+AUTHENTICATION_BACKENDS = ["contas.backends.EmailOuCpfBackend"]
+
+LOGIN_URL = "contas:entrar"
+
+LOGIN_REDIRECT_URL = "inicio"
+
+# A sessão expira após 30 minutos sem requisições (RS010).
+SESSION_COOKIE_AGE = 30 * 60
+
+SESSION_SAVE_EVERY_REQUEST = True
 
 
 # Internacionalização

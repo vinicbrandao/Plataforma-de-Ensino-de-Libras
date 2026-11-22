@@ -1,0 +1,205 @@
+:root {
+  color-scheme: light dark;
+  --texto: #1f2a2e;
+  --suave: #55656b;
+  --borda: #d5dfe2;
+  --fundo: #f5f8f9;
+  --superficie: #fff;
+  --destaque: #0b6e69;
+  --sobre-destaque: #fff;
+  --perigo: #b42318;
+  --sucesso: #166534;
+  --fonte: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --texto: #e6eef0;
+    --suave: #a3b4b9;
+    --borda: #34454a;
+    --fundo: #111a1d;
+    --superficie: #1a2529;
+    --destaque: #5fd3c8;
+    --sobre-destaque: #0d1517;
+    --perigo: #f28b82;
+    --sucesso: #7fd09a;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  color: var(--texto);
+  background: var(--fundo);
+  font-family: var(--fonte);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+a { color: var(--destaque); text-underline-offset: 0.15em; }
+
+:focus-visible { outline: 3px solid var(--destaque); outline-offset: 2px; }
+
+h1, h2 { line-height: 1.2; text-wrap: balance; }
+
+h1 { font-size: 1.75rem; margin-top: 0; }
+
+.pular {
+  position: absolute;
+  left: -999px;
+  padding: 0.5rem 1rem;
+  background: var(--superficie);
+}
+
+.pular:focus { left: 1rem; top: 1rem; z-index: 10; }
+
+/* Cabeçalho e rodapé */
+
+.topo { background: var(--superficie); border-bottom: 1px solid var(--borda); }
+
+.topo-interno,
+.conteudo,
+.rodape {
+  width: 100%;
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.topo-interno {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 0.75rem;
+}
+
+.marca { color: var(--texto); font-weight: 700; font-size: 1.15rem; text-decoration: none; }
+
+.marca span { color: var(--suave); font-weight: 400; }
+
+.menu { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; align-items: center; }
+
+.menu form { margin: 0; }
+
+.menu-usuario { color: var(--suave); }
+
+.conteudo { flex: 1; padding-block: 2rem; }
+
+.conteudo:focus { outline: none; }
+
+.rodape { padding-block: 1.5rem; color: var(--suave); font-size: 0.875rem; }
+
+/* Componentes */
+
+.cartao {
+  padding: 1.5rem;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 0.75rem;
+}
+
+.cartao-estreito { max-width: 28rem; margin-inline: auto; }
+
+.botao,
+button.botao {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border: 0;
+  border-radius: 0.5rem;
+  color: var(--sobre-destaque);
+  background: var(--destaque);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.botao-link {
+  padding: 0;
+  border: 0;
+  color: var(--destaque);
+  background: none;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  cursor: pointer;
+}
+
+.mensagens { margin: 0 0 1.5rem; padding: 0; list-style: none; }
+
+.mensagem {
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--destaque);
+  border-radius: 0.25rem;
+  background: var(--superficie);
+}
+
+.mensagem.success { border-color: var(--sucesso); }
+
+.mensagem.error { border-color: var(--perigo); }
+
+/* Formulários */
+
+.campo { margin-bottom: 1.25rem; }
+
+.campo label,
+.campo legend { display: block; font-weight: 600; }
+
+.campo input[type="text"],
+.campo input[type="email"],
+.campo input[type="password"],
+.campo input[type="date"] {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--borda);
+  border-radius: 0.4rem;
+  color: var(--texto);
+  background: var(--fundo);
+  font: inherit;
+}
+
+.campo fieldset { margin: 0; padding: 0; border: 0; }
+
+.campo .opcao { display: flex; gap: 0.5rem; align-items: center; font-weight: 400; }
+
+.campo-com-erro input { border-color: var(--perigo); }
+
+.ajuda { display: block; color: var(--suave); font-size: 0.875rem; }
+
+.erro { margin-top: 0.25rem; color: var(--perigo); font-weight: 600; }
+
+.erro p { margin: 0; }
+
+.erro p::before { content: "⚠ "; }
+
+.erro-geral {
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--perigo);
+  color: var(--perigo);
+  font-weight: 600;
+}
+
+.erro-geral ul { margin: 0; padding: 0; list-style: none; }
+
+.termos { margin-bottom: 0.75rem; }
+
+.termos summary { cursor: pointer; color: var(--destaque); }
+
+.termos-texto {
+  max-height: 16rem;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--borda);
+  border-radius: 0.4rem;
+}
+
+.termos-texto h2 { font-size: 1.05rem; }

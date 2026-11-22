@@ -1,6 +1,6 @@
 # ADR 0005: E-mails exibidos no console em desenvolvimento
 
-- **Status:** Proposto
+- **Status:** Aceito
 - **Data:** 2026-11-21
 
 ## Contexto

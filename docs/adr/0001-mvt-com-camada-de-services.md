@@ -1,6 +1,6 @@
 # ADR 0001: MVT com camada de services e views baseadas em `View`
 
-- **Status:** Proposto
+- **Status:** Aceito
 - **Data:** 2026-11-21
 
 ## Contexto

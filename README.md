@@ -45,7 +45,7 @@ Abra o `.env` e preencha `DJANGO_SECRET_KEY` com o valor gerado e `POSTGRES_PASS
 
 ### 4. Tabelas, administrador e servidor
 
-> Rode o primeiro `migrate` só depois de existir o modelo de usuário customizado (`contas.Usuario`), previsto na primeira spec. Veja [docs/state.md](docs/state.md).
+O `createsuperuser` pede e-mail, nome completo e senha. As contas de administrador são criadas só por esse comando: não há cadastro público de administrador. Alunos se cadastram em `/cadastro/` e entram com e-mail ou CPF.
 
 ```powershell
 python manage.py migrate

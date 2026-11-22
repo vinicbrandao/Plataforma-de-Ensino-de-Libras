@@ -1,0 +1,30 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">Início</a>
+  &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+  &rsaquo; <a href="{% url 'admin:contas_usuario_changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+  &rsaquo; Desativar
+</div>
+{% endblock %}
+
+{% block content %}
+<h2>Deseja realmente desativar este usuário?</h2>
+<p>O usuário não poderá mais acessar a plataforma até ser reativado. O progresso é mantido.</p>
+<ul>
+  {% for aluno in alunos %}
+    <li>{{ aluno.nome_completo }} ({{ aluno.email }})</li>
+  {% endfor %}
+</ul>
+<form method="post">
+  {% csrf_token %}
+  {% for aluno in alunos %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ aluno.pk }}">
+  {% endfor %}
+  <input type="hidden" name="action" value="desativar_selecionados">
+  <input type="hidden" name="confirmacao" value="sim">
+  <input type="submit" value="Sim">
+  <a href="{% url 'admin:contas_usuario_changelist' %}" class="button cancel-link">Não</a>
+</form>
+{% endblock %}

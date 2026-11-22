@@ -1,0 +1,49 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Plataforma de Ensino de Libras{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+</head>
+<body>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+  <header class="topo">
+    <div class="topo-interno">
+      <a class="marca" href="{% url 'inicio' %}">Libras<span> · Plataforma de Ensino</span></a>
+      <nav class="menu" aria-label="Principal">
+        {% if user.is_authenticated %}
+          <span class="menu-usuario">{{ user.nome_completo }}</span>
+          {% if user.is_staff %}
+            <a href="{% url 'admin:index' %}">Área administrativa</a>
+          {% endif %}
+          <form method="post" action="{% url 'contas:sair' %}">
+            {% csrf_token %}
+            <button type="submit" class="botao-link">Sair</button>
+          </form>
+        {% else %}
+          <a href="{% url 'contas:entrar' %}">Entrar</a>
+          <a class="botao" href="{% url 'contas:cadastro' %}">Criar conta</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo" class="conteudo" tabindex="-1">
+    {% if messages %}
+      <ul class="mensagens">
+        {% for message in messages %}
+          <li class="mensagem {{ message.tags }}" role="status">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="rodape">
+    <p>Plataforma de Ensino de Libras · {% now "Y" %}</p>
+  </footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

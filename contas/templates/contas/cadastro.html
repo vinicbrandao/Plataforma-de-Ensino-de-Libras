@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Criar conta · Plataforma de Ensino de Libras{% endblock %}
+
+{% block content %}
+<section class="cartao">
+  <h1>Criar conta</h1>
+  <p>Todos os campos são obrigatórios, exceto quando indicado.</p>
+  <form method="post" action="{% url 'contas:cadastro' %}" novalidate>
+    {% csrf_token %}
+    {% if form.errors %}
+      <div class="erro-geral" role="alert">Revise os campos destacados.</div>
+    {% endif %}
+    {% for campo in form %}
+      {% if campo.name == "aceite_termos" %}
+        <details class="termos">
+          <summary>Ler os termos de uso e a política de privacidade</summary>
+          {% include "contas/_termos.html" %}
+        </details>
+      {% endif %}
+      {% include "contas/_campo.html" %}
+    {% endfor %}
+    <button type="submit" class="botao">Criar conta</button>
+  </form>
+  <p>Já tem conta? <a href="{% url 'contas:entrar' %}">Entre</a>.</p>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/cadastro.js' %}" defer></script>
+{% endblock %}

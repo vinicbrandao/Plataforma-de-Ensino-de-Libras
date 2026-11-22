@@ -1,6 +1,6 @@
 # ADR 0002: PostgreSQL como banco de dados
 
-- **Status:** Proposto
+- **Status:** Aceito
 - **Data:** 2026-11-21
 
 ## Contexto

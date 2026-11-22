@@ -1,6 +1,6 @@
 # ADR 0003: Django Admin como área administrativa
 
-- **Status:** Proposto
+- **Status:** Aceito
 - **Data:** 2026-11-21
 
 ## Contexto

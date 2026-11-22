@@ -1,6 +1,6 @@
 # ADR 0004: Na versão 1, a aula é concluída com a aprovação no questionário
 
-- **Status:** Proposto
+- **Status:** Aceito
 - **Data:** 2026-11-21
 
 ## Contexto
