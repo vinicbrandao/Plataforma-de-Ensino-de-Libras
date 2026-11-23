@@ -7,6 +7,11 @@ from .aula import Aula
 from .modulo import Modulo
 
 
+class StatusProgresso(models.TextChoices):
+    EM_ANDAMENTO = "EM_ANDAMENTO", "Em andamento"
+    CONCLUIDA = "CONCLUIDA", "Concluída"
+
+
 class ProgressoAula(models.Model):
     """Andamento de um aluno em uma aula. Sem registro, a aula está Não iniciada (RF006).
 
@@ -14,9 +19,8 @@ class ProgressoAula(models.Model):
     concluída volte a outro status (ADR 0006).
     """
 
-    class Status(models.TextChoices):
-        EM_ANDAMENTO = "EM_ANDAMENTO", "Em andamento"
-        CONCLUIDA = "CONCLUIDA", "Concluída"
+    # No módulo porque a class Meta não enxerga os atributos da classe.
+    Status = StatusProgresso
 
     aluno = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="progressos"
@@ -36,6 +40,10 @@ class ProgressoAula(models.Model):
                 condition=Q(status="CONCLUIDA", concluida_em__isnull=False)
                 | (~Q(status="CONCLUIDA") & Q(concluida_em__isnull=True)),
                 name="progresso_conclusao_coerente",
+            ),
+            models.CheckConstraint(
+                condition=Q(status__in=StatusProgresso.values),
+                name="trilha_progressoaula_status_valido",
             ),
         ]
 

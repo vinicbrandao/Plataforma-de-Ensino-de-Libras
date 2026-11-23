@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.db import connection
+from django.db import IntegrityError, connection, transaction
 from django.test import SimpleTestCase, TestCase
 
 from core.validadores import VideoMp4Validator
@@ -86,6 +86,17 @@ class SinalServiceTests(MidiaTemporariaMixin, TestCase):
         SinalService.salvar(sinal)
 
         self.assertEqual(Sinal.objects.get().descricao_execucao, "Mão na bochecha.")
+
+    def test_banco_recusa_classe_gramatical_fora_das_opcoes(self):
+        sinal = criar_sinal("Mãe")
+
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            Sinal.objects.filter(pk=sinal.pk).update(classe_gramatical="PRONOME")
+
+    def test_classe_gramatical_pode_ficar_vazia(self):
+        sinal = criar_sinal("Mãe")
+
+        self.assertEqual(sinal.classe_gramatical, "")
 
 
 class IndiceTests(TestCase):

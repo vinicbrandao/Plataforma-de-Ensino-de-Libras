@@ -1,7 +1,7 @@
 -- DDL do banco plataforma_libras, gerado com pg_dump --schema-only (PostgreSQL 18).
 -- Fonte da verdade: as migrations do Django (ADR 0006). Para gerar de novo:
 --   pg_dump -h localhost -U plataforma_libras -d plataforma_libras --schema-only --no-comments -f docs/banco/ddl.sql
--- Os GRANTs das contas aparecem aqui depois de executar docs/banco/contas.sql e gerar de novo.
+-- Inclui os GRANTs criados por docs/banco/contas.sql.
 
 --
 -- PostgreSQL database dump
@@ -177,7 +177,8 @@ CREATE TABLE public.contas_registroauditoria (
     acao character varying(20) NOT NULL,
     criado_em timestamp with time zone NOT NULL,
     alvo_id bigint,
-    autor_id bigint NOT NULL
+    autor_id bigint NOT NULL,
+    CONSTRAINT contas_registroauditoria_acao_valido CHECK (((acao)::text = ANY ((ARRAY['LOGIN_ADMIN'::character varying, 'LOGOUT_ADMIN'::character varying, 'CONSULTA_ALUNO'::character varying, 'DESATIVACAO'::character varying, 'REATIVACAO'::character varying])::text[])))
 );
 
 
@@ -218,6 +219,8 @@ CREATE TABLE public.contas_usuario (
     is_active boolean NOT NULL,
     is_staff boolean NOT NULL,
     data_cadastro timestamp with time zone NOT NULL,
+    CONSTRAINT contas_usuario_contato_libras_valido CHECK ((((contato_libras)::text = ''::text) OR ((contato_libras)::text = ANY ((ARRAY['NUNCA'::character varying, 'POUCOS_SINAIS'::character varying, 'BASICO'::character varying, 'EXPERIENTE'::character varying])::text[])))),
+    CONSTRAINT contas_usuario_deficiencia_valido CHECK ((((deficiencia)::text = ''::text) OR ((deficiencia)::text = ANY ((ARRAY['NAO'::character varying, 'AUDITIVA'::character varying, 'VISUAL'::character varying, 'OUTRA'::character varying, 'NAO_INFORMAR'::character varying])::text[])))),
     CONSTRAINT usuario_aluno_completo CHECK ((is_staff OR ((cpf IS NOT NULL) AND (data_nascimento IS NOT NULL) AND (termos_aceitos_em IS NOT NULL) AND (NOT ((telefone)::text = ''::text)) AND (NOT ((deficiencia)::text = ''::text)) AND (NOT ((contato_libras)::text = ''::text))))),
     CONSTRAINT usuario_cpf_formatado CHECK (((cpf IS NULL) OR ((cpf)::text ~ '^\d{3}\.\d{3}\.\d{3}-\d{2}$'::text))),
     CONSTRAINT usuario_email_minusculo CHECK (((email)::text = lower((email)::text))),
@@ -335,7 +338,8 @@ CREATE TABLE public.dicionario_sinal (
     descricao_execucao character varying(500) NOT NULL,
     video character varying(100) NOT NULL,
     ativo boolean NOT NULL,
-    categoria_id bigint
+    categoria_id bigint,
+    CONSTRAINT dicionario_sinal_classe_gramatical_valido CHECK ((((classe_gramatical)::text = ''::text) OR ((classe_gramatical)::text = ANY ((ARRAY['SUBSTANTIVO'::character varying, 'VERBO'::character varying, 'ADJETIVO'::character varying, 'ADVERBIO'::character varying, 'OUTROS'::character varying])::text[]))))
 );
 
 
@@ -658,7 +662,8 @@ CREATE TABLE public.trilha_progressoaula (
     concluida_em timestamp with time zone,
     aluno_id bigint NOT NULL,
     aula_id bigint NOT NULL,
-    CONSTRAINT progresso_conclusao_coerente CHECK ((((concluida_em IS NOT NULL) AND ((status)::text = 'CONCLUIDA'::text)) OR ((NOT ((status)::text = 'CONCLUIDA'::text)) AND (concluida_em IS NULL))))
+    CONSTRAINT progresso_conclusao_coerente CHECK ((((concluida_em IS NOT NULL) AND ((status)::text = 'CONCLUIDA'::text)) OR ((NOT ((status)::text = 'CONCLUIDA'::text)) AND (concluida_em IS NULL)))),
+    CONSTRAINT trilha_progressoaula_status_valido CHECK (((status)::text = ANY ((ARRAY['EM_ANDAMENTO'::character varying, 'CONCLUIDA'::character varying])::text[])))
 );
 
 
@@ -1404,6 +1409,323 @@ ALTER TABLE ONLY public.trilha_progressoaula
 
 ALTER TABLE ONLY public.trilha_progressoaula
     ADD CONSTRAINT trilha_progressoaula_aula_id_c67ffc70_fk_trilha_aula_id FOREIGN KEY (aula_id) REFERENCES public.trilha_aula(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: pg_database_owner
+--
+
+GRANT USAGE ON SCHEMA public TO libras_app;
+GRANT USAGE ON SCHEMA public TO libras_relatorio;
+
+
+--
+-- Name: TABLE auth_group; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.auth_group TO libras_app;
+
+
+--
+-- Name: SEQUENCE auth_group_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.auth_group_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE auth_group_permissions; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.auth_group_permissions TO libras_app;
+
+
+--
+-- Name: SEQUENCE auth_group_permissions_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.auth_group_permissions_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE auth_permission; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.auth_permission TO libras_app;
+
+
+--
+-- Name: SEQUENCE auth_permission_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.auth_permission_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE contas_falhalogin; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.contas_falhalogin TO libras_app;
+
+
+--
+-- Name: SEQUENCE contas_falhalogin_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.contas_falhalogin_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE contas_registroauditoria; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.contas_registroauditoria TO libras_app;
+
+
+--
+-- Name: SEQUENCE contas_registroauditoria_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.contas_registroauditoria_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE contas_usuario; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.contas_usuario TO libras_app;
+
+
+--
+-- Name: TABLE contas_usuario_groups; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.contas_usuario_groups TO libras_app;
+
+
+--
+-- Name: SEQUENCE contas_usuario_groups_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.contas_usuario_groups_id_seq TO libras_app;
+
+
+--
+-- Name: SEQUENCE contas_usuario_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.contas_usuario_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE contas_usuario_user_permissions; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.contas_usuario_user_permissions TO libras_app;
+
+
+--
+-- Name: SEQUENCE contas_usuario_user_permissions_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.contas_usuario_user_permissions_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE dicionario_categoria; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.dicionario_categoria TO libras_app;
+
+
+--
+-- Name: SEQUENCE dicionario_categoria_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.dicionario_categoria_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE dicionario_sinal; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.dicionario_sinal TO libras_app;
+
+
+--
+-- Name: SEQUENCE dicionario_sinal_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.dicionario_sinal_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE django_admin_log; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.django_admin_log TO libras_app;
+
+
+--
+-- Name: SEQUENCE django_admin_log_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.django_admin_log_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE django_content_type; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.django_content_type TO libras_app;
+
+
+--
+-- Name: SEQUENCE django_content_type_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.django_content_type_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE django_migrations; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.django_migrations TO libras_app;
+
+
+--
+-- Name: SEQUENCE django_migrations_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.django_migrations_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE django_session; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.django_session TO libras_app;
+
+
+--
+-- Name: TABLE questionarios_alternativa; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.questionarios_alternativa TO libras_app;
+
+
+--
+-- Name: SEQUENCE questionarios_alternativa_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.questionarios_alternativa_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE questionarios_questao; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.questionarios_questao TO libras_app;
+
+
+--
+-- Name: SEQUENCE questionarios_questao_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.questionarios_questao_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE questionarios_tentativa; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.questionarios_tentativa TO libras_app;
+
+
+--
+-- Name: SEQUENCE questionarios_tentativa_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.questionarios_tentativa_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE trilha_aula; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.trilha_aula TO libras_app;
+
+
+--
+-- Name: SEQUENCE trilha_aula_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.trilha_aula_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE trilha_materialcomplementar; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.trilha_materialcomplementar TO libras_app;
+
+
+--
+-- Name: SEQUENCE trilha_materialcomplementar_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.trilha_materialcomplementar_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE trilha_modulo; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.trilha_modulo TO libras_app;
+
+
+--
+-- Name: SEQUENCE trilha_modulo_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.trilha_modulo_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE trilha_progressoaula; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.trilha_progressoaula TO libras_app;
+
+
+--
+-- Name: SEQUENCE trilha_progressoaula_id_seq; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT USAGE ON SEQUENCE public.trilha_progressoaula_id_seq TO libras_app;
+
+
+--
+-- Name: TABLE vw_progresso_modulo; Type: ACL; Schema: public; Owner: plataforma_libras
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.vw_progresso_modulo TO libras_app;
+GRANT SELECT ON TABLE public.vw_progresso_modulo TO libras_relatorio;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: plataforma_libras
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE plataforma_libras IN SCHEMA public GRANT USAGE ON SEQUENCES TO libras_app;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: plataforma_libras
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE plataforma_libras IN SCHEMA public GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES TO libras_app;
 
 
 --

@@ -7,17 +7,16 @@ Este arquivo guarda apenas o que não está em outro lugar. Mantenha-o com cerca
 ## Em andamento
 
 - As specs 0001 a 0005 estão implementadas: os 10 RFs da versão 1 funcionam, e `criar_conteudo_inicial` cadastra o conteúdo de demonstração.
-- A entrega de Lab. BD está em `docs/banco/` (`entrega-lab-bd.md`, `contas.sql`, `verificacao.sql`, `ddl.sql`). O relatório de andamento enviado para análise está em `docs/relatorios/`.
+- A entrega de Lab. BD está pronta: `docs/banco/entrega-lab-bd.pdf` (16 páginas, com os prompts no Anexo A) e `docs/banco/ddl.txt`, cópia do `ddl.sql` enviada junto. `contas.sql` e `verificacao.sql` já foram executados no banco local, e o `ddl.sql` inclui os `GRANT`s. Se o `ddl.sql` mudar, copie-o de novo para `ddl.txt`. Os campos de escolha têm `CHECK` no banco (`<tabela>_<campo>_valido`): uma opção nova exige nova migration e um novo `ddl.sql`. O PDF registra os prompts até o 30; se forem enviados outros antes da entrega, gere o PDF de novo. O relatório de andamento enviado para análise está em `docs/relatorios/`.
 - Cada prompt enviado à IA é registrado em `docs/prompts-ia.md`.
 - A prática com câmera (RF008) foi removida do produto: [ADR 0007](adr/0007-plataforma-sem-pratica-com-camera.md) aceito, substituindo o ADR 0004; PRD e `requisitos.md` atualizados. O código não muda.
 
 ## Próximos passos
 
 1. Aplicar no .docx as mudanças listadas em `docs/relatorios/mudancas-requisitos-sem-camera.md`. O `contexto-academico.md` ainda diz que o RF008 "fica fora"; a equipe decide se ajusta o texto.
-2. Rodar `docs/banco/contas.sql` e depois `verificacao.sql` como `postgres` (comandos no README). Em seguida, gerar o `ddl.sql` de novo, para incluir os `GRANT`s, e converter `entrega-lab-bd.md` em PDF, anexando `ddl.sql` e `prompts-ia.md`.
-3. Colocar os 27 vídeos e legendas em `amostras/` (lista em `amostras/LEIA-ME.md`) e rodar `python manage.py criar_conteudo_inicial`. Depois, completar pelo Admin a descrição da execução dos sinais e revisar o texto das questões.
-4. Testar a reprodução de um vídeo real no navegador.
-5. Se houver tempo, o RF012 (histórico, agora só dos questionários, com os dados da tabela `Tentativa`) e os bônus RF004, RF005 e RF002. Ao implementar o RF002, retirar o bloqueio de menores (RF-61).
+2. Colocar os 27 vídeos e legendas em `amostras/` (lista em `amostras/LEIA-ME.md`) e rodar `python manage.py criar_conteudo_inicial`. Depois, completar pelo Admin a descrição da execução dos sinais e revisar o texto das questões.
+3. Testar a reprodução de um vídeo real no navegador.
+4. Se houver tempo, o RF012 (histórico, agora só dos questionários, com os dados da tabela `Tentativa`) e os bônus RF004, RF005 e RF002. Ao implementar o RF002, retirar o bloqueio de menores (RF-61).
 
 ## Pendências
 

@@ -2,6 +2,7 @@ from uuid import uuid4
 
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models
+from django.db.models import Q
 
 from core.validadores import VideoMp4Validator
 
@@ -13,13 +14,17 @@ def caminho_video_sinal(instancia: "Sinal", nome_enviado: str) -> str:
     return f"sinais/{uuid4().hex}.mp4"
 
 
+class ClasseGramatical(models.TextChoices):
+    SUBSTANTIVO = "SUBSTANTIVO", "Substantivo"
+    VERBO = "VERBO", "Verbo"
+    ADJETIVO = "ADJETIVO", "Adjetivo"
+    ADVERBIO = "ADVERBIO", "Advérbio"
+    OUTROS = "OUTROS", "Outros"
+
+
 class Sinal(models.Model):
-    class ClasseGramatical(models.TextChoices):
-        SUBSTANTIVO = "SUBSTANTIVO", "Substantivo"
-        VERBO = "VERBO", "Verbo"
-        ADJETIVO = "ADJETIVO", "Adjetivo"
-        ADVERBIO = "ADVERBIO", "Advérbio"
-        OUTROS = "OUTROS", "Outros"
+    # No módulo porque a class Meta não enxerga os atributos da classe.
+    ClasseGramatical = ClasseGramatical
 
     termo = models.CharField(
         max_length=100,
@@ -47,6 +52,13 @@ class Sinal(models.Model):
         verbose_name = "sinal"
         verbose_name_plural = "sinais"
         ordering = ["termo"]
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(classe_gramatical="")
+                | Q(classe_gramatical__in=ClasseGramatical.values),
+                name="dicionario_sinal_classe_gramatical_valido",
+            ),
+        ]
         indexes = [
             # Acelera a busca por parte do termo (LIKE '%texto%'), que o B-tree não atende.
             GinIndex(

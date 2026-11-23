@@ -63,6 +63,13 @@ Tipos, tamanhos e `NOT NULL` em todas as colunas, mais restrições `CHECK` sobr
 | `questao_posicao_positiva` | `questionarios_questao` | `CHECK ((posicao > 0))` |
 | `tentativa_total_positivo` | `questionarios_tentativa` | `CHECK ((total > 0))` |
 | `contas_falhalogin_falhas_check` | `contas_falhalogin` | `CHECK ((falhas >= 0))` |
+| `trilha_progressoaula_status_valido` | `trilha_progressoaula` | `CHECK (status IN ('EM_ANDAMENTO', 'CONCLUIDA'))` |
+| `contas_usuario_deficiencia_valido` | `contas_usuario` | `CHECK (deficiencia = '' OR deficiencia IN ('NAO', 'AUDITIVA', 'VISUAL', 'OUTRA', 'NAO_INFORMAR'))` |
+| `contas_usuario_contato_libras_valido` | `contas_usuario` | `CHECK (contato_libras = '' OR contato_libras IN ('NUNCA', 'POUCOS_SINAIS', 'BASICO', 'EXPERIENTE'))` |
+| `dicionario_sinal_classe_gramatical_valido` | `dicionario_sinal` | `CHECK (classe_gramatical = '' OR classe_gramatical IN ('SUBSTANTIVO', 'VERBO', 'ADJETIVO', 'ADVERBIO', 'OUTROS'))` |
+| `contas_registroauditoria_acao_valido` | `contas_registroauditoria` | `CHECK (acao IN ('LOGIN_ADMIN', 'LOGOUT_ADMIN', 'CONSULTA_ALUNO', 'DESATIVACAO', 'REATIVACAO'))` |
+
+As cinco últimas restringem os campos de escolha aos valores das opções. O vazio só é aceito nos campos opcionais: administradores não informam deficiência nem contato com Libras, e a classe gramatical do sinal é opcional. O PostgreSQL guarda o `IN` como `= ANY (ARRAY[...])`, forma que aparece no `ddl.txt`.
 
 ### Integridade referencial
 
@@ -166,6 +173,33 @@ GRANT SELECT ON vw_progresso_modulo TO libras_relatorio;
 
 O `ALTER DEFAULT PRIVILEGES` estende as permissões de `libras_app` às tabelas que as próximas migrations criarem. A view roda com as permissões da dona, por isso `libras_relatorio` lê os percentuais sem ter acesso a `contas_usuario`. O script [`verificacao.sql`](verificacao.sql) prova as permissões: `libras_relatorio` lê a view e é recusado em `contas_usuario`; `libras_app` lê e grava dados, mas é recusado ao criar ou alterar tabelas.
 
+Saída de `verificacao.sql`, executado em 22/11/2026 logo depois de `contas.sql` (trechos):
+
+```text
+      conta       |         objeto          | privilegio | permitido
+------------------+-------------------------+------------+-----------
+ libras_app       | contas_usuario          | INSERT     | t
+ libras_app       | contas_usuario          | SELECT     | t
+ libras_app       | questionarios_tentativa | DELETE     | t
+ libras_app       | trilha_progressoaula    | UPDATE     | t
+ libras_app       | vw_progresso_modulo     | SELECT     | t
+ libras_relatorio | contas_usuario          | INSERT     | f
+ libras_relatorio | contas_usuario          | SELECT     | f
+ libras_relatorio | questionarios_tentativa | DELETE     | f
+ libras_relatorio | trilha_progressoaula    | UPDATE     | f
+ libras_relatorio | vw_progresso_modulo     | SELECT     | t
+
+       conta       | usa_schema | cria_objetos
+-------------------+------------+--------------
+ plataforma_libras | t          | t
+ libras_app        | t          | f
+ libras_relatorio  | t          | f
+
+NOTA:  OK: libras_relatorio não lê contas_usuario (permissão negada para tabela contas_usuario)
+NOTA:  OK: libras_app não cria tabelas (permissão negada para esquema public)
+NOTA:  OK: libras_app não altera tabelas (é necessário ser o dono da tabela contas_usuario)
+```
+
 ## 5. View `vw_progresso_modulo`
 
 Uma linha por aluno e por módulo com aulas publicadas: quantas aulas o módulo tem, quantas o aluno concluiu e o percentual arredondado. A própria aplicação lê a view para mostrar a barra de progresso da trilha (RF006).
@@ -194,9 +228,11 @@ Como só aulas publicadas entram na contagem, publicar ou despublicar uma aula r
 
 ## 6. Uso de inteligência artificial
 
-- **Ferramenta:** Claude Code (aplicativo desktop), da Anthropic.
+- **Ferramenta:** Claude e Claude Code (aplicativo desktop), da Anthropic.
 - **Modelo:** Claude Opus 5.5 (`claude-opus-5-5`).
 - **Prompts:** todos os prompts enviados estão transcritos, sem alterações e com a data, em `docs/prompts-ia.md`, anexado a esta entrega.
+
+A análise do documento de requisitos, o planejamento da versão 1 e a redação dos prompts enviados ao Claude Code foram feitos com apoio do Claude (Claude Opus 5.5), no claude.ai.
 
 | Nº | Data | Assunto do prompt |
 |---|---|---|
@@ -221,3 +257,12 @@ Como só aulas publicadas entram na contagem, publicar ou despublicar uma aula r
 | 19 | 22/11/2026 | Resumo do andamento para análise |
 | 20 | 22/11/2026 | Entrega de Lab. BD (contas, verificação, DDL) e conteúdo inicial |
 | 21 | 22/11/2026 | Aprovação do plano da entrega |
+| 22 | 22/11/2026 | Retirada da prática com câmera (RF008) do produto |
+| 23 | 22/11/2026 | Aprovação das mudanças de documentação |
+| 24 | 22/11/2026 | Aceite do ADR 0007 |
+| 25 | 22/11/2026 | Adiamento do commit |
+| 26 | 22/11/2026 | Estimativa do andamento do projeto |
+| 27 | 22/11/2026 | Próximos passos |
+| 28 | 22/11/2026 | Execução de `contas.sql` e `verificacao.sql`, novo `ddl.sql` e geração deste PDF |
+| 29 | 22/11/2026 | PDF sem o DDL completo, que segue em `ddl.txt` |
+| 30 | 22/11/2026 | Restrições `CHECK` nos campos de escolha (integridade de domínio) e atualização da entrega |

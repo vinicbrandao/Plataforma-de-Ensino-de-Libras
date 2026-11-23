@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from contas.exceptions import CadastroDeMenorIndisponivel, CpfJaCadastrado, EmailJaCadastrado
 from contas.forms import CadastroForm
-from contas.models import Usuario
+from contas.models import RegistroAuditoria, Usuario
 from contas.services import CadastroService
 
 from .fabricas import CPF_VALIDO_2, criar_aluno, dados_cadastro, dados_form_cadastro
@@ -75,6 +75,30 @@ class ConstraintsTests(TestCase):
 
         self.assertIsNone(admin.cpf)
         self.assertEqual(admin.email, "admin@exemplo.com")
+
+    def test_banco_recusa_deficiencia_fora_das_opcoes(self):
+        aluno = criar_aluno()
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            Usuario.objects.filter(pk=aluno.pk).update(deficiencia="MOTORA")
+
+    def test_banco_recusa_contato_libras_fora_das_opcoes(self):
+        aluno = criar_aluno()
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            Usuario.objects.filter(pk=aluno.pk).update(contato_libras="FLUENTE")
+
+    def test_administrador_pode_ficar_sem_deficiencia_e_contato(self):
+        admin = Usuario.objects.create_superuser(
+            email="admin@exemplo.com", password="x1", nome_completo="Admin"
+        )
+
+        self.assertEqual((admin.deficiencia, admin.contato_libras), ("", ""))
+
+    def test_banco_recusa_acao_de_auditoria_fora_das_opcoes(self):
+        admin = Usuario.objects.create_superuser(
+            email="admin@exemplo.com", password="x1", nome_completo="Admin"
+        )
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            RegistroAuditoria.objects.create(autor=admin, acao="EXCLUSAO")
 
 
 class CadastroFormTests(SimpleTestCase):

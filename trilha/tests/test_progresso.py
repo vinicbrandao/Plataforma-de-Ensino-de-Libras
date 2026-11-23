@@ -37,6 +37,12 @@ class TriggerDeConclusaoTests(MidiaTemporariaMixin, TestCase):
         with self.assertRaises(IntegrityError), transaction.atomic():
             ProgressoAula.objects.filter(aluno=self.aluno).update(status="EM_ANDAMENTO")
 
+    def test_banco_recusa_status_fora_das_opcoes(self):
+        ProgressoService.registrar_acesso(self.aluno, self.aula)
+
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            ProgressoAula.objects.filter(aluno=self.aluno).update(status="PAUSADA")
+
     def test_trigger_mantem_a_data_mesmo_se_alguem_tentar_mudar(self):
         progresso = ProgressoService.concluir(self.aluno, self.aula)
 

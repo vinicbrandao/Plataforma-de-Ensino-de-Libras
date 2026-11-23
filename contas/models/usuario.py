@@ -28,19 +28,26 @@ class UsuarioManager(BaseUserManager):
         return self._criar(email, password, **campos)
 
 
-class Usuario(AbstractBaseUser, PermissionsMixin):
-    class Deficiencia(models.TextChoices):
-        NAO = "NAO", "Não"
-        AUDITIVA = "AUDITIVA", "Sim, deficiência auditiva"
-        VISUAL = "VISUAL", "Sim, deficiência visual"
-        OUTRA = "OUTRA", "Sim, outra"
-        NAO_INFORMAR = "NAO_INFORMAR", "Prefiro não informar"
+# As choices ficam no módulo porque a class Meta não enxerga os atributos de Usuario;
+# Usuario.Deficiencia e Usuario.ContatoLibras continuam disponíveis pelos aliases.
+class Deficiencia(models.TextChoices):
+    NAO = "NAO", "Não"
+    AUDITIVA = "AUDITIVA", "Sim, deficiência auditiva"
+    VISUAL = "VISUAL", "Sim, deficiência visual"
+    OUTRA = "OUTRA", "Sim, outra"
+    NAO_INFORMAR = "NAO_INFORMAR", "Prefiro não informar"
 
-    class ContatoLibras(models.TextChoices):
-        NUNCA = "NUNCA", "Nunca tive contato"
-        POUCOS_SINAIS = "POUCOS_SINAIS", "Conheço poucos sinais"
-        BASICO = "BASICO", "Conheço o básico"
-        EXPERIENTE = "EXPERIENTE", "Tenho bastante experiência"
+
+class ContatoLibras(models.TextChoices):
+    NUNCA = "NUNCA", "Nunca tive contato"
+    POUCOS_SINAIS = "POUCOS_SINAIS", "Conheço poucos sinais"
+    BASICO = "BASICO", "Conheço o básico"
+    EXPERIENTE = "EXPERIENTE", "Tenho bastante experiência"
+
+
+class Usuario(AbstractBaseUser, PermissionsMixin):
+    Deficiencia = Deficiencia
+    ContatoLibras = ContatoLibras
 
     nome_completo = models.CharField("nome completo", max_length=120)
     email = models.EmailField("e-mail", max_length=200, unique=True)
@@ -96,6 +103,15 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
             models.CheckConstraint(
                 condition=Q(qual_deficiencia="") | Q(deficiencia="OUTRA"),
                 name="usuario_qual_deficiencia",
+            ),
+            # Vazio só para administradores; a obrigatoriedade do aluno está em usuario_aluno_completo.
+            models.CheckConstraint(
+                condition=Q(deficiencia="") | Q(deficiencia__in=Deficiencia.values),
+                name="contas_usuario_deficiencia_valido",
+            ),
+            models.CheckConstraint(
+                condition=Q(contato_libras="") | Q(contato_libras__in=ContatoLibras.values),
+                name="contas_usuario_contato_libras_valido",
             ),
         ]
 

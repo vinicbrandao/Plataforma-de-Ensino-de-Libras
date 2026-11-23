@@ -296,3 +296,50 @@ Aceito
 ```text
 Ainda não
 ```
+
+### 26. Estimativa de quanto do projeto foi feito
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Já fiz o commit. Claude, na nossa situação atual, quantos porcento do projeto você acha que foi feito?
+```
+
+### 27. Como prosseguir
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Ótimo trabalho. Como podemos prosseguir?
+```
+
+### 28. Início da finalização da entrega de Lab. BD
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Perfeito! Vamos começar pelo número 1.
+```
+
+### 29. PDF menor, sem o DDL completo
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Porfavor, envie um PDF menor, tire o Anexo B e envie o ddl.sql como TXT.
+Deixe que eu faço os commits a partir de agora.
+```
+
+### 30. Integridade de domínio nos campos de escolha e atualização da entrega
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Execute do início ao fim, sem parar entre as etapas. Leia AGENTS.md, docs/state.md, o ADR 0006 e docs/banco/entrega-lab-bd.md.
+
+1. Integridade de domínio: acrescente CheckConstraint nos models para restringir os campos de escolha aos valores permitidos, pelo menos ProgressoAula.status, Usuario.deficiencia, Usuario.contato_libras e Sinal.classe_gramatical (aceitando vazio onde o campo é opcional). Nomes no padrão <tabela>_<campo>_valido. Gere as migrations, rode migrate, check, test e makemigrations --check e corrija o que falhar.
+2. Regere docs/banco/ddl.sql com pg_dump --schema-only e copie para ddl.txt.
+3. Em entrega-lab-bd.md, acrescente as novas constraints na tabela de integridade de domínio. Na seção de uso de IA, acrescente: "A análise do documento de requisitos, o planejamento da versão 1 e a redação dos prompts enviados ao Claude Code foram feitos com apoio do Claude (Claude Opus 5.5), no claude.ai."
+4. Registre este prompt em docs/prompts-ia.md, regenere entrega-lab-bd.pdf com os prompts atualizados e atualize docs/state.md.
+5. Commit: "Reforça a integridade de domínio e atualiza a entrega de Lab. BD".
+```
