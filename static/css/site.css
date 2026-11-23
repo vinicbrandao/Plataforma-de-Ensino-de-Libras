@@ -403,3 +403,51 @@ progress {
 .correcao-certa { border-left: 4px solid var(--sucesso); }
 
 .correcao-errada { border-left: 4px solid var(--perigo); }
+
+/* Histórico */
+
+.busca input[type="date"] {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--borda);
+  border-radius: 0.4rem;
+  color: var(--texto);
+  background: var(--superficie);
+  font: inherit;
+}
+
+.filtros-historico { align-items: flex-start; }
+
+.filtros-historico .campo { flex: 1 1 10rem; }
+
+.filtros-historico .botao { align-self: flex-end; }
+
+.tabela-rolavel { overflow-x: auto; margin-bottom: 1.5rem; }
+
+.tabela {
+  width: 100%;
+  min-width: 32rem;
+  border-collapse: collapse;
+  background: var(--superficie);
+}
+
+.tabela caption {
+  padding-bottom: 0.5rem;
+  color: var(--suave);
+  text-align: left;
+}
+
+.tabela th,
+.tabela td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--borda);
+  text-align: left;
+  vertical-align: top;
+}
+
+.tabela th { font-weight: 600; }
+
+.tentativa-aprovada { color: var(--sucesso); font-weight: 600; }
+
+.tentativa-reprovada { color: var(--perigo); font-weight: 600; }

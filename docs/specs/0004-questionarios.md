@@ -131,7 +131,7 @@ Ganha o botão "Responder questionário", que leva a `questionarios:responder`.
 
 ### `TentativaAdmin`
 
-Somente leitura, sem inclusão, alteração nem exclusão. Lista aluno, aula, acertos, total, percentual, aprovação e data. Serve de consulta para a equipe enquanto o RF012 está fora do escopo.
+Somente leitura, sem inclusão, alteração nem exclusão. Lista aluno, aula, acertos, total, percentual, aprovação e data. Serve de consulta para a equipe; o aluno vê as próprias tentativas no histórico ([spec 0006](0006-historico-de-desempenho.md)).
 
 ## Limites aceitos nesta versão
 

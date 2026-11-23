@@ -29,3 +29,7 @@ class RespostasIncompletas(ErroDeQuestionario):
 
 class QuestionarioSemQuestoes(ErroDeQuestionario):
     mensagem = "Esta aula ainda não tem questões"
+
+
+class PeriodoInvalido(ErroDeQuestionario):
+    mensagem = "A data final não pode ser anterior à data inicial"

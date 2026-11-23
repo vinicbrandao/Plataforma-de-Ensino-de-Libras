@@ -10,7 +10,7 @@ O pacote `core` guarda a configuração (`settings.py`, `urls.py`, `wsgi.py`, `a
 |---|---|---|
 | `contas` | Usuário customizado (`AUTH_USER_MODEL`), cadastro, login, logout, bloqueio por tentativas e Admin de usuários | RF001, RF003, RF016 (bônus: RF002, RF004, RF005) |
 | `trilha` | Módulos, aulas, materiais complementares, progresso do aluno e tela da vídeo-aula | RF006, RF007, RF013 |
-| `questionarios` | Questões, alternativas, tentativas e correção | RF009, RF014 |
+| `questionarios` | Questões, alternativas, tentativas, correção e histórico do aluno | RF009, RF012, RF014 |
 | `dicionario` | Categorias, sinais e busca | RF010, RF015 |
 
 Os models listados no diagrama são uma previsão. Os campos e as regras definitivos ficam nas specs.

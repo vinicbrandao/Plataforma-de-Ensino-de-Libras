@@ -2,14 +2,14 @@
 
 - **Status:** Aceito
 - **Data:** 2026-11-21
-- **Especificações:** [Spec 0001: Fundação e contas](../specs/0001-fundacao-e-contas.md), [Spec 0002: Dicionário de sinais](../specs/0002-dicionario.md), [Spec 0003: Trilha, vídeo-aula e progresso](../specs/0003-trilha.md), [Spec 0004: Questionários e conclusão da aula](../specs/0004-questionarios.md), [Spec 0005: Conteúdo inicial para a demonstração](../specs/0005-conteudo-inicial.md); a ordem das próximas está em [docs/state.md](../state.md).
+- **Especificações:** [Spec 0001: Fundação e contas](../specs/0001-fundacao-e-contas.md), [Spec 0002: Dicionário de sinais](../specs/0002-dicionario.md), [Spec 0003: Trilha, vídeo-aula e progresso](../specs/0003-trilha.md), [Spec 0004: Questionários e conclusão da aula](../specs/0004-questionarios.md), [Spec 0005: Conteúdo inicial para a demonstração](../specs/0005-conteudo-inicial.md), [Spec 0006: Histórico de desempenho](../specs/0006-historico-de-desempenho.md); a ordem das próximas está em [docs/state.md](../state.md).
 - **Fonte:** [Documento de requisitos](../requisitos.md). Os IDs entre parênteses (RF001, RNF03, RS010…) são os desse documento.
 
 ## Objetivo
 
 Entregar o núcleo da plataforma: o visitante cria uma conta, entra, percorre a trilha de módulos, assiste às vídeo-aulas, responde aos questionários e consulta o dicionário de sinais. O administrador mantém todo o conteúdo e os usuários pelo Django Admin ([ADR 0003](../adr/0003-django-admin-como-area-administrativa.md)).
 
-A plataforma ensina por vídeos, questionários e o dicionário, sem prática de sinais com câmera: o RF008 foi removido do produto por decisão da equipe, e a aula é concluída com a aprovação no questionário ([ADR 0007](../adr/0007-plataforma-sem-pratica-com-camera.md)). Os lembretes (RF011) e o histórico (RF012) ficam para versões futuras.
+A plataforma ensina por vídeos, questionários e o dicionário, sem prática de sinais com câmera: o RF008 foi removido do produto por decisão da equipe, e a aula é concluída com a aprovação no questionário ([ADR 0007](../adr/0007-plataforma-sem-pratica-com-camera.md)). O histórico dos questionários (RF012) entrou depois do núcleo, e os lembretes (RF011) ficam para versões futuras.
 
 ## Perfis de uso
 
@@ -83,6 +83,16 @@ A plataforma ensina por vídeos, questionários e o dicionário, sem prática de
 - **RF-42:** Somente sinais ativos aparecem, em ordem alfabética, 20 por página. Sem resultados, aparece "Nenhum sinal encontrado. Revise o termo ou escolha outra categoria".
 - **RF-43:** Cada sinal mostra o termo, o vídeo curto sem áudio em loop, que pode ser pausado, e, quando cadastrados, a classe gramatical, a categoria e a descrição da execução.
 
+### Histórico de desempenho (RF012)
+
+- **RF-62:** O aluno consulta o histórico dos próprios questionários pelo menu de qualquer tela autenticada. O visitante é levado ao login.
+- **RF-63:** Cada tentativa mostra a data e a hora, o módulo, a aula, os acertos e o resultado (Aprovado ou Reprovado), da mais recente para a mais antiga, 20 por página.
+- **RF-64:** Os filtros de módulo, aula, resultado e período (data inicial e data final) são opcionais e podem ser combinados. Data final anterior à inicial é recusada com "A data final não pode ser anterior à data inicial".
+- **RF-65:** Para cada aula respondida, o histórico mostra a quantidade total de tentativas e a data da primeira aprovação.
+- **RF-66:** As tentativas de aulas despublicadas depois continuam no histórico.
+- **RF-67:** Sem nenhuma tentativa registrada, aparece "Nenhum questionário respondido até o momento".
+- **RF-68:** Cada aluno vê somente as próprias tentativas, verificadas no servidor, e o histórico não permite alterar nem excluir tentativas (RS004).
+
 ### Área administrativa (RF013 a RF016, pelo Django Admin)
 
 - **RF-44:** Somente administradores acessam a área administrativa. Não existe cadastro público de administrador: as contas são criadas pela equipe na implantação (RS009).
@@ -139,12 +149,12 @@ Entram simplificados, e cada um ganha uma spec antes de ser implementado:
 ## Fora do escopo desta versão
 
 - RF011 Lembretes e avisos por e-mail, e a rotina diária que os dispara.
-- RF012 Histórico de desempenho, agora restrito aos questionários: as tentativas são registradas (RF-38), mas não há tela para consultá-las.
+- No histórico (RF012), o detalhe de cada questão de uma tentativa antiga: a tentativa guarda só os números (spec 0004).
 - RF002, RF004 e RF005, se o bônus não for feito.
 - Envio real de e-mails, HTTPS, cópia de segurança diária (RNF07) e implantação em servidor.
 
 ## Critérios de conclusão
 
-- Cada requisito RF-01 a RF-61 e RNF-01 a RNF-07 tem ao menos um teste automatizado ou uma verificação manual descrita na spec.
+- Cada requisito RF-01 a RF-68 e RNF-01 a RNF-07 tem ao menos um teste automatizado ou uma verificação manual descrita na spec.
 - `python manage.py check`, `python manage.py test` e `python manage.py makemigrations --check` passam.
 - O fluxo completo funciona no navegador: o administrador cadastra um módulo, uma aula com vídeo, legenda e questão, publica a aula e cadastra um sinal; o aluno cria a conta, entra, abre a aula, é aprovado no questionário, vê a aula concluída e o progresso atualizado e encontra o sinal no dicionário.

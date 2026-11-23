@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Histórico · Plataforma de Ensino de Libras{% endblock %}
+
+{% block content %}
+<h1>Histórico de desempenho</h1>
+
+{% if not resumo %}
+  <p class="vazio" role="status">Nenhum questionário respondido até o momento</p>
+{% else %}
+  <form method="get" action="{% url 'questionarios:historico' %}" class="busca filtros-historico" novalidate>
+    {% for campo in form %}
+      <div class="campo{% if campo.errors %} campo-com-erro{% endif %}">
+        {{ campo.label_tag }}
+        {{ campo }}
+        {% if campo.errors %}
+          <div class="erro" id="{{ campo.auto_id }}_error">{% for erro in campo.errors %}<p>{{ erro }}</p>{% endfor %}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="botao">Filtrar</button>
+  </form>
+
+  {% if historico %}
+    {% with pagina=historico.pagina %}
+      {% if pagina.paginator.count %}
+        <div class="tabela-rolavel">
+          <table class="tabela">
+            <caption>{{ pagina.paginator.count }} tentativa{{ pagina.paginator.count|pluralize }}, da mais recente para a mais antiga</caption>
+            <thead>
+              <tr>
+                <th scope="col">Data e hora</th>
+                <th scope="col">Módulo</th>
+                <th scope="col">Aula</th>
+                <th scope="col">Acertos</th>
+                <th scope="col">Resultado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for tentativa in pagina %}
+                <tr>
+                  <td>{{ tentativa.realizada_em|date:"d/m/Y H:i" }}</td>
+                  <td>{{ tentativa.aula.modulo.titulo }}</td>
+                  <td>{{ tentativa.aula.titulo }}</td>
+                  <td>{{ tentativa.acertos }} de {{ tentativa.total }} ({{ tentativa.percentual }}%)</td>
+                  <td class="{% if tentativa.aprovada %}tentativa-aprovada{% else %}tentativa-reprovada{% endif %}">
+                    {% if tentativa.aprovada %}Aprovado{% else %}Reprovado{% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% if pagina.has_other_pages %}
+          <nav class="paginacao" aria-label="Páginas do histórico">
+            {% if pagina.has_previous %}
+              <a href="?{% if filtros %}{{ filtros }}&amp;{% endif %}pagina={{ pagina.previous_page_number }}">Anterior</a>
+            {% endif %}
+            <span>Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>
+            {% if pagina.has_next %}
+              <a href="?{% if filtros %}{{ filtros }}&amp;{% endif %}pagina={{ pagina.next_page_number }}">Próxima</a>
+            {% endif %}
+          </nav>
+        {% endif %}
+      {% else %}
+        <p class="vazio" role="status">Nenhuma tentativa encontrada com esses filtros</p>
+      {% endif %}
+    {% endwith %}
+  {% endif %}
+
+  <h2>Resumo por aula</h2>
+  <div class="tabela-rolavel">
+    <table class="tabela">
+      <caption>Total de tentativas e primeira aprovação de cada aula respondida</caption>
+      <thead>
+        <tr>
+          <th scope="col">Módulo</th>
+          <th scope="col">Aula</th>
+          <th scope="col">Tentativas</th>
+          <th scope="col">Primeira aprovação</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for linha in resumo %}
+          <tr>
+            <td>{{ linha.modulo }}</td>
+            <td>{{ linha.aula }}</td>
+            <td>{{ linha.tentativas }}</td>
+            <td>{% if linha.primeira_aprovacao %}{{ linha.primeira_aprovacao|date:"d/m/Y H:i" }}{% else %}Ainda não aprovado{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+{% endblock %}
