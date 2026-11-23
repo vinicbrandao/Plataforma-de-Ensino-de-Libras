@@ -6,7 +6,7 @@ Projeto em dupla do curso de Sistemas de Informação (Cesmac). A Plataforma de 
 
 - O documento de requisitos (Requisitos_da_Plataforma_de_Ensino_de_Libras_atualizado.docx, convertido em docs/requisitos.md) segue o template do professor e continua descrevendo o sistema completo: RFs, RNFs, requisitos de segurança, matriz de risco, matriz de rastreabilidade, pontos de função e protótipos.
 - O professor fez o papel de cliente na reunião de levantamento (Ata de Reunião 1, 15/10/2026). Toda decisão de escopo deve ser rastreável até a Ata ou registrada como decisão da equipe.
-- Os professores aconselharam ter pelo menos 7 requisitos funcionais realmente funcionando. O escopo da versão 1 está no PRD 0001: núcleo com RF001, RF003, RF006, RF007, RF009, RF010 e RF013, mais RF014, RF015 e RF016 pelo Django Admin. Os RFs mais complexos (RF008, RF011 e RF012) ficam fora.
+- Os professores aconselharam ter pelo menos 7 requisitos funcionais realmente funcionando. O escopo da versão 1 está no PRD 0001: núcleo com RF001, RF003, RF006, RF007, RF009, RF010 e RF013, mais RF014, RF015 e RF016 pelo Django Admin. Os RFs mais complexos ficam fora: RF011. O RF008 foi removido do produto por decisão da equipe (ADR 0007), e o RF012 entrou depois do núcleo (spec 0006).
 - Cada RF implementado precisa ser demonstrável no navegador e rastreável: RF do documento → RF-xx do PRD → spec → código → testes.
 
 ## Entrega do código (exigência do projeto)
@@ -33,5 +33,5 @@ Recomendação da equipe, não critério oficial. Como a disciplina avalia orien
   4. Contas e permissões para acessar a estrutura.
   5. Uma view.
 - A entrega é em PDF ou TXT. Migrations e código são aceitos só com o trecho relevante, não o arquivo inteiro.
-- O professor exige que o PDF informe o modelo de IA usado e os prompts utilizados. Todo prompt enviado ao Claude Code deve ser registrado em docs/prompts-ia.md, com a data e o modelo.
+- O professor exige que o PDF informe o modelo de IA usado e os prompts utilizados. Os prompts foram registrados em docs/prompts-ia.md até a entrega de Lab. BD (prompt 30); depois disso, o registro foi encerrado.
 - Proposta da versão 1: trigger em ProgressoAula (grava a data de conclusão e impede sair de Concluída), índice no termo do sinal, view vw_progresso_modulo, roles libras_app e libras_relatorio além do dono plataforma_libras, e índice único parcial garantindo uma única alternativa correta por questão. O material de entrega fica em docs/banco/.
