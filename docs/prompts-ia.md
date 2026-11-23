@@ -264,3 +264,35 @@ Etapa 4. Fechamento
 ```text
 Aprovado, execute
 ```
+
+### 22. Retirada da prática com câmera
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Claude, houve um engano, nós decidimos não fazer o uso da feature de resposta do usuário utilizando a câmera do próprio. A plataforma de libras será apenas vídeos disponibilizados pela plataforma com questionários e um dicionário. Baseado nisso, o que você mudaria no código?
+```
+
+### 23. Aprovação das mudanças de documentação
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Sim, faça
+```
+
+### 24. Aceite do ADR 0007
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Aceito
+```
+
+### 25. Adiamento do commit da retirada da câmera
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Ainda não
+```

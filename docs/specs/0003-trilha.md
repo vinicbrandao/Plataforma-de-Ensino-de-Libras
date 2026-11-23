@@ -2,7 +2,7 @@
 
 - **Status:** Implementado
 - **Requisitos:** RF-16 a RF-33, RF-45 a RF-50, RF-59 e RF-60 do [PRD 0001](../prd/0001-plataforma-libras-v1.md); RNF-02, RNF-03 e RNF-07
-- **Decisões:** [ADR 0001](../adr/0001-mvt-com-camada-de-services.md), [ADR 0003](../adr/0003-django-admin-como-area-administrativa.md), [ADR 0004](../adr/0004-conclusao-da-aula-pelo-questionario.md), [ADR 0006](../adr/0006-estruturas-do-banco-em-sql.md)
+- **Decisões:** [ADR 0001](../adr/0001-mvt-com-camada-de-services.md), [ADR 0003](../adr/0003-django-admin-como-area-administrativa.md), [ADR 0007](../adr/0007-plataforma-sem-pratica-com-camera.md), [ADR 0006](../adr/0006-estruturas-do-banco-em-sql.md)
 - **Depende de:** [Spec 0001](0001-fundacao-e-contas.md), [Spec 0002](0002-dicionario.md)
 
 ## Divisão com a spec 0004

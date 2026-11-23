@@ -1,6 +1,6 @@
 # ADR 0004: Na versão 1, a aula é concluída com a aprovação no questionário
 
-- **Status:** Aceito
+- **Status:** Substituído por [ADR 0007](0007-plataforma-sem-pratica-com-camera.md)
 - **Data:** 2026-11-21
 
 ## Contexto

@@ -1,6 +1,8 @@
 # Documento de Requisitos — Plataforma de Ensino de Libras
 
-> Convertido de `Requisitos_da_Plataforma_de_Ensino_de_Libras_atualizado.docx`. Em caso de divergência, o .docx é a fonte original. Os IDs (RF, RNF, RS) são os mesmos do documento.
+> Convertido de `Requisitos_da_Plataforma_de_Ensino_de_Libras_atualizado.docx`. Os IDs (RF, RNF, RS) são os mesmos do documento.
+>
+> **Atualização de 22/11/2026:** a prática de sinais com câmera (RF008) foi removida do produto por decisão da equipe ([ADR 0007](adr/0007-plataforma-sem-pratica-com-camera.md)). Este arquivo já reflete a mudança; o .docx precisa recebê-la (lista em `docs/relatorios/mudancas-requisitos-sem-camera.md`). Os IDs não foram renumerados.
 
 ## 1. Introdução
 
@@ -44,13 +46,13 @@ Para estabelecer a prioridade dos requisitos, nas seções 4 e 5, foram adotadas
 
 A Plataforma de Ensino de Libras é uma aplicação 100% digital desenvolvida para quebrar a barreira de comunicação entre pessoas surdas e ouvintes. O sistema é voltado para o público em geral (crianças, adultos, com ou sem deficiência) e tem o objetivo de ensinar o idioma de forma prática e interativa.
 
-Diferente de plataformas de ensino tradicionais em que o aluno apenas assiste passivamente, este sistema utiliza um Roadmap de ensino baseado em níveis e integra Reconhecimento de Imagem. A plataforma utilizará a câmera do dispositivo do usuário para avaliar se os gestos e sinais reproduzidos pelo aluno estão corretos. Além disso, o sistema conta com recursos de apoio, como um dicionário de vídeos e notificações de lembrete de estudos. O escopo foca exclusivamente em Libras.
+Diferente de plataformas de ensino tradicionais em que o aluno apenas assiste passivamente, este sistema utiliza um Roadmap de ensino baseado em níveis, com vídeo-aulas legendadas e um questionário ao fim de cada aula. Além disso, o sistema conta com recursos de apoio, como um dicionário de vídeos e notificações de lembrete de estudos. O escopo foca exclusivamente em Libras.
 
 ## 3. Requisitos funcionais (casos de uso)
 
 ### RF001 – Cadastro de usuário
 
-**Objetivo:** Cadastrar novos alunos na plataforma. A conta libera todas as aulas, a prática com câmera (RF008) e o dicionário (RF010). Sem conta, o visitante acessa apenas a landing page e a primeira aula do Módulo 1 (RF006).
+**Objetivo:** Cadastrar novos alunos na plataforma. A conta libera todas as aulas e o dicionário (RF010). Sem conta, o visitante acessa apenas a landing page e a primeira aula do Módulo 1 (RF006).
 
 **Atores:** Visitante.
 
@@ -196,7 +198,7 @@ Os e-mails enviados ao responsável não incluem dados sensíveis, como a inform
 
 ### RF003 – Login
 
-**Objetivo:** Permitir que usuários cadastrados acessem a plataforma de forma segura e encerrem a sessão. O login libera todas as aulas, a prática com câmera (RF008), o dicionário (RF010) e, para o administrador, a área administrativa (RF013 a RF016).
+**Objetivo:** Permitir que usuários cadastrados acessem a plataforma de forma segura e encerrem a sessão. O login libera todas as aulas, o dicionário (RF010) e, para o administrador, a área administrativa (RF013 a RF016).
 Atores: Aluno, Administrador.
 Prioridade: Essencial.
 Origem: Ata de Reunião 1, Tópico 5.
@@ -428,7 +430,7 @@ A trilha é exibida de forma adaptada a celulares e tablets (NF004).
 
 ### RF007 – Vídeo-aula
 
-**Objetivo:** Exibir a aula, composta por vídeo, materiais de apoio, prática com câmera e questionário, e registrar o andamento e a conclusão da aula pelo aluno.
+**Objetivo:** Exibir a aula, composta por vídeo, materiais de apoio e questionário, e registrar o andamento e a conclusão da aula pelo aluno.
 
 **Atores:** Visitante (apenas a primeira aula do Módulo 1), Aluno.
 
@@ -445,8 +447,6 @@ Vídeo da aula: String, endereço do arquivo de vídeo, obrigatório.¹
 Texto de apoio: String, até 2.000 caracteres, opcional.
 
 Materiais complementares: String, endereço de arquivos PDF ou de imagem, opcionais.²
-
-Prática com câmera: um ou mais sinais a reproduzir (RF008).
 
 Questionário: uma ou mais questões (RF009).
 
@@ -470,13 +470,13 @@ Legendas em português: Boolean (ativar ou desativar).⁴
 
 **Regras de negócio:**
 
-A aula é concluída quando o aluno conclui a prática com câmera (RF008) e é aprovado no questionário (RF009), em qualquer ordem. O vídeo não precisa ser assistido até o fim para iniciar a prática ou o questionário.
+A aula é concluída quando o aluno é aprovado no questionário (RF009). O vídeo não precisa ser assistido até o fim para iniciar o questionário.
 
 Ao abrir uma aula Não iniciada, o status passa a Em andamento. A data e a hora de início e de conclusão são registradas.
 
-Uma aula concluída permanece concluída; refazer a prática ou o questionário não altera o status.
+Uma aula concluída permanece concluída; refazer o questionário não altera o status.
 
-Na aula liberada ao visitante, é possível assistir ao vídeo, ver os materiais e responder ao questionário, sem registro. A prática com câmera exibe aviso de login.
+Na aula liberada ao visitante, é possível assistir ao vídeo, ver os materiais e responder ao questionário, sem registro.
 
 Ao concluir a aula, o sistema indica a próxima aula da trilha.
 
@@ -484,7 +484,7 @@ Em caso de falha no carregamento do vídeo, o sistema exibe mensagem e um botão
 
 **Mensagens:** “Aula concluída!”;
 
-“Faça login para praticar com a câmera e salvar seu progresso”;
+“Faça login para salvar seu progresso”;
 
 “Não foi possível carregar o vídeo. Tente novamente”.
 
@@ -492,65 +492,9 @@ Em caso de falha no carregamento do vídeo, o sistema exibe mensagem e um botão
 
 **Protótipo: tela Vídeo-aula (seção 9).**
 
-### RF008 – Prática de sinais com câmera
+### RF008 – Prática de sinais com câmera (removido)
 
-**Objetivo:** Utilizar a câmera do dispositivo e o reconhecimento de gestos para verificar se o aluno reproduz corretamente os sinais da aula.
-
-**Atores:** Aluno.
-
-**Prioridade:** Essencial.
-
-**Origem:** Ata de Reunião 1, Tópico 3.2.
-
-**Pré-condições:** Aluno autenticado (RF003), aula aberta (RF007) e dispositivo com câmera.
-
-**Elementos da prática:**
-
-Sinal a praticar: termo, vídeo de referência e gabarito.¹
-
-Resultado da tentativa: String: Correto ou Incorreto.²
-
-**Regras de preenchimento dos campos:**
-
-¹ Vem do cadastro de sinais (RF015), o mesmo usado no dicionário (RF010). O vídeo de referência é exibido ao lado da imagem do aluno, e os sinais são apresentados na ordem definida na aula (RF013).
-
-² É registrado com data, hora e índice de similaridade.
-
-**Regras de negócio:**
-
-A câmera só é ativada após a permissão do usuário no navegador, somente durante a prática, com indicação visível de que está ativa, e é desligada ao sair da tela (RS005). Funciona com webcam no computador e com a câmera frontal em celulares e tablets.
-
-Antes de avaliar, o sistema verifica se as mãos estão visíveis e se a iluminação é suficiente; se não estiverem, orienta o ajuste, sem contar como tentativa.
-
-A detecção é executada no navegador do aluno, a partir dos pontos de referência das mãos, e comparada com o gabarito do sinal. Nenhuma imagem é enviada ao servidor nem armazenada; o servidor registra apenas o resultado (NF006).
-
-O resultado é Correto quando o índice de similaridade atinge o limite mínimo, que é parametrizável. Pendência: o valor do limite e o conjunto de sinais avaliáveis serão definidos após testes com sinais reais, em versão posterior deste documento.
-
-Sinais com movimento complexo ou que dependam de expressão facial podem ter precisão menor e devem ser validados nos testes.
-
-O resultado é exibido em até 2 segundos (NF005), combinando cor, texto e ícone. O som de sucesso pode ser desligado pelo aluno (NF003).
-
-O número de tentativas é ilimitado, e cada tentativa é registrada (RF012).
-
-A prática da aula é concluída quando todos os sinais da aula forem reconhecidos como corretos ao menos uma vez.
-
-Sem câmera ou com a permissão negada, o sistema informa o motivo e como habilitar a câmera; a prática fica pendente e a aula permanece Em andamento.
-
-**Mensagens:** “Permita o acesso à câmera para praticar”;
-
-“Nenhuma câmera encontrada neste dispositivo”;
-
-“Posicione as mãos dentro da imagem”;
-
-“Melhore a iluminação do ambiente”;
-
-“Sinal correto!”;
-
-“Sinal não reconhecido. Observe o vídeo de referência e tente novamente”.
-
-**Alteração e exclusão:** Não se aplica. O resultado é gerado pelo sistema e não pode ser alterado.
-
-**Protótipo: tela Vídeo-aula (seção 9).**
+**Removido do produto em 22/11/2026, por decisão da equipe** ([ADR 0007](adr/0007-plataforma-sem-pratica-com-camera.md)). A plataforma ensina por vídeos, questionários e o dicionário, sem reconhecimento de gestos pela câmera. O ID é mantido para não quebrar as referências.
 
 ### RF009 – Questionário
 
@@ -638,8 +582,6 @@ Os resultados são exibidos em ordem alfabética, 20 por página.
 
 O dicionário fica acessível pelo menu em qualquer tela autenticada. O visitante que tenta acessá-lo é direcionado ao login.
 
-O cadastro de sinais é o mesmo usado como referência na prática com câmera (RF008).
-
 **Mensagens:** “Digite ao menos 2 caracteres”; “Nenhum sinal encontrado. Revise o termo ou escolha outra categoria”.
 
 **Alteração e exclusão:** Não se aplica.
@@ -686,7 +628,7 @@ Protótipo: não possui tela própria; a opção de lembretes fica na tela Ediç
 
 ### RF012 – Histórico de desempenho
 
-**Objetivo:** Permitir que o aluno consulte o histórico de suas práticas com câmera e de seus questionários, acompanhando sua evolução.
+**Objetivo:** Permitir que o aluno consulte o histórico de seus questionários, acompanhando sua evolução.
 
 **Atores:** Aluno.
 
@@ -700,23 +642,21 @@ Protótipo: não possui tela própria; a opção de lembretes fica na tela Ediç
 
 Módulo e aula: Seleção única, opcional.
 
-Tipo: Seleção única: Prática com câmera ou Questionário, opcional.
-
-Resultado: Seleção única: Correto, Incorreto, Aprovado ou Reprovado, opcional.
+Resultado: Seleção única: Aprovado ou Reprovado, opcional.
 
 Período: Date (DD/MM/AAAA), data inicial e data final, opcionais.¹
 
 **Dados exibidos de cada tentativa:**
 
-Data e hora, módulo, aula e tipo: da tentativa.
+Data e hora, módulo e aula: da tentativa.
 
-Resultado: Correto ou Incorreto na prática; acertos e Aprovado ou Reprovado no questionário.²
+Resultado: acertos e Aprovado ou Reprovado.²
 
 **Regras de preenchimento dos campos:**
 
 ¹ A data final não pode ser anterior à data inicial.
 
-² Os dados vêm das tentativas registradas nos RF008 e RF009 e não podem ser alterados nem excluídos.
+² Os dados vêm das tentativas registradas no RF009 e não podem ser alterados nem excluídos.
 
 **Regras de negócio:**
 
@@ -728,7 +668,7 @@ Para cada aula, o sistema exibe a quantidade total de tentativas e a data da pri
 
 Tentativas de aulas que foram despublicadas depois continuam sendo exibidas.
 
-**Mensagens:** “Nenhuma prática realizada até o momento”;
+**Mensagens:** “Nenhum questionário respondido até o momento”;
 
 “A data final não pode ser anterior à data inicial”.
 
@@ -772,9 +712,7 @@ Legenda em português: String, endereço do arquivo, obrigatório para publicar.
 
 Texto de apoio: String, até 2.000 caracteres, opcional.
 
-Sinais da prática: Seleção múltipla, um ou mais sinais, obrigatório para publicar.⁵
-
-Situação: Seleção única: Publicada ou Não publicada; padrão Não publicada.⁶
+Situação: Seleção única: Publicada ou Não publicada; padrão Não publicada.⁵
 
 **Cadastro de material complementar:**
 
@@ -782,7 +720,7 @@ Aula: Seleção única, obrigatória.
 
 Título: String, até 100 caracteres, obrigatório.
 
-Arquivo: String, endereço do arquivo PDF ou de imagem, obrigatório.⁷
+Arquivo: String, endereço do arquivo PDF ou de imagem, obrigatório.⁶
 
 **Regras de preenchimento dos campos:**
 
@@ -794,11 +732,9 @@ Arquivo: String, endereço do arquivo PDF ou de imagem, obrigatório.⁷
 
 ⁴ Formato SRT ou VTT, em português e sincronizada com o vídeo (NF003).
 
-⁵ Sinais do cadastro do dicionário que possuem gabarito (RF015), na ordem em que serão praticados (RF008).
+⁵ Uma aula só pode ser publicada se tiver vídeo, legenda e ao menos uma questão (RF014). Somente aulas publicadas aparecem na trilha (RF006).
 
-⁶ Uma aula só pode ser publicada se tiver vídeo, legenda, ao menos um sinal da prática e ao menos uma questão (RF014). Somente aulas publicadas aparecem na trilha (RF006).
-
-⁷ PDF, JPG ou PNG, de até 10 MB.
+⁶ PDF, JPG ou PNG, de até 10 MB.
 
 **Regras de negócio:**
 
@@ -822,7 +758,7 @@ Ao clicar em Cancelar, é exibida a mensagem de confirmação do RF001.
 
 “Posição já cadastrada”;
 
-“A aula precisa de vídeo, legenda, sinais e questões para ser publicada”;
+“A aula precisa de vídeo, legenda e questões para ser publicada”;
 
 “Não é possível excluir um módulo que possui aulas”;
 
@@ -890,7 +826,7 @@ A listagem exibe as questões por aula, em ordem de posição.
 
 ### RF015 – Gestão do dicionário
 
-**Objetivo:** Permitir que o administrador cadastre e mantenha as categorias e os sinais usados no dicionário (RF010) e na prática com câmera (RF008).
+**Objetivo:** Permitir que o administrador cadastre e mantenha as categorias e os sinais usados no dicionário (RF010) e nas questões (RF014).
 
 **Atores:** Administrador.
 
@@ -918,9 +854,7 @@ Descrição da execução: String, até 500 caracteres, opcional.
 
 Vídeo do sinal: String, endereço do arquivo de vídeo, obrigatório.⁴
 
-Gabarito do sinal: JSON, opcional.⁵
-
-Situação: Seleção única: Ativo ou Inativo; padrão Ativo.⁶
+Situação: Seleção única: Ativo ou Inativo; padrão Ativo.⁵
 
 **Regras de preenchimento dos campos:**
 
@@ -932,9 +866,7 @@ Situação: Seleção única: Ativo ou Inativo; padrão Ativo.⁶
 
 ⁴ Vídeo curto em MP4, adequado à reprodução em loop, com os mesmos padrões de qualidade do vídeo da aula (RF013).
 
-⁵ Gerado pela captura do sinal com a câmera na área administrativa, a partir dos pontos de referência das mãos. É obrigatório para que o sinal possa ser usado na prática de uma aula (RF013).
-
-⁶ Sinal inativo não aparece no dicionário. Um sinal usado em aula publicada não pode ser inativado.
+⁵ Sinal inativo não aparece no dicionário. Um sinal usado em questão de aula publicada não pode ser inativado.
 
 **Regras de negócio:**
 
@@ -954,7 +886,7 @@ A listagem de sinais exibe 20 registros por página, em ordem alfabética, com p
 
 “Existem sinais ativos nesta categoria”;
 
-“Este sinal é usado em aulas e não pode ser inativado ou excluído”; “Cadastre o gabarito para usar este sinal na prática”;
+“Este sinal é usado em aulas e não pode ser inativado ou excluído”;
 
 “Cadastro realizado com sucesso”.
 
@@ -1016,14 +948,14 @@ Protótipo: tela Área Administrativa (seção 9).
 
 | ID | Requisito | Descrição | Prioridade |
 |---|---|---|---|
-| [RNF01] | Usabilidade, facilidade de uso | A interface deve ser intuitiva, com dicas (hint) nos botões, ajuda nas telas de prática e de questionário e acesso ao dicionário pelo menu. Qualquer tela principal deve ser alcançada em no máximo 3 cliques a partir da plataforma. | Importante |
+| [RNF01] | Usabilidade, facilidade de uso | A interface deve ser intuitiva, com dicas (hint) nos botões, ajuda na tela de questionário e acesso ao dicionário pelo menu. Qualquer tela principal deve ser alcançada em no máximo 3 cliques a partir da plataforma. | Importante |
 | [RNF02] | Usabilidade, mensagens | Toda ação que não puder ser realizada deve exibir mensagem específica junto ao campo ou à ação, sem apagar os dados já preenchidos. | Importante |
 | [RNF03] | Acessibilidade | Todo conteúdo deve ser compreensível sem áudio: os vídeos têm legenda em português e nenhuma informação é transmitida apenas por som ou apenas por cor. A interface segue as WCAG 2.1, nível AA, incluindo contraste, navegação e controle do vídeo pelo teclado e texto alternativo em imagens. | Essencial |
 | [RNF04] | Distribuição, compatibilidade | O sistema é uma aplicação web, sem instalação, compatível com as duas versões mais recentes do Chrome, Firefox, Edge e Safari, em computador e celular, com layout responsivo a partir de 360 px de largura. | Essencial |
-| [RNF05] | Desempenho | As páginas devem carregar em até 3 segundos em conexão de 10 Mbps. O resultado da prática com câmera (RF008) deve ser exibido em até 2 segundos após o aluno concluir o sinal. | Importante |
-| [RNF06] | Privacidade, adequação à LGPD | O sistema coleta apenas os dados previstos nos requisitos funcionais, permite não informar a deficiência, registra data e hora dos consentimentos (RF001 e RF002), não exibe a deficiência ao administrador (RF016) nem a envia por e-mail (RF011), e não grava nem armazena imagens da câmera (RF008). | Essencial |
+| [RNF05] | Desempenho | As páginas devem carregar em até 3 segundos em conexão de 10 Mbps. | Importante |
+| [RNF06] | Privacidade, adequação à LGPD | O sistema coleta apenas os dados previstos nos requisitos funcionais, permite não informar a deficiência, registra data e hora dos consentimentos (RF001 e RF002), não exibe a deficiência ao administrador (RF016) nem a envia por e-mail (RF011). | Essencial |
 | [RNF07] | Confiabilidade | O banco de dados deve ter cópia de segurança diária, mantida por 7 dias. | Importante |
-| [RNF08] | Hardware e software, usuário | Dispositivo com navegador compatível (NF004) e conexão à internet. Para a prática com câmera (RF008), o dispositivo precisa de câmera. | Essencial |
+| [RNF08] | Hardware e software, usuário | Dispositivo com navegador compatível (NF004) e conexão à internet. | Essencial |
 | [RNF09] | Hardware e software, servidor | Servidor capaz de executar a aplicação web e o banco de dados PostgreSQL, com espaço de armazenamento para os vídeos e arquivos das aulas e do dicionário, serviço de envio de e-mail (RF002, RF004, RF005 e RF011) e agendamento da rotina diária (RF002 e RF011). | Essencial |
 
 ## 5. Requisito de Segurança
@@ -1034,7 +966,7 @@ Protótipo: tela Área Administrativa (seção 9).
 | [RS002] | Perigo: enumeração de contas, quando as mensagens do login (RF003) ou da recuperação de senha (RF004) revelam se um e-mail ou CPF está cadastrado. | Exibir a mesma mensagem esteja o login ou o e-mail cadastrado ou não, e exibir “Usuário desativado” somente com a senha correta. |
 | [RS003] | Perigo: vazamento de senhas armazenadas (RF001, RF004 e RF005). | Armazenar senhas somente como hash com salt, nunca em texto puro, e não registrar senhas em logs nem no histórico de alterações. |
 | [RS004] | Perigo: exposição de dados pessoais e sensíveis, como CPF, deficiência e dados de menores e responsáveis (RF001, RF002, RF005, RF012 e RF016). | Permitir a cada aluno acessar apenas os próprios dados, verificando no servidor; usar HTTPS em todas as páginas; exibir o CPF de forma parcial ao administrador; registrar as consultas do administrador; nomear a foto de perfil sem dados pessoais; e separar as permissões do banco de dados por perfil de acesso. |
-| [RS005] | Perigo: captura ou armazenamento indevido de imagens da câmera (RF008). | Ativar a câmera somente com permissão do usuário e durante a prática, indicar quando está ativa, processar as imagens no navegador e não gravar, enviar nem armazenar imagens. |
+| [RS005] | Removido: o perigo de captura de imagens da câmera deixou de existir com a retirada do RF008 ([ADR 0007](adr/0007-plataforma-sem-pratica-com-camera.md)). | Não se aplica. |
 | [RS006] | Perigo: cadastro de menor de idade sem o conhecimento do responsável (RF002). | Exigir o termo de autorização e enviar e-mail de aviso ao responsável no cadastro e a cada alteração dos seus dados. |
 | [RS007] | Perigo: alteração de dados do perfil ou do responsável sem rastreio (RF002 e RF005). | Registrar toda alteração em histórico que não pode ser alterado nem excluído e exigir a senha atual para trocar a senha. |
 | [RS008] | Perigo: reutilização ou interceptação do link de redefinição de senha (RF004). | Usar código aleatório de uso único, válido por 30 minutos e invalidado por nova solicitação, e limitar a 3 solicitações por hora. |
@@ -1050,13 +982,13 @@ Protótipo: tela Área Administrativa (seção 9).
 | Frequente<br>(A) |  |  |  |  |
 | Provável<br>(B) |  |  |  |  |
 | Ocasional<br>(C) | RS004,<br>RS006 | RS001 | RS010 |  |
-| Remoto<br>(D) | RS003 | RS008,<br>RS009,<br>RS011,<br>RS012 | RS007 | RS005 |
+| Remoto<br>(D) | RS003 | RS008,<br>RS009,<br>RS011,<br>RS012 | RS007 |  |
 | Improvável<br>(E) | RS002 |  |  |  |
-| Eliminado<br>(F) |  |  |  |  |
+| Eliminado<br>(F) |  |  |  | RS005 |
 
 ## 7. Matriz de Rastreabilidade – Requisito Funcional
 
-| ID de requisitos | RF001 | RF002 | RF003 | RF004 | RF005 | RF006 | RF007 | RF008 | RF009 | RF010 | RF011 | RF012 | RF013 | RF014 | RF015 | RF016 |
+| ID de requisitos | RF001 | RF002 | RF003 | RF004 | RF005 | RF006 | RF007 | RF008 (removido) | RF009 | RF010 | RF011 | RF012 | RF013 | RF014 | RF015 | RF016 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | RF001 |  | D |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | RF002 | D |  |  |  |  |  |  |  |  |  |  |  |  |  |  | R |
@@ -1064,12 +996,12 @@ Protótipo: tela Área Administrativa (seção 9).
 | RF004 | D |  | R |  | R |  |  |  |  |  |  |  |  |  |  | R |
 | RF005 | D | D | D | R |  | R |  |  |  |  |  |  |  |  |  | R |
 | RF006 | D |  | R |  | R |  | D |  |  |  |  |  | D |  |  |  |
-| RF007 | D |  | R |  |  | D |  | D | D |  |  |  | D |  |  |  |
-| RF008 |  |  | D |  |  |  | D |  |  | R |  |  | D |  | D |  |
+| RF007 | D |  | R |  |  | D |  |  | D |  |  |  | D |  |  |  |
+| RF008 (removido) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | RF009 |  |  |  |  |  |  | D |  |  | R |  |  |  | D |  |  |
-| RF010 |  |  | D |  |  |  |  | R | R |  |  |  | R |  | D |  |
+| RF010 |  |  | D |  |  |  |  |  | R |  |  |  | R |  | D |  |
 | RF011 | D | D |  |  | D | D | D |  |  |  |  |  |  |  |  | D |
-| RF012 |  |  | D |  |  |  |  | D | D |  |  |  | R | R |  |  |
+| RF012 |  |  | D |  |  |  |  |  | D |  |  |  | R | R |  |  |
 | RF013 |  |  | D |  |  |  |  |  |  | R |  | R |  | D | D |  |
 | RF014 |  |  | D |  |  |  |  |  |  |  |  | R | D |  | D |  |
 | RF015 |  |  | D |  |  |  |  |  |  |  |  |  |  |  |  |  |
@@ -1140,7 +1072,7 @@ Os valores acima serão utilizados para calcular o número de pontos de função
 | RF005 | MÉDIA | 7 | 0 | 4 | 12 | 4 | 27 |
 | RF006 | BAIXA | 0 | 0 | 7 | 0 | 0 | 7 |
 | RF007 | MÉDIA | 7 | 0 | 0 | 6 | 4 | 17 |
-| RF008 | MÉDIA | 7 | 0 | 5 | 4 | 3 | 19 |
+| RF008 (removido) | — | 0 | 0 | 0 | 0 | 0 | 0 |
 | RF009 | BAIXA | 7 | 0 | 5 | 0 | 3 | 15 |
 | RF010 | BAIXA | 0 | 0 | 0 | 0 | 7 | 7 |
 | RF011 | MÉDIA | 7 | 0 | 14 | 3 | 0 | 24 |

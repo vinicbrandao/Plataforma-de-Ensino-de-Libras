@@ -9,7 +9,7 @@
 
 Entregar o núcleo da plataforma: o visitante cria uma conta, entra, percorre a trilha de módulos, assiste às vídeo-aulas, responde aos questionários e consulta o dicionário de sinais. O administrador mantém todo o conteúdo e os usuários pelo Django Admin ([ADR 0003](../adr/0003-django-admin-como-area-administrativa.md)).
 
-A prática com câmera (RF008), os lembretes (RF011) e o histórico (RF012) ficam para versões futuras. Por isso, nesta versão a aula é concluída com a aprovação no questionário ([ADR 0004](../adr/0004-conclusao-da-aula-pelo-questionario.md)).
+A plataforma ensina por vídeos, questionários e o dicionário, sem prática de sinais com câmera: o RF008 foi removido do produto por decisão da equipe, e a aula é concluída com a aprovação no questionário ([ADR 0007](../adr/0007-plataforma-sem-pratica-com-camera.md)). Os lembretes (RF011) e o histórico (RF012) ficam para versões futuras.
 
 ## Perfis de uso
 
@@ -62,7 +62,7 @@ A prática com câmera (RF008), os lembretes (RF011) e o histórico (RF012) fica
 - **RF-27:** A legenda já começa ativada para o aluno que informou deficiência auditiva no cadastro.
 - **RF-28:** A aula lista os materiais complementares, que podem ser visualizados e baixados. Acessá-los não é condição para concluir a aula.
 - **RF-29:** Ao abrir pela primeira vez uma aula Não iniciada, ela passa a Em andamento, e a data e a hora de início ficam registradas.
-- **RF-30:** A aula é concluída quando o aluno é aprovado no questionário. A data e a hora da conclusão ficam registradas, o sistema exibe "Aula concluída!" e indica a próxima aula da trilha ([ADR 0004](../adr/0004-conclusao-da-aula-pelo-questionario.md)).
+- **RF-30:** A aula é concluída quando o aluno é aprovado no questionário. A data e a hora da conclusão ficam registradas, o sistema exibe "Aula concluída!" e indica a próxima aula da trilha ([ADR 0007](../adr/0007-plataforma-sem-pratica-com-camera.md)).
 - **RF-31:** Uma aula concluída continua concluída, mesmo que o aluno refaça o questionário e seja reprovado.
 - **RF-32:** Na aula liberada ao visitante, ele assiste ao vídeo, vê os materiais e responde ao questionário, sem nenhum registro. A aula exibe "Faça login para salvar seu progresso".
 - **RF-33:** Se o vídeo não carregar, o sistema exibe "Não foi possível carregar o vídeo. Tente novamente" e um botão para tentar de novo.
@@ -88,14 +88,14 @@ A prática com câmera (RF008), os lembretes (RF011) e o histórico (RF012) fica
 - **RF-44:** Somente administradores acessam a área administrativa. Não existe cadastro público de administrador: as contas são criadas pela equipe na implantação (RS009).
 - **RF-45:** O administrador cadastra módulos com título único de até 100 caracteres, descrição de até 500 e posição inteira positiva, que também é única. A comparação de títulos ignora maiúsculas, minúsculas e espaços repetidos (RF013).
 - **RF-46:** O administrador cadastra aulas com módulo, título único dentro do módulo, descrição, posição única dentro do módulo, vídeo MP4, legenda em português no formato WebVTT (.vtt), texto de apoio de até 2.000 caracteres e situação, que começa como Não publicada (RF013).
-- **RF-47:** Uma aula só é publicada se tiver vídeo, legenda e ao menos uma questão. Caso contrário, aparece "A aula precisa de vídeo, legenda e questões para ser publicada". Os sinais da prática não são exigidos nesta versão (RF013).
+- **RF-47:** Uma aula só é publicada se tiver vídeo, legenda e ao menos uma questão. Caso contrário, aparece "A aula precisa de vídeo, legenda e questões para ser publicada" (RF013).
 - **RF-48:** O administrador pode abrir uma aula não publicada para vê-la como o aluno a verá (RF013).
 - **RF-49:** Um módulo só é excluído se não tiver aulas. Uma aula com progresso registrado não é excluída, apenas despublicada, e despublicar preserva o progresso (RF013).
 - **RF-50:** O administrador cadastra materiais complementares em uma aula, com título e arquivo PDF, JPG ou PNG de até 10 MB (RF013).
 - **RF-51:** O administrador cadastra questões em uma aula, com enunciado de até 500 caracteres, sinal do dicionário opcional, posição única na aula e de 2 a 5 alternativas de até 200 caracteres, com exatamente uma correta (RF014).
 - **RF-52:** A última questão de uma aula publicada não pode ser excluída. Alterar ou excluir uma questão não muda as tentativas já registradas (RF014).
 - **RF-53:** O administrador cadastra categorias com nome único de até 60 caracteres e situação Ativa ou Inativa. Uma categoria com sinais ativos não é inativada, e uma categoria com sinais não é excluída (RF015).
-- **RF-54:** O administrador cadastra sinais com termo único de até 100 caracteres, classe gramatical, categoria, descrição de até 500 caracteres, vídeo MP4 e situação. Sinais não têm gabarito de câmera nesta versão. A unicidade de termos e nomes ignora maiúsculas, minúsculas e acentos (RF015).
+- **RF-54:** O administrador cadastra sinais com termo único de até 100 caracteres, classe gramatical, categoria, descrição de até 500 caracteres, vídeo MP4 e situação. A unicidade de termos e nomes ignora maiúsculas, minúsculas e acentos (RF015).
 - **RF-55:** Um sinal usado em questão não é excluído, e um sinal usado em questão de aula publicada não é inativado (RF015).
 - **RF-56:** O administrador consulta os alunos, com nome, e-mail, data de nascimento, data de cadastro e CPF parcial (***.456.789-**), sem a informação sobre deficiência. O único campo alterável é a situação, e usuários não são excluídos (RF016).
 - **RF-57:** A pesquisa de alunos aceita o CPF completo, com ou sem pontuação, parte do nome, e-mail e situação, combinados (RF016).
@@ -128,17 +128,18 @@ Entram simplificados, e cada um ganha uma spec antes de ser implementado:
 - A sessão expira sem aviso prévio (RF003, RS010).
 - O vídeo usa o player HTML5 nativo, sem qualidade adaptativa e sem retomar do ponto em que parou (RF007).
 - O dicionário não sugere termos enquanto o aluno digita (RF010).
-- A publicação da aula exige vídeo, legenda e uma questão, sem exigir sinais da prática (RF013).
-- Os sinais não têm gabarito da câmera (RF015).
 - A legenda da aula aceita só WebVTT (.vtt), o formato lido pelo player nativo; SRT não é aceito (RF013).
 - Menores de 18 anos não conseguem se cadastrar até o RF002 ser implementado (RF-61).
 - A área administrativa usa a interface padrão do Django Admin. Comportamentos de tela do documento, como a confirmação ao clicar em Cancelar (RF013), seguem o padrão do Admin ([ADR 0003](../adr/0003-django-admin-como-area-administrativa.md)).
 
+## Removido do produto
+
+- RF008 Prática de sinais com câmera, com o gabarito dos sinais (RF015), os sinais da prática nas aulas (RF013) e os requisitos ligados à câmera (RNF05, RNF06, RNF08 e RS005), por decisão da equipe ([ADR 0007](../adr/0007-plataforma-sem-pratica-com-camera.md)).
+
 ## Fora do escopo desta versão
 
-- RF008 Prática de sinais com câmera, incluindo a captura do gabarito no cadastro de sinais.
 - RF011 Lembretes e avisos por e-mail, e a rotina diária que os dispara.
-- RF012 Histórico de desempenho: as tentativas do questionário são registradas (RF-38), mas não há tela para consultá-las.
+- RF012 Histórico de desempenho, agora restrito aos questionários: as tentativas são registradas (RF-38), mas não há tela para consultá-las.
 - RF002, RF004 e RF005, se o bônus não for feito.
 - Envio real de e-mails, HTTPS, cópia de segurança diária (RNF07) e implantação em servidor.
 

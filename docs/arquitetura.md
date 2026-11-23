@@ -44,7 +44,7 @@ flowchart LR
     Questao -.->|sinal opcional| Sinal
     Tentativa -->|aluno| Usuario
     Tentativa -->|aula| Aula
-    questionarios ==>|"aprovação conclui a aula (ADR 0004)"| trilha
+    questionarios ==>|"aprovação conclui a aula (ADR 0007)"| trilha
 ```
 
 ### Dependências entre apps
@@ -52,7 +52,7 @@ flowchart LR
 - Todos os apps podem usar `core/validadores.py`.
 - `dicionario` não depende de nenhum outro app.
 - `trilha` depende de `contas` (o aluno do progresso).
-- `questionarios` depende de `trilha` (a aula) e de `dicionario` (o sinal da questão). Na aprovação, chama o service de progresso da `trilha` para concluir a aula ([ADR 0004](adr/0004-conclusao-da-aula-pelo-questionario.md)).
+- `questionarios` depende de `trilha` (a aula) e de `dicionario` (o sinal da questão). Na aprovação, chama o service de progresso da `trilha` para concluir a aula ([ADR 0007](adr/0007-plataforma-sem-pratica-com-camera.md)).
 - `trilha` e `dicionario` não importam `questionarios`. Para exigir ao menos uma questão antes de publicar (RF013) e para barrar a inativação de sinal em uso (RF015), eles consultam pelo nome reverso `questoes`, sem importar classes do outro app. Assim os imports não formam ciclo.
 - O questionário tem página própria (`questionarios:responder`). A tela da aula só aponta para ela com `{% url %}`, sem importar o app.
 - Todo model que aponta para o usuário usa `settings.AUTH_USER_MODEL`.

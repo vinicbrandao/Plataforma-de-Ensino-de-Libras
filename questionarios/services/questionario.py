@@ -45,7 +45,7 @@ def _eh_aluno(usuario) -> bool:
 
 
 class QuestionarioService:
-    """Questionário da aula: correção, tentativa e conclusão (RF009, ADR 0004)."""
+    """Questionário da aula: correção, tentativa e conclusão (RF009, ADR 0007)."""
 
     @staticmethod
     def aprovado(acertos: int, total: int) -> bool:
