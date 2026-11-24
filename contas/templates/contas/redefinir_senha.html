@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Nova senha · Plataforma de Ensino de Libras{% endblock %}
+
+{% block content %}
+<section class="cartao cartao-estreito">
+  <h1>Nova senha</h1>
+  {% if link_invalido %}
+    <div class="erro-geral" role="alert"><p>{{ link_invalido }}</p></div>
+    <p><a href="{% url 'contas:esqueci_senha' %}">Pedir um novo link</a></p>
+  {% else %}
+    <form method="post" action="{% url 'contas:redefinir_senha' %}" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="erro-geral" role="alert">{{ form.non_field_errors }}</div>
+      {% endif %}
+      {% for campo in form %}
+        {% include "contas/_campo.html" %}
+      {% endfor %}
+      <button type="submit" class="botao">Salvar nova senha</button>
+    </form>
+  {% endif %}
+</section>
+{% endblock %}

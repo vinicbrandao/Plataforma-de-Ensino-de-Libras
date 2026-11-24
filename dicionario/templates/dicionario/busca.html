@@ -17,16 +17,38 @@
     {{ form.categoria.label_tag }}
     {{ form.categoria }}
   </div>
+  {% if eh_aluno %}
+    <div class="campo campo-caixa">
+      {{ form.favoritos }} {{ form.favoritos.label_tag }}
+    </div>
+  {% endif %}
   <button type="submit" class="botao">Buscar</button>
 </form>
 
-{% if pagina is not None %}
+{% if sem_favoritos %}
+  <p class="vazio" role="status">Você ainda não tem sinais favoritos</p>
+{% elif pagina is None and not form.errors %}
+  <p class="resumo">Digite uma palavra ou escolha uma categoria para ver os sinais.</p>
+{% endif %}
+
+{% if pagina is not None and not sem_favoritos %}
   {% if pagina.paginator.count %}
     <p class="resumo" role="status">{{ pagina.paginator.count }} sina{{ pagina.paginator.count|pluralize:"l,is" }} encontrado{{ pagina.paginator.count|pluralize }}.</p>
     <ul class="sinais">
       {% for sinal in pagina %}
         <li class="sinal cartao">
           <h2>{{ sinal.termo }}</h2>
+          {% if eh_aluno %}
+            <form method="post" action="{% url 'dicionario:favoritar' sinal.pk %}" class="favorito">
+              {% csrf_token %}
+              <input type="hidden" name="proxima" value="{{ request.get_full_path }}">
+              {% if sinal.pk in favoritos %}
+                <button type="submit" class="botao-link" aria-pressed="true"><span aria-hidden="true">★</span> Remover dos favoritos</button>
+              {% else %}
+                <button type="submit" class="botao-link" aria-pressed="false"><span aria-hidden="true">☆</span> Favoritar</button>
+              {% endif %}
+            </form>
+          {% endif %}
           <video src="{{ sinal.video.url }}" controls loop muted playsinline preload="metadata"
                  aria-label="Vídeo do sinal {{ sinal.termo }}"></video>
           <dl>

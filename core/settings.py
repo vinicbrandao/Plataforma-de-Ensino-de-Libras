@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "dicionario",
     "trilha",
     "questionarios",
+    "contato",
 ]
 
 MIDDLEWARE = [
@@ -92,7 +93,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.environ.get("POSTGRES_DB", "plataforma_libras"),
-        "USER": os.environ.get("POSTGRES_USER", "plataforma_libras"),
+        "USER": os.environ.get("POSTGRES_USER", "libras_owner"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
         "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
         "PORT": os.environ.get("POSTGRES_PORT", "5432"),

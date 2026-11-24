@@ -16,6 +16,7 @@ class BuscaSinalForm(forms.Form):
     categoria = forms.TypedChoiceField(
         label="Categoria", required=False, coerce=int, empty_value=None
     )
+    favoritos = forms.BooleanField(label="Somente favoritos", required=False)
 
     def __init__(self, *args, categorias: list[tuple[int, str]] | None = None, **kwargs):
         super().__init__(*args, **kwargs)

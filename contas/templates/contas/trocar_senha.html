@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Trocar senha · Plataforma de Ensino de Libras{% endblock %}
+
+{% block content %}
+<section class="cartao cartao-estreito">
+  <h1>Trocar senha</h1>
+  <form method="post" action="{% url 'contas:trocar_senha' %}" novalidate>
+    {% csrf_token %}
+    {% for campo in form %}
+      {% include "contas/_campo.html" %}
+    {% endfor %}
+    <button type="submit" class="botao">Salvar nova senha</button>
+  </form>
+  <p><a href="{% url 'contas:perfil' %}">Voltar ao perfil</a></p>
+</section>
+{% endblock %}

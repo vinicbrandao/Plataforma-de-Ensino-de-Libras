@@ -2,8 +2,10 @@
 
 - **Status:** Implementado
 - **Requisitos:** RF-62 a RF-68 do [PRD 0001](../prd/0001-plataforma-libras-v1.md)
-- **Decisões:** [ADR 0001](../adr/0001-mvt-com-camada-de-services.md), [ADR 0007](../adr/0007-plataforma-sem-pratica-com-camera.md)
+- **Decisões:** [ADR 0001](../adr/0001-mvt-com-camada-de-services.md), [ADR 0008](../adr/0008-pratica-com-camera-adiada.md)
 - **Depende de:** [Spec 0004](0004-questionarios.md)
+
+> **Revisão de 24/11/2026:** o escopo da versão 1 deixa o RF012 de fora, mas esta spec já estava implementada, e a equipe decidiu mantê-la como extra. As duas mensagens passaram a ser as do documento de requisitos de 23/11.
 
 O aluno consulta as tentativas dos questionários que a spec 0004 já registra na tabela `Tentativa`. Não há model nem migration novos: a tela só lê.
 
@@ -62,9 +64,9 @@ Formulário GET, sem gravação. As opções vêm do service, pela view, como no
   - `PeriodoInvalido` vira o erro no campo `data_final`, e os filtros preenchidos continuam na tela (RNF-01).
   - Com o form inválido, a tela mostra os erros e o resumo, sem a lista.
 - **Tela:**
-  - Sem nenhuma tentativa, mostra só "Nenhum questionário respondido até o momento" (RF-67), sem filtros nem resumo.
+  - Sem nenhuma tentativa, mostra só "Nenhuma tentativa registrada até o momento" (RF-67), sem filtros nem resumo.
   - Com tentativas, mostra os filtros, a tabela de tentativas (data e hora `dd/mm/aaaa hh:mm`, módulo, aula, "X de Y" com o percentual e o resultado) e a paginação, que mantém os filtros nos links.
-  - Com filtros que não encontram nada, mostra "Nenhuma tentativa encontrada com esses filtros".
+  - Com filtros que não encontram nada, mostra "Nenhum registro encontrado para os filtros informados".
   - O resumo por aula fica abaixo, com módulo, aula, total de tentativas e a data da primeira aprovação, ou "Ainda não aprovado".
   - O resultado é escrito por extenso ("Aprovado" ou "Reprovado"), e não indicado só por cor (RNF-02).
 - A tabela usa `<caption>`, `<th scope="col">` e rolagem horizontal própria abaixo de 360 px (RNF-03).
@@ -85,6 +87,6 @@ Formulário GET, sem gravação. As opções vêm do service, pela view, como no
 - [x] Data final anterior à inicial é recusada pelo service e mostrada no campo.
 - [x] O resumo mostra o total de tentativas e a data da primeira aprovação de cada aula, ou "Ainda não aprovado", e ignora os filtros.
 - [x] Tentativas de aula despublicada continuam no histórico e nas opções de filtro.
-- [x] Sem tentativas, aparece "Nenhum questionário respondido até o momento". Com filtros sem resultado, aparece a mensagem de filtro.
+- [x] Sem tentativas, aparece "Nenhuma tentativa registrada até o momento". Com filtros sem resultado, aparece a mensagem de filtro.
 - [x] A listagem faz um número fixo de consultas, sem N+1.
 - [x] O menu mostra "Histórico" ao aluno e não ao visitante nem ao administrador.

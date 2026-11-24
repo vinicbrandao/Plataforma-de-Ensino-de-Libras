@@ -27,7 +27,7 @@ class VideoMp4ValidatorTests(SimpleTestCase):
     def test_recusa_arquivo_com_outra_assinatura_mesmo_com_extensao_mp4(self):
         falso = SimpleUploadedFile("sinal.mp4", b"%PDF-1.7 conteudo qualquer")
 
-        with self.assertRaisesMessage(ValidationError, "envie um vídeo MP4 de até 20 MB"):
+        with self.assertRaisesMessage(ValidationError, "envie um vídeo MP4 de até 50 MB"):
             VideoMp4Validator()(falso)
 
     def test_recusa_arquivo_acima_do_limite(self):

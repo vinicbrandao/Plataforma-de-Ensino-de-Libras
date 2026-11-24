@@ -18,4 +18,10 @@ class CategoriaComSinaisAtivos(ErroDeDicionario):
 
 
 class SinalEmUso(ErroDeDicionario):
-    mensagem = "Este sinal é usado em aulas e não pode ser inativado ou excluído"
+    mensagem = "Este sinal é usado em aulas ou questões e não pode ser inativado ou excluído"
+
+
+class SinalNaoEncontrado(ErroDeDicionario):
+    """Sinal inexistente ou inativo (RF017)."""
+
+    mensagem = "Sinal não encontrado"

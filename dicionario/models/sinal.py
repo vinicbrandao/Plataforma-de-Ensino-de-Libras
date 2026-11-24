@@ -44,7 +44,7 @@ class Sinal(models.Model):
         "vídeo do sinal",
         upload_to=caminho_video_sinal,
         validators=[VideoMp4Validator()],
-        help_text="Vídeo curto em MP4, sem áudio, de até 20 MB.",
+        help_text="Vídeo curto em MP4, sem áudio, de até 50 MB.",
     )
     ativo = models.BooleanField("ativo", default=True)
 

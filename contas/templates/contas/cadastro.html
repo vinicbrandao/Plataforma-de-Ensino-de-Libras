@@ -13,6 +13,17 @@
       <div class="erro-geral" role="alert">Revise os campos destacados.</div>
     {% endif %}
     {% for campo in form %}
+      {% if campo.name == "responsavel_nome" %}
+        <fieldset id="dados-responsavel" class="responsavel">
+          <legend>Responsável legal</legend>
+          <p class="ajuda">Obrigatório para quem tem menos de 18 anos. O responsável não acessa a plataforma e recebe um aviso por e-mail.</p>
+      {% endif %}
+      {% if campo.name == "aceite_responsavel" %}
+        <details class="termos">
+          <summary>Ler o termo de autorização e consentimento</summary>
+          <p>O responsável legal autoriza o cadastro do menor na Plataforma de Ensino de Libras e o tratamento dos dados informados para as atividades de ensino, conforme a LGPD. Texto provisório até a equipe ter a versão final.</p>
+        </details>
+      {% endif %}
       {% if campo.name == "aceite_termos" %}
         <details class="termos">
           <summary>Ler os termos de uso e a política de privacidade</summary>
@@ -20,6 +31,9 @@
         </details>
       {% endif %}
       {% include "contas/_campo.html" %}
+      {% if campo.name == "aceite_responsavel" %}
+        </fieldset>
+      {% endif %}
     {% endfor %}
     <button type="submit" class="botao">Criar conta</button>
   </form>

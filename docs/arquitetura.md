@@ -9,50 +9,357 @@ O pacote `core` guarda a configuração (`settings.py`, `urls.py`, `wsgi.py`, `a
 | App | Responsabilidade | Requisitos |
 |---|---|---|
 | `contas` | Usuário customizado (`AUTH_USER_MODEL`), cadastro, login, logout, bloqueio por tentativas e Admin de usuários | RF001, RF003, RF016 (bônus: RF002, RF004, RF005) |
-| `trilha` | Módulos, aulas, materiais complementares, progresso do aluno e tela da vídeo-aula | RF006, RF007, RF013 |
-| `questionarios` | Questões, alternativas, tentativas, correção e histórico do aluno | RF009, RF012, RF014 |
-| `dicionario` | Categorias, sinais e busca | RF010, RF015 |
+| `trilha` | Módulos, aulas, materiais complementares, progresso do aluno e tela da vídeo-aula | RF006, RF007, RF013 (bônus: RF018, RF019) |
+| `questionarios` | Questões, alternativas, tentativas, correção e histórico do aluno | RF009, RF014 (RF012 já implementado) |
+| `dicionario` | Categorias, sinais e busca | RF010, RF015 (bônus: RF017) |
+| `contato` | Mensagens do Fale conosco e respostas da equipe (bônus, app novo) | RF020 |
 
-Os models listados no diagrama são uma previsão. Os campos e as regras definitivos ficam nas specs.
+Os campos e as regras definitivos de cada model ficam nas specs. Os models dos bônus RF017 a RF020 são criados antes das telas, para que o DDL entregue tenha as tabelas ([ADR 0009](adr/0009-tabelas-dos-bonus-na-versao-1.md)).
+
+### Modelo de dados
+
+Tabelas da versão 1, com as de todos os bônus: RF017 a RF020 (criadas antes das telas) e RF004, RF005 e RF002. A view `vw_progresso_modulo` é lida pelo model não gerenciado `ProgressoModulo` ([ADR 0006](adr/0006-estruturas-do-banco-em-sql.md)).
 
 ```mermaid
-flowchart LR
-    subgraph contas
-        Usuario
-    end
+erDiagram
+    contas_usuario ||--o{ contas_registroauditoria : "autor e alvo"
+    contas_usuario ||--o{ trilha_progressoaula : aluno
+    contas_usuario ||--o{ questionarios_tentativa : aluno
+    contas_usuario ||--o{ dicionario_favorito : aluno
+    contas_usuario ||--o{ trilha_anotacaoaula : aluno
+    contas_usuario ||--o{ trilha_avaliacaoaula : aluno
+    contas_usuario ||--o{ contato_mensagemcontato : aluno
+    contas_usuario ||--o{ contas_tokenredefinicaosenha : usuario
+    contas_usuario ||--o{ contas_historicoalteracao : usuario
+    contas_usuario ||--o{ contas_confirmacaoemail : usuario
+    contas_usuario ||--o| contas_responsavellegal : aluno
+    dicionario_categoria |o--o{ dicionario_sinal : categoria
+    dicionario_sinal ||--o{ dicionario_favorito : sinal
+    dicionario_sinal |o--o{ questionarios_questao : "sinal opcional"
+    trilha_modulo ||--o{ trilha_aula : modulo
+    trilha_aula ||--o{ trilha_materialcomplementar : aula
+    trilha_aula ||--o{ trilha_progressoaula : aula
+    trilha_aula ||--o{ questionarios_questao : aula
+    trilha_aula ||--o{ questionarios_tentativa : aula
+    trilha_aula ||--o{ trilha_anotacaoaula : aula
+    trilha_aula ||--o{ trilha_avaliacaoaula : aula
+    trilha_aula |o--o{ contato_mensagemcontato : "aula opcional"
+    questionarios_questao ||--|{ questionarios_alternativa : questao
 
-    subgraph dicionario
-        Categoria --> Sinal
-    end
+    contas_usuario {
+        bigint id PK
+        varchar email UK "minúsculas"
+        varchar cpf UK "XXX.XXX.XXX-XX, nulo só para administrador"
+        varchar nome_completo
+        date data_nascimento
+        varchar telefone
+        varchar deficiencia "CHECK valores válidos"
+        varchar contato_libras "CHECK valores válidos"
+        timestamptz termos_aceitos_em
+        boolean is_active
+        boolean is_staff
+    }
+    contas_responsavellegal {
+        bigint id PK
+        bigint aluno_id FK "UK: um por aluno"
+        varchar nome
+        varchar vinculo "CHECK valores válidos"
+        varchar cpf "CHECK formato, não único"
+        varchar email
+        timestamptz termo_aceito_em
+    }
+    contas_tokenredefinicaosenha {
+        bigint id PK
+        bigint usuario_id FK
+        varchar codigo_hash UK "SHA-256"
+        timestamptz expira_em "CHECK > criado_em"
+        timestamptz usado_em
+        timestamptz invalidado_em
+    }
+    contas_solicitacaoredefinicao {
+        bigint id PK
+        varchar chave "HMAC do e-mail"
+        timestamptz criada_em
+    }
+    contas_historicoalteracao {
+        bigint id PK
+        bigint usuario_id FK
+        varchar campo
+        varchar valor_anterior
+        varchar valor_novo
+        timestamptz alterado_em
+    }
+    contas_confirmacaoemail {
+        bigint id PK
+        bigint usuario_id FK
+        varchar novo_email
+        varchar codigo_hash UK
+        timestamptz expira_em "CHECK > criado_em"
+        timestamptz confirmado_em
+    }
+    contas_falhalogin {
+        bigint id PK
+        varchar chave UK "HMAC do login"
+        smallint falhas
+        timestamptz bloqueado_ate
+    }
+    contas_registroauditoria {
+        bigint id PK
+        bigint autor_id FK
+        bigint alvo_id FK
+        varchar acao "CHECK valores válidos"
+        timestamptz criado_em
+    }
+    dicionario_categoria {
+        bigint id PK
+        varchar nome
+        varchar nome_normalizado UK
+        boolean ativa
+    }
+    dicionario_sinal {
+        bigint id PK
+        varchar termo
+        varchar termo_normalizado UK "índice GIN pg_trgm"
+        varchar classe_gramatical "CHECK valores válidos"
+        bigint categoria_id FK
+        varchar video
+        boolean ativo
+    }
+    dicionario_favorito {
+        bigint id PK
+        bigint aluno_id FK
+        bigint sinal_id FK
+        timestamptz criado_em
+    }
+    trilha_modulo {
+        bigint id PK
+        varchar titulo UK "lower(titulo)"
+        integer posicao UK "CHECK > 0"
+    }
+    trilha_aula {
+        bigint id PK
+        bigint modulo_id FK
+        varchar titulo
+        integer posicao "UK com modulo"
+        varchar video
+        varchar legenda
+        boolean publicada "CHECK publicada exige vídeo e legenda"
+    }
+    trilha_materialcomplementar {
+        bigint id PK
+        bigint aula_id FK
+        varchar titulo
+        varchar arquivo
+    }
+    trilha_progressoaula {
+        bigint id PK
+        bigint aluno_id FK
+        bigint aula_id FK
+        varchar status "trigger trg_progresso_conclusao"
+        timestamptz iniciada_em
+        timestamptz concluida_em
+    }
+    trilha_anotacaoaula {
+        bigint id PK
+        bigint aluno_id FK
+        bigint aula_id FK
+        varchar texto "até 2.000, não vazio"
+        timestamptz atualizada_em
+    }
+    trilha_avaliacaoaula {
+        bigint id PK
+        bigint aluno_id FK
+        bigint aula_id FK
+        smallint nota "CHECK 1 a 5"
+        varchar comentario
+        timestamptz avaliada_em
+    }
+    questionarios_questao {
+        bigint id PK
+        bigint aula_id FK
+        bigint sinal_id FK
+        varchar enunciado
+        integer posicao "UK com aula"
+    }
+    questionarios_alternativa {
+        bigint id PK
+        bigint questao_id FK "índice único parcial WHERE correta"
+        varchar texto
+        boolean correta
+    }
+    questionarios_tentativa {
+        bigint id PK
+        bigint aluno_id FK
+        bigint aula_id FK
+        smallint acertos "CHECK acertos <= total"
+        smallint total "CHECK > 0"
+        boolean aprovada
+        timestamptz realizada_em
+    }
+    contato_mensagemcontato {
+        bigint id PK
+        bigint aluno_id FK
+        bigint aula_id FK
+        varchar assunto "CHECK valores válidos"
+        varchar mensagem "10 a 1.000"
+        varchar situacao "CHECK valores válidos"
+        varchar resposta
+        timestamptz enviada_em
+        timestamptz resolvida_em
+    }
+```
 
-    subgraph trilha
-        Modulo --> Aula
-        Aula --> MaterialComplementar
-        ProgressoAula
-        ProgressoModulo["ProgressoModulo (view)"]
-    end
+A view `vw_progresso_modulo` calcula, por aluno e módulo, as aulas publicadas, as concluídas e o percentual, a partir de `contas_usuario`, `trilha_modulo`, `trilha_aula` e `trilha_progressoaula`.
 
-    subgraph questionarios
-        Questao --> Alternativa
-        Tentativa
-    end
+### Classes principais
 
-    ProgressoAula -->|aluno| Usuario
-    ProgressoAula -->|aula| Aula
-    ProgressoModulo -.->|calculada de| ProgressoAula
-    Questao -->|aula| Aula
-    Questao -.->|sinal opcional| Sinal
-    Tentativa -->|aluno| Usuario
-    Tentativa -->|aula| Aula
-    questionarios ==>|"aprovação conclui a aula (ADR 0007)"| trilha
+Models e services de cada app. As setas cheias são herança, e as tracejadas são uso. Views, forms e o Admin seguem a seção "Camadas" e chamam esses services.
+
+```mermaid
+classDiagram
+    direction LR
+
+    class AbstractBaseUser
+    class PermissionsMixin
+    class Usuario {
+        nome_completo
+        email
+        cpf
+        deficiencia
+        contato_libras
+    }
+    AbstractBaseUser <|-- Usuario
+    PermissionsMixin <|-- Usuario
+
+    class CadastroService {
+        +cadastrar(dados) Usuario
+        +calcular_idade(nascimento, hoje) int
+    }
+    class AutenticacaoService {
+        +autenticar(login, senha) Usuario
+    }
+    class RedefinicaoSenhaService {
+        +solicitar(email, montar_link)
+        +redefinir(codigo, nova_senha)
+    }
+    class PerfilService {
+        +atualizar(usuario, dados, montar_link) bool
+        +confirmar_email(codigo)
+        +trocar_senha(usuario, atual, nova)
+        +atualizar_responsavel(aluno, dados)
+    }
+    class ResponsavelLegal
+    Usuario "1" -- "0..1" ResponsavelLegal
+    PerfilService ..> Usuario
+    RedefinicaoSenhaService ..> Usuario
+    class UsuarioService {
+        +buscar_alunos(queryset, termo)
+        +desativar(aluno, por)
+        +reativar(aluno, por)
+    }
+    CadastroService ..> Usuario
+    AutenticacaoService ..> Usuario
+    UsuarioService ..> Usuario
+
+    class CadastroComNomeUnicoService {
+        +salvar(objeto)
+    }
+    class CategoriaService
+    class SinalService {
+        +validar_inativacao(sinal_id, ativo)
+    }
+    class DicionarioService {
+        +buscar(texto, categoria_id, pagina) Page
+    }
+    class FavoritoService {
+        +alternar(aluno, sinal_id) bool
+    }
+    CadastroComNomeUnicoService <|-- CategoriaService
+    CadastroComNomeUnicoService <|-- SinalService
+    class Categoria
+    class Sinal
+    class Favorito
+    Categoria "0..1" -- "*" Sinal
+    Sinal "1" -- "*" Favorito
+    DicionarioService ..> Sinal
+    FavoritoService ..> Favorito
+
+    class ConteudoOrdenadoService {
+        +validar_posicao()
+        +validar_titulo()
+    }
+    class ModuloService
+    class AulaService {
+        +validar_publicacao()
+    }
+    ConteudoOrdenadoService <|-- ModuloService
+    ConteudoOrdenadoService <|-- AulaService
+    class TrilhaService {
+        +montar(aluno) Trilha
+    }
+    class ExibicaoAulaService {
+        +verificar_acesso(aula_id, usuario) Aula
+        +abrir(aula_id, usuario) AulaAberta
+    }
+    class ProgressoService {
+        +registrar_acesso(aluno, aula)
+        +concluir(aluno, aula)
+    }
+    class AnotacaoService {
+        +salvar(aluno, aula_id, texto)
+        +excluir(aluno, aula_id)
+    }
+    class AvaliacaoService {
+        +avaliar(aluno, aula_id, nota, comentario)
+        +resumo(aula)
+    }
+    class Modulo
+    class Aula
+    class ProgressoAula
+    class ProgressoModulo {
+        <<view>>
+    }
+    class AnotacaoAula
+    class AvaliacaoAula
+    Modulo "1" -- "*" Aula
+    Aula "1" -- "*" ProgressoAula
+    Aula "1" -- "*" AnotacaoAula
+    Aula "1" -- "*" AvaliacaoAula
+    TrilhaService ..> ProgressoModulo
+    ExibicaoAulaService ..> ProgressoService
+    AnotacaoService ..> ExibicaoAulaService
+    AvaliacaoService ..> ExibicaoAulaService
+
+    class QuestaoService {
+        +validar_alternativas(corretas)
+        +salvar(questao)
+    }
+    class QuestionarioService {
+        +carregar(aula_id, usuario)
+        +corrigir(aula_id, usuario, respostas) Resultado
+    }
+    class Questao
+    class Alternativa
+    class Tentativa
+    Questao "1" -- "2..5" Alternativa
+    QuestionarioService ..> Tentativa
+    QuestionarioService ..> ProgressoService : aprovação conclui a aula
+
+    class MensagemService {
+        +enviar(aluno, assunto, aula_id, mensagem)
+        +atualizar(mensagem, situacao, resposta)
+    }
+    class MensagemContato
+    MensagemService ..> MensagemContato
 ```
 
 ### Dependências entre apps
 
 - Todos os apps podem usar `core/validadores.py`.
-- `dicionario` não depende de nenhum outro app.
-- `trilha` depende de `contas` (o aluno do progresso).
-- `questionarios` depende de `trilha` (a aula) e de `dicionario` (o sinal da questão). Na aprovação, chama o service de progresso da `trilha` para concluir a aula ([ADR 0007](adr/0007-plataforma-sem-pratica-com-camera.md)).
+- `dicionario` depende de `contas` só pelo aluno do favorito (`settings.AUTH_USER_MODEL`), e de nenhum outro app.
+- `trilha` depende de `contas` (o aluno do progresso, da anotação e da avaliação).
+- `questionarios` depende de `trilha` (a aula) e de `dicionario` (o sinal da questão). Na aprovação, chama o service de progresso da `trilha` para concluir a aula ([ADR 0008](adr/0008-pratica-com-camera-adiada.md)).
+- `contato` depende de `contas` (o aluno) e de `trilha` (a aula relacionada). Nenhum app importa `contato`.
 - `trilha` e `dicionario` não importam `questionarios`. Para exigir ao menos uma questão antes de publicar (RF013) e para barrar a inativação de sinal em uso (RF015), eles consultam pelo nome reverso `questoes`, sem importar classes do outro app. Assim os imports não formam ciclo.
 - O questionário tem página própria (`questionarios:responder`). A tela da aula só aponta para ela com `{% url %}`, sem importar o app.
 - Todo model que aponta para o usuário usa `settings.AUTH_USER_MODEL`.

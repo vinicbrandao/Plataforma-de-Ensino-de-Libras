@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.shortcuts import redirect, render
 from django.views import View
 
-from ..exceptions import CadastroDeMenorIndisponivel, CpfJaCadastrado, EmailJaCadastrado
+from ..exceptions import CpfDoResponsavelIgualAoDoAluno, CpfJaCadastrado, EmailJaCadastrado, ResponsavelObrigatorio
 from ..forms import CadastroForm
 from ..services import CadastroService
 
@@ -24,15 +24,15 @@ class CadastroView(View):
         if not form.is_valid():
             return render(request, TEMPLATE, {"form": form})
         try:
-            usuario = CadastroService.cadastrar(form.dados())
+            usuario = CadastroService.cadastrar(form.dados(), form.responsavel())
         except EmailJaCadastrado:
             form.add_error("email", "E-mail já cadastrado")
         except CpfJaCadastrado:
             form.add_error("cpf", "CPF já cadastrado")
-        except CadastroDeMenorIndisponivel:
-            form.add_error(
-                "data_nascimento", "O cadastro de menores de 18 anos ainda não está disponível"
-            )
+        except CpfDoResponsavelIgualAoDoAluno as exc:
+            form.add_error("responsavel_cpf", exc.mensagem)
+        except ResponsavelObrigatorio as exc:
+            form.add_error(None, exc.mensagem)
         else:
             login(request, usuario, backend=BACKEND)
             messages.success(request, "Cadastro realizado com sucesso")

@@ -1,27 +1,27 @@
 # Estado atual
 
-Atualizado em: 2026-11-22
+Atualizado em: 2026-11-24
 
 Este arquivo guarda apenas o que não está em outro lugar. Mantenha-o com cerca de 30 linhas e retire o que estiver resolvido. O status de cada documento fica no próprio documento, e o histórico fica no Git.
 
 ## Em andamento
 
-- As specs 0001 a 0006 estão implementadas: os 10 RFs da versão 1 e o RF012 (histórico dos questionários, em `/historico/`) funcionam, e `criar_conteudo_inicial` cadastra o conteúdo de demonstração. O RF012 entrou no PRD como RF-62 a RF-68.
-- A entrega de Lab. BD está pronta: `docs/banco/entrega-lab-bd.pdf` (16 páginas, com os prompts no Anexo A) e `docs/banco/ddl.txt`, cópia do `ddl.sql` enviada junto. `contas.sql` e `verificacao.sql` já foram executados no banco local, e o `ddl.sql` inclui os `GRANT`s. Se o `ddl.sql` mudar, copie-o de novo para `ddl.txt`. Os campos de escolha têm `CHECK` no banco (`<tabela>_<campo>_valido`): uma opção nova exige nova migration e um novo `ddl.sql`. O PDF registra os prompts até o 30; se forem enviados outros antes da entrega, gere o PDF de novo. O relatório de andamento enviado para análise está em `docs/relatorios/`.
-- O registro de prompts em `docs/prompts-ia.md` foi encerrado no prompt 30, depois da entrega de Lab. BD. Os prompts seguintes não são registrados.
-- A prática com câmera (RF008) foi removida do produto: [ADR 0007](adr/0007-plataforma-sem-pratica-com-camera.md) aceito, substituindo o ADR 0004; PRD e `requisitos.md` atualizados. O código não muda.
+- A revisão pelo documento de requisitos de 23/11/2026 foi aprovada: PRD revisado e ADRs 0008 (câmera adiada), 0009 (tabelas dos bônus antes das telas) e 0010 (dono `libras_owner`) aceitos. O `.docx` da raiz é o v23112026.
+- Implementados: o núcleo (specs 0001 a 0004), o conteúdo inicial (0005), o RF012 como extra (0006) e os sete bônus: RF017, RF019, RF018, RF020, RF004, RF005 e RF002 simplificado (specs 0007 a 0013), verificados no navegador. São 331 testes.
+- Lab. BD: o dono do banco é `libras_owner`; `contas.sql` e `verificacao.sql` rodaram em 24/11; `ddl.sql`, `ddl.txt` e `entrega-lab-bd.pdf` (com os prompts 1 a 49) têm as tabelas de todos os bônus, inclusive as de RF004, RF005 e RF002. Se o `ddl.sql` mudar, copie-o de novo para `ddl.txt` e gere o PDF outra vez.
+- O registro de prompts em `docs/prompts-ia.md` foi completado em 24/11 (prompts 31 a 46, transcritos do histórico). Cada novo prompt antes da entrega deve ser registrado e o PDF gerado de novo.
 
 ## Próximos passos
 
-1. Aplicar no .docx as mudanças listadas em `docs/relatorios/mudancas-requisitos-sem-camera.md`.
-2. Colocar os 27 vídeos e legendas em `amostras/` (previsto para 2026-11-23) (lista em `amostras/LEIA-ME.md`) e rodar `python manage.py criar_conteudo_inicial`. Depois, completar pelo Admin a descrição da execução dos sinais e revisar o texto das questões.
-3. Testar a reprodução de um vídeo real no navegador.
-4. Se houver tempo, os bônus RF004, RF005 e RF002. Ao implementar o RF002, retirar o bloqueio de menores (RF-61).
+1. Fazer o commit do trabalho de 22 a 24/11 (cerca de 120 arquivos fora do Git).
+2. Trocar pelo Admin os 27 vídeos e legendas provisórios do banco local pelos reais, quando existirem (veja `amostras/LEIA-ME.md`). A demonstração já funciona com os provisórios: 3 módulos, 6 aulas publicadas, 18 questões e 15 sinais.
+3. Corrigir no `.docx` a matriz de rastreabilidade sem RF017 a RF020, a "seção 9" de protótipos e o "(SE)" da Consulta Externa.
 
 ## Pendências
 
+- Outras máquinas com o banco antigo precisam renomear o papel `plataforma_libras` para `libras_owner` e trocar `POSTGRES_USER` no `.env` (comando no README).
 - As senhas de `libras_app` e `libras_relatorio` em `contas.sql` são placeholders (`troque_esta_senha`). Troque com `ALTER ROLE` antes de usar essas contas fora do desenvolvimento.
+- `docs/relatorios/mudancas-requisitos-sem-camera.md` ficou superado: o documento de 23/11 adiou o RF008 em vez de retirá-lo.
 - As skills citam Python 3.12, e a máquina atual usa Python 3.13. O Django 6.1 aceita os dois.
-- O documento de requisitos chama os não funcionais de NF003 dentro dos RFs e de RNF03 na tabela. São o mesmo requisito.
 - Os termos de uso exibidos no cadastro são provisórios até a equipe ter o texto final.
-- Antes de um deploy real: `DJANGO_DEBUG=False`, `ALLOWED_HOSTS`, HTTPS, SMTP real (ADR 0005), backup diário (RNF07) e `check --deploy`.
+- Antes de um deploy real: `DJANGO_DEBUG=False`, `ALLOWED_HOSTS`, HTTPS, SMTP real (ADR 0005), backup diário (RNF007) e `check --deploy`.

@@ -46,7 +46,7 @@ Ordenação: `nome`.
 
 ## Validador de vídeo (`dicionario/validadores.py`)
 
-`VideoMp4Validator(tamanho_maximo=20 MB)` recusa arquivos acima do limite e arquivos cujo conteúdo não começa com a caixa `ftyp` do MP4 (bytes 4 a 8), mesmo que a extensão seja `.mp4`. A mensagem é "Arquivo inválido: envie um vídeo MP4 de até 20 MB". O limite de 20 MB é decisão da equipe: o RF015 não define um tamanho, e os vídeos de sinal são curtos.
+`VideoMp4Validator(tamanho_maximo=50 MB)` recusa arquivos acima do limite e arquivos cujo conteúdo não começa com a caixa `ftyp` do MP4 (bytes 4 a 8), mesmo que a extensão seja `.mp4`. A mensagem é "Arquivo inválido: envie um vídeo MP4 de até 50 MB". O limite de 50 MB é o do RF015 no documento de requisitos de 23/11/2026.
 
 ## Exceções (`dicionario/exceptions.py`)
 
@@ -83,7 +83,7 @@ Sem regras extras nesta spec. O RF-55 será acrescentado em `validar_regras` pel
 | `filtrar(queryset, texto="", categoria_id=None)` | Com texto, filtra `termo_normalizado__contains` pela forma normalizada do texto. Com categoria, filtra também pela categoria, desde que ela esteja ativa. Também é usado pela pesquisa do Admin |
 | `buscar(texto="", categoria_id=None, pagina=1) -> Page` | Somente sinais ativos, com `filtrar`. Ordena por `termo`, com 20 por página. Página inexistente vira a última (`Paginator.get_page`). Usa `select_related("categoria")` |
 
-Sem texto e sem categoria, a busca lista todos os sinais ativos, para que o aluno possa navegar pelo dicionário.
+`tem_criterio(texto, categoria_id) -> bool` diz se há o que buscar. A busca é obrigatória quando não há categoria (RF010 ¹, documento de 23/11/2026): sem texto e sem categoria, a view não chama `buscar` e a tela só mostra a orientação "Digite uma palavra ou escolha uma categoria para ver os sinais."
 
 ## Form `BuscaSinalForm` (GET)
 
@@ -105,7 +105,7 @@ Sem texto e sem categoria, a busca lista todos os sinais ativos, para que o alun
 ### `BuscaView`
 
 - O visitante é redirecionado para o login com `next` (RF-39).
-- Com o form válido, chama `DicionarioService.buscar` e mostra os resultados. Com o form inválido, mostra a mensagem junto ao campo e nenhum resultado.
+- Com o form válido e um critério (`DicionarioService.tem_criterio`), chama `DicionarioService.buscar` e mostra os resultados. Sem critério, mostra só a orientação. Com o form inválido, mostra a mensagem junto ao campo e nenhum resultado.
 - Sem resultados, exibe "Nenhum sinal encontrado. Revise o termo ou escolha outra categoria" (RF-42).
 - Cada sinal mostra o termo, o vídeo (`<video controls loop muted playsinline preload="metadata">`, que o aluno pode pausar) e, quando houver, a classe gramatical, a categoria e a descrição da execução (RF-43).
 - A paginação mantém os filtros nos links.
@@ -146,6 +146,7 @@ Sem texto e sem categoria, a busca lista todos os sinais ativos, para que o alun
 - [x] A migração cria o índice GIN com `gin_trgm_ops` em `termo_normalizado`.
 - [x] Visitante em `/dicionario/` é redirecionado para o login.
 - [x] Aluno vê os resultados, a mensagem de nenhum resultado e a mensagem de busca com 1 caractere.
+- [x] Sem busca e sem categoria, nenhum sinal é listado.
 - [x] O menu mostra "Dicionário" só para usuários autenticados.
 - [x] O Admin recusa termo repetido com mensagem no campo e cria o sinal com o nome de arquivo gerado.
 - [x] O Admin recusa inativar categoria com sinais ativos e não exclui categoria com sinais.

@@ -15,7 +15,7 @@
   {% endif %}
   <p>Aproveitamento: <strong>{{ resultado.percentual }}%</strong></p>
   {% if resultado.aula_concluida %}
-    <p><strong>Aula concluída!</strong></p>
+    <p><strong>Aula concluída!</strong> <a href="{% url 'trilha:aula' resultado.aula.pk %}#avaliacao">Avalie esta aula</a></p>
   {% elif resultado.eh_visitante %}
     <p>Faça login para salvar seu progresso. <a href="{% url 'contas:entrar' %}?next={% url 'trilha:aula' resultado.aula.pk %}">Entrar</a></p>
   {% endif %}

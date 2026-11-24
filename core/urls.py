@@ -17,6 +17,7 @@ urlpatterns = [
     path("", include("contas.urls")),
     path("", include("trilha.urls")),
     path("", include("questionarios.urls")),
+    path("", include("contato.urls")),
     path("dicionario/", include("dicionario.urls")),
 ]
 

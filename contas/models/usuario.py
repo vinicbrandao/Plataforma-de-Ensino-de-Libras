@@ -1,9 +1,20 @@
+from pathlib import Path
+from uuid import uuid4
+
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.db.models import Q
 from django.db.models.functions import Lower
 from django.utils import timezone
+
+from core.validadores import ImagemPerfilValidator
+
+
+def caminho_foto(instancia: "Usuario", nome_enviado: str) -> str:
+    # Nome gerado pelo sistema, sem dados pessoais (RS004, RS012).
+    extensao = Path(nome_enviado).suffix.lower().replace(".jpeg", ".jpg")
+    return f"perfis/{uuid4().hex}{extensao if extensao in ('.jpg', '.png') else ''}"
 
 
 class UsuarioManager(BaseUserManager):
@@ -63,6 +74,15 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         "teve contato com Libras", max_length=20, choices=ContatoLibras, blank=True
     )
     termos_aceitos_em = models.DateTimeField("termos aceitos em", null=True, blank=True)
+    foto = models.FileField(
+        "foto de perfil",
+        upload_to=caminho_foto,
+        blank=True,
+        validators=[ImagemPerfilValidator()],
+        help_text="JPG ou PNG de até 2 MB.",
+    )
+    # Preferência usada pelos lembretes (RF011), que não estão na versão 1.
+    receber_lembretes = models.BooleanField("receber lembretes de estudo por e-mail", default=True)
     is_active = models.BooleanField("ativo", default=True)
     is_staff = models.BooleanField("administrador", default=False)
     data_cadastro = models.DateTimeField("data de cadastro", default=timezone.now)

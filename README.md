@@ -3,8 +3,12 @@
 Aplicação web para ensino de Libras, com trilha de aulas em vídeo, questionários e dicionário de sinais. É um projeto acadêmico de Engenharia de Software, também avaliado em Laboratório de Programação Orientada a Objetos e Laboratório de Banco de Dados.
 
 - Requisitos completos: [docs/requisitos.md](docs/requisitos.md)
-- Escopo da versão 1: [docs/prd/0001-plataforma-libras-v1.md](docs/prd/0001-plataforma-libras-v1.md)
+- Escopo da versão 1 (PRD): [docs/prd.md](docs/prd.md), que leva a [docs/prd/0001-plataforma-libras-v1.md](docs/prd/0001-plataforma-libras-v1.md)
 - Arquitetura: [docs/arquitetura.md](docs/arquitetura.md)
+- Especificações: [docs/specs/](docs/specs/) e decisões: [docs/adr/](docs/adr/)
+- Pilares de POO no código: [docs/poo.md](docs/poo.md)
+- Banco de dados (Lab. BD): [docs/banco/](docs/banco/entrega-lab-bd.md)
+- Skills usadas no desenvolvimento: [.agents/skills/](.agents/skills/)
 - Estado atual e próximos passos: [docs/state.md](docs/state.md)
 
 Tecnologias: Python 3.12 ou mais recente, Django 6.1 e PostgreSQL (testado com a versão 18).
@@ -28,8 +32,8 @@ Se o PowerShell bloquear o `Activate.ps1`, rode `Set-ExecutionPolicy -Scope Curr
 Com o PostgreSQL instalado e o serviço rodando, crie o usuário e o banco. O `psql` pede a senha do usuário `postgres`, definida na instalação. Se o comando não for encontrado, use o caminho completo, como `& "C:\Program Files\PostgreSQL\18\bin\psql.exe"`.
 
 ```powershell
-psql -U postgres -c "CREATE ROLE plataforma_libras WITH LOGIN CREATEDB PASSWORD 'troque-esta-senha';"
-psql -U postgres -c "CREATE DATABASE plataforma_libras OWNER plataforma_libras ENCODING 'UTF8' TEMPLATE template0;"
+psql -U postgres -c "CREATE ROLE libras_owner WITH LOGIN CREATEDB PASSWORD 'troque-esta-senha';"
+psql -U postgres -c "CREATE DATABASE plataforma_libras OWNER libras_owner ENCODING 'UTF8' TEMPLATE template0;"
 ```
 
 A permissão `CREATEDB` é necessária porque `python manage.py test` cria um banco temporário de testes.
@@ -78,6 +82,12 @@ O material de Laboratório de Banco de Dados está em [docs/banco/](docs/banco/e
 ```powershell
 psql -U postgres -h localhost -d plataforma_libras -f docs/banco/contas.sql
 psql -U postgres -h localhost -d plataforma_libras -f docs/banco/verificacao.sql
+```
+
+O papel dono do banco se chama `libras_owner` ([ADR 0010](docs/adr/0010-dono-do-banco-libras-owner.md)). Se o seu banco foi criado antes, com o papel `plataforma_libras`, renomeie-o uma vez e troque `POSTGRES_USER` no `.env` para `libras_owner`:
+
+```powershell
+psql -U postgres -h localhost -d postgres -c "ALTER ROLE plataforma_libras RENAME TO libras_owner;"
 ```
 
 ## Verificações

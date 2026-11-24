@@ -16,6 +16,8 @@
           <a href="{% url 'dicionario:busca' %}">Dicionário</a>
           {% if not user.is_staff %}
             <a href="{% url 'questionarios:historico' %}">Histórico</a>
+            <a href="{% url 'contato:enviar' %}">Fale conosco</a>
+            <a href="{% url 'contas:perfil' %}">Perfil</a>
           {% endif %}
           <span class="menu-usuario">{{ user.nome_completo }}</span>
           {% if user.is_staff %}

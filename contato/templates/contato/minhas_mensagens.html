@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Minhas mensagens · Plataforma de Ensino de Libras{% endblock %}
+
+{% block content %}
+<h1>Minhas mensagens</h1>
+<p><a class="botao" href="{% url 'contato:enviar' %}">Nova mensagem</a></p>
+
+{% if pagina.paginator.count %}
+  <ul class="mensagens-contato">
+    {% for mensagem in pagina %}
+      <li class="cartao">
+        <p class="resumo">{{ mensagem.enviada_em|date:"d/m/Y H:i" }} · {{ mensagem.get_assunto_display }}{% if mensagem.aula %} · {{ mensagem.aula.titulo }}{% endif %}</p>
+        <p><strong>Situação:</strong> {{ mensagem.get_situacao_display }}</p>
+        <p>{{ mensagem.mensagem|linebreaksbr }}</p>
+        {% if mensagem.resposta %}
+          <div class="resposta-contato">
+            <p><strong>Resposta da equipe</strong></p>
+            <p>{{ mensagem.resposta|linebreaksbr }}</p>
+          </div>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+  {% if pagina.has_other_pages %}
+    <nav class="paginacao" aria-label="Páginas das mensagens">
+      {% if pagina.has_previous %}<a href="?pagina={{ pagina.previous_page_number }}">Anterior</a>{% endif %}
+      <span>Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>
+      {% if pagina.has_next %}<a href="?pagina={{ pagina.next_page_number }}">Próxima</a>{% endif %}
+    </nav>
+  {% endif %}
+{% else %}
+  <p class="vazio" role="status">Você ainda não enviou mensagens</p>
+{% endif %}
+{% endblock %}

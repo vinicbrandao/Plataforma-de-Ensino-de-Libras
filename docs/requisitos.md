@@ -1,24 +1,23 @@
-# Documento de Requisitos — Plataforma de Ensino de Libras
+# Documento de Requisitos — Plataforma de Ensino de Libras (LibrasLab)
 
-> Convertido de `Requisitos_da_Plataforma_de_Ensino_de_Libras_atualizado.docx`. Os IDs (RF, RNF, RS) são os mesmos do documento.
->
-> **Atualização de 22/11/2026:** a prática de sinais com câmera (RF008) foi removida do produto por decisão da equipe ([ADR 0007](adr/0007-plataforma-sem-pratica-com-camera.md)). Este arquivo já reflete a mudança; o .docx precisa recebê-la (lista em `docs/relatorios/mudancas-requisitos-sem-camera.md`). Os IDs não foram renumerados.
+> Convertido de `Requisitos_da_Plataforma_de_Ensino_de_Libras_atualizadov23112026.docx` (versão de 23/11/2026), que é a fonte da verdade do projeto. Os IDs (RF, RNF, RS) e os textos são os do documento. Na conversão, a tabela de requisitos funcionais virou uma seção por RF, e as imagens (protótipo e figuras de pontos de função) ficaram só no `.docx`.
 
 ## 1. Introdução
 
-Este documento especifica os requisitos do sistema Plataforma de ensino de libras, fornecendo aos desenvolvedores as informações necessárias para o projeto e implementação, assim como para a realização dos testes e homologação do sistema.
+Este documento especifica os requisitos do sistema **Plataforma de Ensino de Libras,** fornecendo aos desenvolvedores as informações necessárias para o projeto e implementação, assim como para a realização dos testes e homologação do sistema.
 
 ### 1.1. Visão geral do documento
 
 Além desta seção introdutória, as seções seguintes estão organizadas como descrito abaixo.
 
-- Seção 2 – Descrição geral do sistema: apresenta uma visão geral do sistema, caracterizando qual é o seu escopo e descrevendo seus usuários.
-- Seção 3 – Requisitos funcionais (casos de uso): especifica todos os casos de uso do sistema, descrevendo os fluxos de eventos, prioridades, atores, entradas e saídas de cada caso de uso a ser implementado.
-- Seção 4 – Requisitos não-funcionais: especifica todos os requisitos não funcionais do sistema, divididos em requisitos de usabilidade, confiabilidade, desempenho, segurança, distribuição, adequação a padrões e requisitos de hardware e software.
-- Seção 5 – Matriz de rastreabilidade: registra a ligação dos requisitos dependentes;
-- Seção 6 – Requisitos de Segurança: especifica todos os requisitos de segurança relacionados aos requisitos funcionais e não funcionais;
-- Seção 7 – Matriz de Avaliação de Risco: registra os riscos de uma falha de requisito;
-- Seção 8 – Referências: apresenta referências para outros documentos utilizados para a confecção deste documento.
+- **Seção 2 – Descrição geral do sistema**: apresenta uma visão geral do sistema, caracterizando qual é o seu escopo e descrevendo seus usuários.
+- **Seção 3 – Requisitos funcionais (casos de uso)**: especifica todos os casos de uso do sistema, descrevendo os fluxos de eventos, prioridades, atores, entradas e saídas de cada caso de uso a ser implementado.
+- **Seção 4 – Requisitos não-funcionais**: especifica todos os requisitos não funcionais do sistema, divididos em requisitos de usabilidade, confiabilidade, desempenho, segurança, distribuição, adequação a padrões e requisitos de hardware e software.
+- **Seção 5 – Requisitos de segurança:** especifica todos os requisitos de segurança relacionados aos requisitos funcionais e não funcionais;
+- **Seção 6 – Matriz de Avaliação de Risco:** classifica os riscos de segurança por severidade e probabilidade.
+- **Seção 7 – Matriz de rastreabilidade**: registra a ligação dos requisitos dependentes;
+- **Seção 8 – Ponto de função:** mede o tamanho funcional do sistema.
+- **Seção 9 – Referências:** apresenta referências para outros documentos utilizados para a confecção deste documento.
 
 ### 1.2. Convenções, termos e abreviações
 
@@ -26,19 +25,15 @@ A correta interpretação deste documento exige o conhecimento de algumas conven
 
 #### 1.2.1. Identificação dos requisitos
 
-Por convenção, a referência a requisitos é feita através do nome da subseção onde eles estão descritos, seguidos do identificador do requisito, de acordo com a especificação a seguir:
-
-[nome da subseção. identificador do requisito], por exemplo, o requisito funcional [Recuperação de dados.RF016] deve estar descrito em uma subseção chamada “Recuperação de dados”, em um bloco identificado pelo número [RF016]. Já o requisito não-funcional [Confiabilidade.NF008] deve estar descrito na seção de requisitos não-funcionais de Confiabilidade, em um bloco identificado por [NF008]. [RS001] trata dos requisitos de segurança
-
-Os requisitos devem ser identificados com um identificador único. A numeração inicia com o identificador [RF001], [NF001] ou [RS001] e prossegue sendo incrementada à medida que forem surgindo novos requisitos.
+Cada requisito é referenciado pelo seu identificador único, seguido do nome, por exemplo, RF001 – Cadastro de usuário. Os requisitos funcionais usam o prefixo RF, os não funcionais RNF e os de segurança RS, sempre com três dígitos (RF001, RNF001, RS001). A numeração é incrementada à medida que surgem novos requisitos.
 
 #### 1.2.2. Prioridades dos requisitos
 
-Para estabelecer a prioridade dos requisitos, nas seções 4 e 5, foram adotadas as denominações “essencial”, “importante” e “desejável”.
+Para estabelecer a prioridade dos requisitos, nas seções 3 e 4, foram adotadas as denominações “essencial”, “importante” e “desejável”.
 
-- Essencial é o requisito sem o qual o sistema não entra em funcionamento. Requisitos essenciais são requisitos imprescindíveis, que têm que ser implementados impreterivelmente.
-- Importante é o requisito sem o qual o sistema entra em funcionamento, mas de forma não satisfatória. Requisitos importantes devem ser implementados, mas, se não forem, o sistema poderá ser implantado e usado mesmo assim.
-- Desejável é o requisito que não compromete as funcionalidades básicas do sistema, isto é, o sistema pode funcionar de forma satisfatória sem ele. Requisitos desejáveis podem ser deixados para versões posteriores do sistema, caso não haja tempo hábil para implementá-los na versão que está sendo especificada.
+- **Essencial** é o requisito sem o qual o sistema não entra em funcionamento. Requisitos essenciais são requisitos imprescindíveis, que têm que ser implementados impreterivelmente.
+- **Importante** é o requisito sem o qual o sistema entra em funcionamento, mas de forma não satisfatória. Requisitos importantes devem ser implementados, mas, se não forem, o sistema poderá ser implantado e usado mesmo assim.
+- **Desejável** é o requisito que não compromete as funcionalidades básicas do sistema, isto é, o sistema pode funcionar de forma satisfatória sem ele. Requisitos desejáveis podem ser deixados para versões posteriores do sistema, caso não haja tempo hábil para implementá-los na versão que está sendo especificada.
 
 ## 2. Descrição geral do sistema
 
@@ -46,19 +41,31 @@ Para estabelecer a prioridade dos requisitos, nas seções 4 e 5, foram adotadas
 
 A Plataforma de Ensino de Libras é uma aplicação 100% digital desenvolvida para quebrar a barreira de comunicação entre pessoas surdas e ouvintes. O sistema é voltado para o público em geral (crianças, adultos, com ou sem deficiência) e tem o objetivo de ensinar o idioma de forma prática e interativa.
 
-Diferente de plataformas de ensino tradicionais em que o aluno apenas assiste passivamente, este sistema utiliza um Roadmap de ensino baseado em níveis, com vídeo-aulas legendadas e um questionário ao fim de cada aula. Além disso, o sistema conta com recursos de apoio, como um dicionário de vídeos e notificações de lembrete de estudos. O escopo foca exclusivamente em Libras.
+Diferente de plataformas de ensino tradicionais, em que o aluno apenas assiste passivamente, este sistema utiliza um Roadmap de ensino organizado em níveis, chamados neste documento de módulos. Também prevê Reconhecimento de Imagem: a câmera do dispositivo avaliará se os sinais reproduzidos pelo aluno estão corretos (RF008, previsto para versão posterior). O sistema conta ainda com dicionário de vídeos, sinais favoritos, anotações e avaliação das aulas, lembretes de estudo por e-mail e um canal de contato. O escopo foca exclusivamente em Libras.
+
+Os usuários do sistema são:
+
+**Visitante:** pessoa sem conta, que acessa a landing page, visualiza a trilha e abre apenas a primeira aula do Módulo 1.
+
+**Aluno:** usuário cadastrado, com acesso a todas as aulas e recursos.
+
+**Responsável legal:** responsável pelo aluno menor de idade; não acessa o sistema e apenas recebe e-mails.
+
+**Administrador:** mantém o conteúdo e os usuários; sua conta é criada na implantação.
+
+**Sistema:** executa as rotinas automáticas, como o envio de e-mails.
 
 ## 3. Requisitos funcionais (casos de uso)
 
 ### RF001 – Cadastro de usuário
 
-**Objetivo:** Cadastrar novos alunos na plataforma. A conta libera todas as aulas e o dicionário (RF010). Sem conta, o visitante acessa apenas a landing page e a primeira aula do Módulo 1 (RF006).
+**Objetivo:** Cadastrar novos alunos na plataforma. A conta libera todas as aulas, a prática com câmera (RF008) e o dicionário (RF010). Sem conta, o visitante acessa a landing page, visualiza a trilha e abre apenas a primeira aula do Módulo 1 (RF006).
 
 **Atores:** Visitante.
 
 **Prioridade:** Essencial.
 
-**Origem:** Ata de Reunião 1, Tópicos 2 e 5.
+**Origem:** Ata de Reunião 1, Tópicos 2 e 5. O acesso do visitante sem conta é decisão da equipe, flexibilizando o Tópico 5.
 
 **Pré-condições:** Nenhuma.
 
@@ -78,11 +85,11 @@ Data de nascimento: Date (DD/MM/AAAA), obrigatória.⁷
 
 Telefone: String, 15 caracteres ((XX) 9XXXX-XXXX), obrigatório.⁸
 
-Possui deficiência: Checkbox (seleção única), obrigatória: Não; Sim, deficiência auditiva; Sim, deficiência visual; Sim, outra; Prefiro não informar.⁹
+Possui deficiência: Seleção única, obrigatória: Não; Sim, deficiência auditiva; Sim, deficiência visual; Sim, outra; Prefiro não informar.⁹
 
-Qual deficiência: String, até 120 caracteres; exibido e obrigatório apenas quando “Possui deficiência” for “Sim, outra”.¹⁰
+Qual deficiência: String, até 120 caracteres; exibido e obrigatório apenas quando "Possui deficiência" for "Sim, outra".¹⁰
 
-Teve contato com Libras: Checkbox (seleção única), obrigatória: Nunca tive contato; Conheço poucos sinais; Conheço o básico; Tenho bastante experiência.¹¹
+Teve contato com Libras: Seleção única, obrigatória: Nunca tive contato; Conheço poucos sinais; Conheço o básico; Tenho bastante experiência.¹¹
 
 Aceite dos termos de uso e da política de privacidade: confirmação obrigatória.¹²
 
@@ -104,45 +111,53 @@ Aceite dos termos de uso e da política de privacidade: confirmação obrigatór
 
 ⁸ Deve ser um número de celular. Pode ser digitado com ou sem máscara; o sistema aplica o formato (XX) 9XXXX-XXXX automaticamente.
 
-⁹ É dado pessoal sensível pela LGPD; a opção “Prefiro não informar” permite não declarar (NF006).
+⁹ É dado pessoal sensível pela LGPD; a opção "Prefiro não informar" permite não declarar (RNF006).
 
-¹⁰ Ao trocar a resposta “Sim, outra” por outra opção, o campo é ocultado e seu conteúdo é apagado.
+¹⁰ Ao trocar a resposta "Sim, outra" por outra opção, o campo é ocultado e seu conteúdo é apagado.
 
-¹¹ A resposta define o módulo recomendado na trilha (RF006): “Nunca tive contato” e “Conheço poucos sinais” → Módulo 1; “Conheço o básico” → Módulo 2; “Tenho bastante experiência” → Módulo 3.
+¹¹ A resposta define o módulo recomendado na trilha (RF006): "Nunca tive contato" e "Conheço poucos sinais" → Módulo 1; "Conheço o básico" → Módulo 2; "Tenho bastante experiência" → Módulo 3.
 
 ¹² Os termos são exibidos por completo antes do aceite. Sem o aceite, o cadastro não é concluído; a data e a hora do aceite são registradas.
 
-**Mensagens:** “Campo obrigatório não preenchido” (com destaque nos campos);
+**Regras de negócio:**
 
-“Nome inválido”;
+Ao clicar em Cancelar, o sistema exibe a mensagem "Deseja realmente cancelar? Os dados não salvos serão perdidos", com as opções Sim e Não. Com Sim, os dados são descartados e o usuário retorna à tela anterior.
 
-“E-mail inválido”;
+**Mensagens:** "Campo obrigatório não preenchido" (com destaque nos campos);
 
-“E-mail já cadastrado”;
+"Nome inválido";
 
-“CPF inválido”;
+"E-mail inválido";
 
-“CPF já cadastrado”;
+"E-mail já cadastrado";
 
-“A senha deve ter ao menos 8 caracteres, com letras e números”;
+"CPF inválido";
 
-“As senhas informadas não coincidem”;
+"CPF já cadastrado";
 
-“Data de nascimento inválida”;
+"Telefone inválido"; "A senha deve ter ao menos 8 caracteres, com letras e números";
 
-“É necessário aceitar os termos de uso e a política de privacidade”; “Cadastro realizado com sucesso”.
+"As senhas informadas não coincidem";
+
+"Data de nascimento inválida";
+
+"É necessário aceitar os termos de uso e a política de privacidade";
+
+"Deseja realmente cancelar? Os dados não salvos serão perdidos";
+
+"Cadastro realizado com sucesso".
 
 **Alteração e exclusão:** Os dados são alterados pelo próprio aluno conforme o RF005, exceto o CPF e a data de nascimento. O cadastro não é excluído; pode ser desativado pelo administrador (RF016), mantendo-se o histórico.
 
 **PROTÓTIPO:**
 
-![image1](img/requisitos/image1.png)
+*Imagem disponível no documento original (`.docx`).*
 
 ### RF002 – Cadastro de Menor de Idade
 
 **Objetivo:** Exigir e registrar os dados do responsável legal quando o aluno tiver menos de 18 anos, bem como a autorização para o cadastro.
 
-**Atores:** Visitante (aluno menor de idade). O responsável legal não acessa o sistema; apenas recebe emails.
+**Atores:** Visitante (aluno menor de idade). O responsável legal não acessa o sistema; apenas recebe e-mails.
 
 **Prioridade:** Essencial.
 
@@ -188,39 +203,67 @@ O sistema verifica diariamente a data de nascimento dos alunos. Quando o aluno c
 
 Os e-mails enviados ao responsável não incluem dados sensíveis, como a informação sobre deficiência.
 
-**Mensagens:** “Campo obrigatório não preenchido”; “CPF do responsável inválido”; “O CPF do responsável deve ser diferente do CPF do aluno”; “E-mail inválido”; “É necessário confirmar a autorização do responsável”.
+A preferência do responsável de não receber avisos, feita pelo link de cancelamento (RF011), é registrada junto aos seus dados.
+
+**Mensagens:** “Campo obrigatório não preenchido”;
+
+“CPF do responsável inválido”;
+
+“O CPF do responsável deve ser diferente do CPF do aluno”;
+
+“E-mail inválido”;
+
+“Telefone inválido”;
+
+“É necessário confirmar a autorização do responsável”.
 
 **Alteração e exclusão:** Conforme o RF005, enquanto o aluno for menor de idade, mantendo-se o histórico. Os dados do responsável não são excluídos.
 
 **PROTÓTIPO:**
 
-![image1](img/requisitos/image1.png)
+*Imagem disponível no documento original (`.docx`).*
 
 ### RF003 – Login
 
-**Objetivo:** Permitir que usuários cadastrados acessem a plataforma de forma segura e encerrem a sessão. O login libera todas as aulas, o dicionário (RF010) e, para o administrador, a área administrativa (RF013 a RF016).
-Atores: Aluno, Administrador.
-Prioridade: Essencial.
-Origem: Ata de Reunião 1, Tópico 5.
-Pré-condições: Usuário cadastrado (RF001) ou administrador criado na implantação (RF013).
+**Objetivo:** Permitir que usuários cadastrados acessem a plataforma de forma segura e encerrem a sessão. O login libera todas as aulas, a prática com câmera (RF008), o dicionário (RF010) e, para o administrador, a área administrativa (RF013 a RF016).
 
-Campos:
- Login: String, até 200 caracteres, obrigatório; aceita e-mail ou CPF.¹
- Senha: String, obrigatório.²
+**Atores:** Aluno, Administrador.
 
-Regras de preenchimento dos campos:
+**Prioridade:** Essencial.
+
+**Origem:** Ata de Reunião 1, Tópico 5.
+
+**Pré-condições:** Usuário cadastrado (RF001) ou administrador criado na implantação (RF013).
+
+**Campos:**
+
+Login: String, até 200 caracteres, obrigatório; aceita e-mail ou CPF.¹
+
+Senha: String, obrigatório.²
+
+**Regras de preenchimento dos campos:**
+
 ¹ Se o valor informado contiver “@”, é tratado como e-mail, sem distinção entre maiúsculas e minúsculas; caso contrário, como CPF, com ou sem pontuação.
+
 ² O campo é mascarado, com opção de exibir o conteúdo. A senha informada é comparada com o hash armazenado e nunca é enviada no endereço (URL) nem gravada em registros (logs).
 
 **Regras de negócio:**
- Em caso de credenciais incorretas, a mensagem não informa qual dado está errado nem se o login existe (RS002).
- Após 5 tentativas falhas consecutivas para o mesmo login informado, novas tentativas para esse login ficam bloqueadas por 15 minutos, exista ele ou não (RS001).
- Usuário desativado (RF016) não acessa o sistema. A mensagem “Usuário desativado” só é exibida quando a senha informada está correta.
- Após o login, o aluno é direcionado à plataforma (RF006) e o administrador à área administrativa. Se o usuário tentou abrir uma tela restrita antes de entrar, é levado a ela após o login.
- Qualquer tela restrita acessada sem autenticação, inclusive pelo endereço (URL), redireciona para a tela de login.
- A sessão expira após 30 minutos de inatividade, com aviso ao usuário antes do encerramento (RS010).
- O botão Sair fica disponível em todas as telas autenticadas; encerra a sessão no servidor e direciona à tela de login. O botão Voltar do navegador não reexibe telas autenticadas (RS010).
- A tela de login exibe a opção “Esqueci minha senha” (RF004).
+
+Em caso de credenciais incorretas, a mensagem não informa qual dado está errado nem se o login existe (RS002).
+
+Após 5 tentativas falhas consecutivas para o mesmo login informado, novas tentativas para esse login ficam bloqueadas por 15 minutos, exista ele ou não (RS001).
+
+Usuário desativado (RF016) não acessa o sistema. A mensagem “Usuário desativado” só é exibida quando a senha informada está correta.
+
+Após o login, o aluno é direcionado à plataforma (RF006) e o administrador à área administrativa. Se o usuário tentou abrir uma tela restrita antes de entrar, é levado a ela após o login.
+
+Qualquer tela restrita acessada sem autenticação, inclusive pelo endereço (URL), redireciona para a tela de login.
+
+A sessão expira após 30 minutos de inatividade, com aviso ao usuário antes do encerramento (RS010).
+
+O botão Sair fica disponível em todas as telas autenticadas; encerra a sessão no servidor e direciona à tela de login. O botão Voltar do navegador não reexibe telas autenticadas (RS010).
+
+A tela de login exibe a opção “Esqueci minha senha” (RF004). O login e o logout do administrador são registrados com data e hora (RS009).
 
 **Mensagens:** “Campo obrigatório não preenchido”; “Login ou senha inválidos”; “Muitas tentativas de acesso. Tente novamente em 15 minutos”; “Usuário desativado”; “Sua sessão expirou. Faça login novamente”.
 
@@ -228,7 +271,7 @@ Regras de preenchimento dos campos:
 
 **PROTÓTIPO:**
 
-![image1](img/requisitos/image1.png)
+*Imagem disponível no documento original (`.docx`).*
 
 ### RF004 – Recuperação de senha
 
@@ -240,17 +283,17 @@ Regras de preenchimento dos campos:
 
 **Origem:** Ata de Reunião 1, Tópico 5.
 
-**Pré-condições:** Nenhuma. O link só é enviado se o e-mail pertencer a um usuário cadastrado e ativo (RF001).
+**Pré-condições:** Nenhuma. O link só é enviado se o e-mail pertencer a um usuário ativo, seja aluno (RF001) ou administrador (RF013).
 
 **Solicitação de redefinição:**
 
-E-mail: String, até 200 caracteres, obrigatório.¹
+**E-mail:** String, até 200 caracteres, obrigatório.¹
 
-**Redefinição de senha:**
+Redefinição de senha:
 
-Nova senha: String, mínimo de 8 caracteres, com letras e números, obrigatório.²
+**Nova senha:** String, mínimo de 8 caracteres, com letras e números, obrigatório.²
 
-Confirmação da nova senha: String, obrigatório, idêntico ao campo Nova senha.
+**Confirmação da nova senha:** String, obrigatório, idêntico ao campo Nova senha.
 
 **Regras de preenchimento dos campos:**
 
@@ -310,9 +353,9 @@ E-mail: String, editável.¹ ³
 
 Telefone: String, editável.¹
 
-Possui deficiência e Qual deficiência: Checkbox e String, editáveis.¹
+Possui deficiência e Qual deficiência: Seleção única e String, editáveis.¹
 
-Teve contato com Libras: Checkbox, editável.¹ ⁴
+Teve contato com Libras: Seleção única, editável.¹ ⁴
 
 Foto de perfil: String, endereço do arquivo de imagem JPG ou PNG de até 2 MB, opcional.⁵
 
@@ -320,7 +363,7 @@ Receber lembretes de estudo por e-mail: Boolean (Sim ou Não), padrão Sim.⁶
 
 Dados do responsável legal: editáveis enquanto o aluno for menor de idade.⁷
 
-**Alteração de senha:**
+Alteração de senha:
 
 Senha atual: String, obrigatório.⁸
 
@@ -354,21 +397,7 @@ Toda alteração de dados do perfil e do responsável é registrada no históric
 
 Ao clicar em Cancelar, é exibida a mensagem de confirmação do RF001.
 
-**Mensagens:** “Campo obrigatório não preenchido”;
-
-“E-mail inválido”;
-
-“E-mail já cadastrado”;
-
-“Enviamos um link de confirmação para o novo e-mail”;
-
-“Senha atual incorreta”;
-
-“As senhas informadas não coincidem”;
-
-“Arquivo inválido. Envie uma imagem JPG ou PNG de até 2 MB”;
-
-“Dados atualizados com sucesso”.
+**Mensagens:** "Campo obrigatório não preenchido"; "E-mail inválido"; "E-mail já cadastrado"; "Telefone inválido"; "Enviamos um link de confirmação para o novo e-mail"; "Link de confirmação expirado ou inválido"; "Senha atual incorreta"; "As senhas informadas não coincidem"; "A nova senha deve ser diferente da senha atual"; "Arquivo inválido. Envie uma imagem JPG ou PNG de até 2 MB"; "Dados atualizados com sucesso".
 
 **Alteração e exclusão:** O perfil não é excluído pelo aluno; pode ser desativado pelo administrador (RF016).
 
@@ -400,9 +429,9 @@ Progresso, por aluno: Inteiro: percentual de conclusão de cada módulo e do cur
 
 ¹ Módulos e aulas são exibidos em ordem de posição, cadastrada conforme o RF013.
 
-² A aula fica Não iniciada até ser aberta pela primeira vez, passa a Em andamento ao ser aberta e a Concluída conforme o RF007. O status é exibido em texto, além de cor e ícone (NF003).
+² A aula fica Não iniciada até ser aberta pela primeira vez, passa a Em andamento ao ser aberta e a Concluída conforme o RF007. O status é exibido em texto, além de cor e ícone (RNF003).
 
-³ Percentual do módulo = aulas concluídas do módulo ÷ aulas publicadas do módulo × 100; percentual do curso = aulas concluídas ÷ aulas publicadas × 100. Os valores são exibidos como inteiros arredondados, em barra de progresso e em texto (por exemplo, “7 de 20 aulas”).
+³ Percentual do módulo = aulas concluídas do módulo ÷ aulas publicadas do módulo × 100; percentual do curso = aulas concluídas ÷ aulas publicadas × 100. Os valores são exibidos como inteiros arredondados, em barra de progresso e em texto (por exemplo, "7 de 20 aulas").
 
 **Regras de negócio:**
 
@@ -410,7 +439,7 @@ O visitante vê a trilha completa, mas só abre a primeira aula publicada do Mó
 
 Para o aluno autenticado, nenhuma aula é bloqueada.
 
-O módulo recomendado, definido pela resposta “Teve contato com Libras” (RF001), é destacado com a mensagem “Comece pelo Módulo X!”. A recomendação é apenas indicativa.
+O módulo recomendado, definido pela resposta "Teve contato com Libras" (RF001), é destacado com a mensagem "Comece pelo Módulo X!". A recomendação é apenas indicativa.
 
 O botão Continuar leva à aula Em andamento aberta mais recentemente ou, se não houver, à primeira aula não concluída do módulo recomendado.
 
@@ -418,11 +447,9 @@ Somente aulas publicadas (RF013) aparecem na trilha; módulos sem aulas publicad
 
 O aluno visualiza somente o próprio progresso (RS004).
 
-A trilha é exibida de forma adaptada a celulares e tablets (NF004).
+A trilha é exibida de forma adaptada a celulares e tablets (RNF004).
 
-**Mensagens:** “Comece pelo Módulo X!”;
-
-“Faça login para acessar esta aula”.
+**Mensagens:** "Comece pelo Módulo X!"; "Faça login para acessar esta aula".
 
 **Alteração e exclusão:** Não se aplica. O status das aulas é atualizado pelo sistema.
 
@@ -430,7 +457,7 @@ A trilha é exibida de forma adaptada a celulares e tablets (NF004).
 
 ### RF007 – Vídeo-aula
 
-**Objetivo:** Exibir a aula, composta por vídeo, materiais de apoio e questionário, e registrar o andamento e a conclusão da aula pelo aluno.
+**Objetivo:** Exibir a aula, composta por vídeo, materiais de apoio, prática com câmera e questionário, e registrar o andamento e a conclusão da aula pelo aluno.
 
 **Atores:** Visitante (apenas a primeira aula do Módulo 1), Aluno.
 
@@ -448,6 +475,8 @@ Texto de apoio: String, até 2.000 caracteres, opcional.
 
 Materiais complementares: String, endereço de arquivos PDF ou de imagem, opcionais.²
 
+Prática com câmera: um ou mais sinais a reproduzir (RF008).
+
 Questionário: uma ou mais questões (RF009).
 
 **Controles do vídeo:**
@@ -460,23 +489,23 @@ Legendas em português: Boolean (ativar ou desativar).⁴
 
 **Regras de preenchimento dos campos:**
 
-¹ Possui legenda em português (NF003). É carregado pausado e a qualidade se ajusta à conexão do aluno. Para o aluno, o ponto de interrupção é salvo e a aula é retomada de onde parou.
+¹ Possui legenda em português (RNF003). É carregado pausado. Para o aluno, o ponto de interrupção é salvo e a aula é retomada de onde parou.
 
 ² Podem ser visualizados na tela e baixados. Imagens têm texto alternativo. Acessar os materiais não é condição para concluir a aula.
 
-³ Os controles podem ser acionados pelo teclado (NF003).
+³ Os controles podem ser acionados pelo teclado (RNF003).
 
 ⁴ As legendas iniciam ativadas para alunos que informaram deficiência auditiva no cadastro (RF001).
 
 **Regras de negócio:**
 
-A aula é concluída quando o aluno é aprovado no questionário (RF009). O vídeo não precisa ser assistido até o fim para iniciar o questionário.
+A aula é concluída quando o aluno é aprovado no questionário (RF009). Quando a prática com câmera (RF008) estiver implementada, o aluno também precisa concluir a prática, em qualquer ordem. O vídeo não precisa ser assistido até o fim para iniciar o questionário ou a prática.
 
 Ao abrir uma aula Não iniciada, o status passa a Em andamento. A data e a hora de início e de conclusão são registradas.
 
-Uma aula concluída permanece concluída; refazer o questionário não altera o status.
+Uma aula concluída permanece concluída; refazer a prática ou o questionário não altera o status.
 
-Na aula liberada ao visitante, é possível assistir ao vídeo, ver os materiais e responder ao questionário, sem registro.
+Na aula liberada ao visitante, é possível assistir ao vídeo, ver os materiais e responder ao questionário, sem registro. A prática com câmera exibe aviso de login.
 
 Ao concluir a aula, o sistema indica a próxima aula da trilha.
 
@@ -484,7 +513,7 @@ Em caso de falha no carregamento do vídeo, o sistema exibe mensagem e um botão
 
 **Mensagens:** “Aula concluída!”;
 
-“Faça login para salvar seu progresso”;
+“Faça login para praticar com a câmera e salvar seu progresso”;
 
 “Não foi possível carregar o vídeo. Tente novamente”.
 
@@ -492,9 +521,65 @@ Em caso de falha no carregamento do vídeo, o sistema exibe mensagem e um botão
 
 **Protótipo: tela Vídeo-aula (seção 9).**
 
-### RF008 – Prática de sinais com câmera (removido)
+### RF008 – Prática de sinais com câmera
 
-**Removido do produto em 22/11/2026, por decisão da equipe** ([ADR 0007](adr/0007-plataforma-sem-pratica-com-camera.md)). A plataforma ensina por vídeos, questionários e o dicionário, sem reconhecimento de gestos pela câmera. O ID é mantido para não quebrar as referências.
+**Objetivo:** Utilizar a câmera do dispositivo e o reconhecimento de gestos para verificar se o aluno reproduz corretamente os sinais da aula.
+
+**Atores:** Aluno.
+
+**Prioridade:** Desejável. Previsto para versão posterior; a versão 1 não inclui a prática com câmera.
+
+**Origem:** Ata de Reunião 1, Tópico 3.2.
+
+**Pré-condições:** Aluno autenticado (RF003), aula aberta (RF007) e dispositivo com câmera.
+
+**Elementos da prática:**
+
+Sinal a praticar: termo, vídeo de referência e gabarito.¹
+
+Resultado da tentativa: String: Correto ou Incorreto.²
+
+**Regras de preenchimento dos campos:**
+
+¹ Vem do cadastro de sinais (RF015), o mesmo usado no dicionário (RF010). O vídeo de referência é exibido ao lado da imagem do aluno, e os sinais são apresentados na ordem definida na aula (RF013).
+
+² É registrado com data, hora e índice de similaridade.
+
+**Regras de negócio:**
+
+A câmera só é ativada após a permissão do usuário no navegador, somente durante a prática, com indicação visível de que está ativa, e é desligada ao sair da tela (RS005). Funciona com webcam no computador e com a câmera frontal em celulares e tablets.
+
+Antes de avaliar, o sistema verifica se as mãos estão visíveis e se a iluminação é suficiente; se não estiverem, orienta o ajuste, sem contar como tentativa.
+
+A detecção é executada no navegador do aluno, a partir dos pontos de referência das mãos, e comparada com o gabarito do sinal. Nenhuma imagem é enviada ao servidor nem armazenada; o servidor registra apenas o resultado (RNF006).
+
+O resultado é Correto quando o índice de similaridade atinge o limite mínimo, que é parametrizável. Pendência: o valor do limite e o conjunto de sinais avaliáveis serão definidos após testes com sinais reais, em versão posterior deste documento.
+
+Sinais com movimento complexo ou que dependam de expressão facial podem ter precisão menor e devem ser validados nos testes.
+
+O resultado é exibido em até 2 segundos (RNF005), combinando cor, texto e ícone. O som de sucesso pode ser desligado pelo aluno (RNF003).
+
+O número de tentativas é ilimitado, e cada tentativa é registrada (RF012).
+
+A prática da aula é concluída quando todos os sinais da aula forem reconhecidos como corretos ao menos uma vez.
+
+Sem câmera ou com a permissão negada, o sistema informa o motivo e como habilitar a câmera; a prática fica pendente e a aula permanece Em andamento.
+
+**Mensagens:** “Permita o acesso à câmera para praticar”;
+
+“Nenhuma câmera encontrada neste dispositivo”;
+
+“Posicione as mãos dentro da imagem”;
+
+“Melhore a iluminação do ambiente”;
+
+“Sinal correto!”;
+
+“Sinal não reconhecido. Observe o vídeo de referência e tente novamente”.
+
+**Alteração e exclusão:** Não se aplica. O resultado é gerado pelo sistema e não pode ser alterado.
+
+**Protótipo: tela Vídeo-aula (seção 9).**
 
 ### RF009 – Questionário
 
@@ -514,7 +599,7 @@ Questão: enunciado e, opcionalmente, vídeo de um sinal.¹
 
 Alternativas: de 2 a 5 por questão, com exatamente uma correta.¹
 
-**Regras de preenchimento dos campos:**
+Regras de preenchimento dos campos:
 
 ¹ Questões e alternativas são cadastradas conforme o RF014 e exibidas na ordem definida pelo administrador.
 
@@ -534,7 +619,7 @@ O número de tentativas é ilimitado. Para o aluno, cada tentativa é registrada
 
 “Você acertou X de Y questões. É necessário acertar 70% para concluir. Tente novamente”.
 
-**Alteração e exclusão:** Não se aplica.
+**Alteração e exclusão:** Não se aplica**.**
 
 **Protótipo: tela Questionário (seção 9).**
 
@@ -552,7 +637,7 @@ O número de tentativas é ilimitado. Para o aluno, cada tentativa é registrada
 
 **Campos de pesquisa:**
 
-Busca: String, de 2 a 100 caracteres.¹
+Busca: String, de 2 a 100 caracteres, obrigatória quando não houver categoria nem o filtro de favoritos (RF017) selecionado.¹
 
 Categoria: Seleção única, opcional.²
 
@@ -582,11 +667,13 @@ Os resultados são exibidos em ordem alfabética, 20 por página.
 
 O dicionário fica acessível pelo menu em qualquer tela autenticada. O visitante que tenta acessá-lo é direcionado ao login.
 
+O cadastro de sinais é o mesmo usado como referência na prática com câmera (RF008).
+
 **Mensagens:** “Digite ao menos 2 caracteres”; “Nenhum sinal encontrado. Revise o termo ou escolha outra categoria”.
 
 **Alteração e exclusão:** Não se aplica.
 
-Protótipo: tela Dicionário (seção 9).
+**Protótipo:** tela Dicionário (seção 9).
 
 ### RF011 – Lembretes e avisos por e-mail
 
@@ -622,13 +709,15 @@ Se o envio falhar, o sistema tenta novamente até 3 vezes e segue com os demais 
 
 Os envios são feitos somente por e-mail. Notificações push estão fora do escopo desta versão.
 
+Alunos que concluíram todas as aulas publicadas não recebem lembretes de inatividade. Para o aluno que nunca abriu uma aula, os 3 dias são contados a partir da data do cadastro. Os links de cancelamento contêm um código que identifica o destinatário e não pode ser alterado para cancelar o envio de outra pessoa.
+
 **Alteração e exclusão:** Não se aplica.
 
-Protótipo: não possui tela própria; a opção de lembretes fica na tela Edição de Perfil (seção 9).
+**Protótipo:** não possui tela própria; a opção de lembretes fica na tela Edição de Perfil (seção 9).
 
 ### RF012 – Histórico de desempenho
 
-**Objetivo:** Permitir que o aluno consulte o histórico de seus questionários, acompanhando sua evolução.
+**Objetivo:** Permitir que o aluno consulte o histórico de suas práticas com câmera e de seus questionários, acompanhando sua evolução.
 
 **Atores:** Aluno.
 
@@ -642,21 +731,23 @@ Protótipo: não possui tela própria; a opção de lembretes fica na tela Ediç
 
 Módulo e aula: Seleção única, opcional.
 
-Resultado: Seleção única: Aprovado ou Reprovado, opcional.
+Tipo: Seleção única: Prática com câmera ou Questionário, opcional.
+
+Resultado: Seleção única: Correto, Incorreto, Aprovado ou Reprovado, opcional.
 
 Período: Date (DD/MM/AAAA), data inicial e data final, opcionais.¹
 
 **Dados exibidos de cada tentativa:**
 
-Data e hora, módulo e aula: da tentativa.
+Data e hora, módulo, aula e tipo: da tentativa.
 
-Resultado: acertos e Aprovado ou Reprovado.²
+Resultado: Correto ou Incorreto na prática; acertos e Aprovado ou Reprovado no questionário.²
 
 **Regras de preenchimento dos campos:**
 
 ¹ A data final não pode ser anterior à data inicial.
 
-² Os dados vêm das tentativas registradas no RF009 e não podem ser alterados nem excluídos.
+² Os dados vêm das tentativas registradas nos RF008 e RF009 e não podem ser alterados nem excluídos.
 
 **Regras de negócio:**
 
@@ -668,9 +759,11 @@ Para cada aula, o sistema exibe a quantidade total de tentativas e a data da pri
 
 Tentativas de aulas que foram despublicadas depois continuam sendo exibidas.
 
-**Mensagens:** “Nenhum questionário respondido até o momento”;
+**Mensagens:** “Nenhuma tentativa registrada até o momento";
 
-“A data final não pode ser anterior à data inicial”.
+"Nenhum registro encontrado para os filtros informados";
+
+"A data final não pode ser anterior à data inicial".
 
 **Alteração e exclusão:** Não se aplica.
 
@@ -712,15 +805,17 @@ Legenda em português: String, endereço do arquivo, obrigatório para publicar.
 
 Texto de apoio: String, até 2.000 caracteres, opcional.
 
-Situação: Seleção única: Publicada ou Não publicada; padrão Não publicada.⁵
+Sinais da prática: Seleção múltipla, um ou mais sinais, obrigatório para publicar quando a prática com câmera (RF008) estiver implementada.⁵
 
-**Cadastro de material complementar:**
+Situação: Seleção única: Publicada ou Não publicada; padrão Não publicada.⁶
+
+Cadastro de material complementar:
 
 Aula: Seleção única, obrigatória.
 
 Título: String, até 100 caracteres, obrigatório.
 
-Arquivo: String, endereço do arquivo PDF ou de imagem, obrigatório.⁶
+Arquivo: String, endereço do arquivo PDF ou de imagem, obrigatório.⁷
 
 **Regras de preenchimento dos campos:**
 
@@ -728,13 +823,15 @@ Arquivo: String, endereço do arquivo PDF ou de imagem, obrigatório.⁶
 
 ² Número inteiro positivo, que define a ordem na trilha (RF006). Não pode haver dois módulos com a mesma posição, nem duas aulas com a mesma posição no mesmo módulo.
 
-³ Formato MP4, resolução mínima de 720p, com tronco, mãos e rosto de quem sinaliza bem enquadrados, fundo neutro e boa iluminação.
+³ Formato MP4, até 200 MB, resolução mínima de 720p, com tronco, mãos e rosto de quem sinaliza bem enquadrados, fundo neutro e boa iluminação.
 
-⁴ Formato SRT ou VTT, em português e sincronizada com o vídeo (NF003).
+⁴ Formato SRT ou VTT, até 1 MB, em português e sincronizada com o vídeo (RNF003).
 
-⁵ Uma aula só pode ser publicada se tiver vídeo, legenda e ao menos uma questão (RF014). Somente aulas publicadas aparecem na trilha (RF006).
+⁵ Sinais do cadastro do dicionário que possuem gabarito (RF015), na ordem em que serão praticados (RF008).
 
-⁶ PDF, JPG ou PNG, de até 10 MB.
+⁶ Uma aula só pode ser publicada se tiver vídeo, legenda e ao menos uma questão (RF014). Quando a prática com câmera (RF008) estiver implementada, também é exigido ao menos um sinal da prática. Somente aulas publicadas aparecem na trilha (RF006).
+
+⁷ PDF, JPG ou PNG, de até 10 MB.
 
 **Regras de negócio:**
 
@@ -752,21 +849,7 @@ As listagens exibem 20 registros por página, em ordem de posição, com pesquis
 
 Ao clicar em Cancelar, é exibida a mensagem de confirmação do RF001.
 
-**Mensagens:** “Campo obrigatório não preenchido”;
-
-“Título já cadastrado”;
-
-“Posição já cadastrada”;
-
-“A aula precisa de vídeo, legenda e questões para ser publicada”;
-
-“Não é possível excluir um módulo que possui aulas”;
-
-“Esta aula possui progresso registrado e só pode ser despublicada”;
-
-“Arquivo inválido”;
-
-“Cadastro realizado com sucesso”.
+**Mensagens:** "Campo obrigatório não preenchido"; "Título já cadastrado"; "Posição já cadastrada"; "A aula precisa de vídeo, legenda e questões para ser publicada"; "Não é possível excluir um módulo que possui aulas"; "Esta aula possui progresso registrado e só pode ser despublicada"; "Arquivo inválido: formato não permitido"; "Arquivo inválido: tamanho acima do limite"; "Cadastro realizado com sucesso".
 
 **Alteração e exclusão:** Realizadas pelo administrador; toda inclusão, alteração e exclusão é registrada com data e hora.
 
@@ -826,7 +909,7 @@ A listagem exibe as questões por aula, em ordem de posição.
 
 ### RF015 – Gestão do dicionário
 
-**Objetivo:** Permitir que o administrador cadastre e mantenha as categorias e os sinais usados no dicionário (RF010) e nas questões (RF014).
+**Objetivo:** Permitir que o administrador cadastre e mantenha as categorias e os sinais usados no dicionário (RF010) e na prática com câmera (RF008).
 
 **Atores:** Administrador.
 
@@ -834,7 +917,7 @@ A listagem exibe as questões por aula, em ordem de posição.
 
 **Origem:** Ata de Reunião 1, Tópicos 3.2 e 4; decisão da equipe.
 
-**Pré-condições:** Administrador autenticado (RF003).
+Pré-condições: Administrador autenticado (RF003).
 
 **Cadastro de categoria:**
 
@@ -854,7 +937,9 @@ Descrição da execução: String, até 500 caracteres, opcional.
 
 Vídeo do sinal: String, endereço do arquivo de vídeo, obrigatório.⁴
 
-Situação: Seleção única: Ativo ou Inativo; padrão Ativo.⁵
+Gabarito do sinal: JSON, opcional.⁵
+
+Situação: Seleção única: Ativo ou Inativo; padrão Ativo.⁶
 
 **Regras de preenchimento dos campos:**
 
@@ -864,9 +949,11 @@ Situação: Seleção única: Ativo ou Inativo; padrão Ativo.⁵
 
 ³ Termos com mais de um sinal são cadastrados com o sentido entre parênteses, por exemplo “manga (fruta)” e “manga (roupa)”.
 
-⁴ Vídeo curto em MP4, adequado à reprodução em loop, com os mesmos padrões de qualidade do vídeo da aula (RF013).
+⁴ Vídeo curto em MP4, de até 50 MB, adequado à reprodução em loop, com os mesmos padrões de qualidade do vídeo da aula (RF013).
 
-⁵ Sinal inativo não aparece no dicionário. Um sinal usado em questão de aula publicada não pode ser inativado.
+⁵ Gerado pela captura do sinal com a câmera na área administrativa, a partir dos pontos de referência das mãos. É obrigatório para que o sinal possa ser usado na prática de uma aula (RF013).
+
+⁶ Sinal inativo não aparece no dicionário. Um sinal usado em aula publicada não pode ser inativado.
 
 **Regras de negócio:**
 
@@ -886,7 +973,9 @@ A listagem de sinais exibe 20 registros por página, em ordem alfabética, com p
 
 “Existem sinais ativos nesta categoria”;
 
-“Este sinal é usado em aulas e não pode ser inativado ou excluído”;
+“Este sinal é usado em aulas ou questões e não pode ser inativado ou excluído”;
+
+“Cadastre o gabarito para usar este sinal na prática”;
 
 “Cadastro realizado com sucesso”.
 
@@ -926,7 +1015,7 @@ Situação: Seleção única: Ativo ou Inativo; único campo alterável.²
 
 Ao desativar um usuário, o sistema pede confirmação (“Deseja realmente desativar este usuário?”, com as opções Sim e Não) e encerra imediatamente as sessões ativas dele.
 
-A informação sobre deficiência não é exibida ao administrador (NF006).
+A informação sobre deficiência não é exibida ao administrador (RNF006).
 
 Toda consulta ao detalhe de um usuário e toda mudança de situação são registradas com data e hora (RS004).
 
@@ -942,38 +1031,249 @@ A pesquisa aceita CPF, parte do nome, e-mail e situação, combinados. A listage
 
 **Alteração e exclusão:** Restrita ao campo Situação. Usuários não são excluídos.
 
-Protótipo: tela Área Administrativa (seção 9).
+**Protótipo:** tela Área Administrativa (seção 9).
 
-## 4. Requisito não Funcional
+### RF017 – Sinais favoritos
 
-| ID | Requisito | Descrição | Prioridade |
+**Objetivo:** Permitir que o aluno marque sinais do dicionário como favoritos e os consulte em uma lista própria, para revisão rápida.
+
+**Atores:** Aluno.
+
+**Prioridade:** Desejável.
+
+**Origem:** Decisão da equipe, complementando o Tópico 4 da Ata de Reunião 1.
+
+**Pré-condições:** Aluno autenticado (RF003) e sinal ativo no dicionário (RF010).
+
+**Dados exibidos:**
+
+Sinal: Seleção do sinal exibido no dicionário, obrigatório.¹
+
+Data de inclusão: Date (DD/MM/AAAA), gerada pelo sistema.
+
+Somente favoritos: Boolean (Sim ou Não), filtro do dicionário, padrão Não.²
+
+**Regras de preenchimento dos campos:**
+
+¹ A marcação é feita por um botão em cada sinal do dicionário, que alterna entre "Favoritar" e "Remover dos favoritos", em texto e ícone (RNF003). Cada sinal só pode ser favoritado uma vez por aluno.
+
+² Pode ser combinado com a busca e a categoria do RF010. Com o filtro ativo e a busca vazia, lista todos os favoritos, sem exigir o mínimo de 2 caracteres.
+
+**Regras de negócio:**
+
+O aluno consulta e altera somente os próprios favoritos (RS004).
+
+A lista segue as regras de exibição do RF010: ordem alfabética, 20 por página, somente sinais ativos. Um sinal inativado (RF015) deixa de aparecer, mas o favorito é mantido e volta a ser exibido se o sinal for reativado.
+
+Se o sinal for excluído (RF015), os favoritos dele são removidos junto.
+
+Não há limite de favoritos por aluno.
+
+**Mensagens:** "Sinal adicionado aos favoritos";
+
+"Sinal removido dos favoritos";
+
+"Você ainda não tem sinais favoritos".
+
+**Alteração e exclusão:** Não há alteração. O aluno remove o favorito pelo mesmo botão; a remoção exclui o registro.
+
+**Protótipo: tela Dicionário (seção 9).**
+
+### RF018 – Avaliação da aula
+
+**Objetivo:** Permitir que o aluno avalie cada aula com uma nota e um comentário opcional, para que o administrador identifique as aulas que precisam de melhoria.
+
+**Atores:** Aluno; Administrador.
+
+**Prioridade:** Desejável.
+
+**Origem:** Decisão da equipe, complementando o Tópico 3.1 da Ata de Reunião 1.
+
+**Pré-condições:** Aluno autenticado (RF003) e aula com status Em andamento ou Concluída (RF006).
+
+**Campos:**
+
+Nota: Inteiro, de 1 a 5, obrigatório.¹
+
+Comentário: String, até 500 caracteres, opcional.²
+
+Data da avaliação: data e hora, geradas pelo sistema.³
+
+**Regras de preenchimento dos campos:**
+
+¹ Selecionada em 5 estrelas, cada uma com texto equivalente, por exemplo "4 de 5" (RNF003).
+
+² Tratado como texto puro; espaços no início e no fim são removidos (RS013).
+
+³ Atualizada a cada alteração da avaliação.
+
+**Regras de negócio:**
+
+Cada aluno tem no máximo uma avaliação por aula; avaliar novamente substitui a avaliação anterior.
+
+A área de avaliação fica no fim da tela da aula (RF007) e é sugerida ao concluir a aula, sem ser obrigatória e sem interferir na conclusão.
+
+O visitante não avalia aulas.
+
+As avaliações não são exibidas a outros alunos.
+
+Na área administrativa, o administrador consulta, por aula, a média das notas (com uma casa decimal), a quantidade de avaliações e os comentários, sem o nome, o e-mail ou o CPF do aluno (RS004).
+
+As avaliações de aulas despublicadas são mantidas.
+
+**Mensagens:** "Selecione uma nota de 1 a 5";
+
+"Obrigado pela sua avaliação!";
+
+"Avaliação atualizada";
+
+"Esta aula ainda não possui avaliações".
+
+**Alteração e exclusão:** O aluno altera a própria avaliação a qualquer momento; não há exclusão. O administrador apenas consulta.
+
+Protótipo: telas Vídeo-aula e Área Administrativa (seção 9).
+
+### RF019 – Anotações da aula
+
+**Objetivo:** Permitir que o aluno registre anotações pessoais em cada aula e as consulte ao retornar a ela.
+
+**Atores:** Aluno.
+
+**Prioridade:** Desejável.
+
+**Origem:** Decisão da equipe, complementando o Tópico 3.1 da Ata de Reunião 1.
+
+**Pré-condições:** Aluno autenticado (RF003) e aula aberta (RF007).
+
+Campos:
+
+**Anotação:** String, de 1 a 2.000 caracteres, obrigatório para salvar.¹
+
+Data da última alteração: data e hora, geradas pelo sistema.
+
+**Regras de preenchimento dos campos:**
+
+¹ Texto puro, sem formatação, com contador de caracteres restantes (RS013).
+
+**Regras de negócio:**
+
+Cada aluno tem no máximo uma anotação por aula, editada sempre na mesma área da tela da aula.
+
+A anotação é gravada pelo botão Salvar.
+
+Somente o próprio aluno vê a anotação; ela não é exibida ao administrador (RS004).
+
+Na aula liberada ao visitante, a área de anotações exibe aviso de login.
+
+Anotações de aulas despublicadas são mantidas e voltam a ser exibidas se a aula for publicada novamente.
+
+**Mensagens:** "Anotação salva";
+
+"A anotação deve ter até 2.000 caracteres";
+
+"Deseja realmente excluir esta anotação?";
+
+"Anotação excluída";
+
+"Faça login para salvar anotações".
+
+**Alteração e exclusão:** Realizadas pelo próprio aluno. A exclusão exige confirmação e é definitiva.
+
+**Protótipo: tela Vídeo-aula (seção 9).**
+
+### RF020 – Fale conosco
+
+**Objetivo:** Permitir que o aluno envie dúvidas, sugestões e relatos de problemas à equipe e acompanhe a resposta, e que o administrador responda a essas mensagens e atualize a situação delas.
+
+**Atores:** Aluno; Administrador.
+
+**Prioridade:** Desejável.
+
+**Origem:** Decisão da equipe.
+
+**Pré-condições:** Usuário autenticado (RF003).
+
+**Campos do aluno:**
+
+**Assunto:** Seleção única, obrigatória: Dúvida; Problema técnico; Erro em conteúdo; Sugestão**.**
+
+**Aula relacionada:** Seleção única entre as aulas publicadas, opcional.¹
+
+**Mensagem:** String, de 10 a 1.000 caracteres, obrigatório.²
+
+**Campos do administrador:**
+
+**Situação:** Seleção única: Aberta; Em análise; Resolvida; padrão Aberta.³
+
+**Resposta:** String, até 1.000 caracteres, obrigatória para marcar como Resolvida.²
+
+**Regras de preenchimento dos campos:**
+
+¹ Indicada principalmente para o assunto "Erro em conteúdo".
+
+² Tratado como texto puro (RS013).
+
+³ A data e a hora da resolução são registradas quando a situação passa a Resolvida. Uma mensagem Resolvida não volta a outra situação.
+
+**Regras de negócio:**
+
+O aluno consulta somente as próprias mensagens, na área "Minhas mensagens", da mais recente para a mais antiga, com a situação e a resposta (RS004).
+
+São aceitas no máximo 5 mensagens por dia por aluno.
+
+Na área administrativa, as mensagens são listadas 20 por página, com as mais antigas não resolvidas primeiro, e podem ser filtradas por assunto e situação. O administrador vê o nome e o e-mail do aluno, sem o CPF e sem a informação sobre deficiência (RNF006).
+
+A resposta é exibida somente na plataforma; não há envio de e-mail.
+
+O envio e cada mudança de situação são registrados com data e hora.
+
+As mensagens de usuários desativados (RF016) são mantidas.
+
+**Mensagens:** "Campo obrigatório não preenchido";
+
+"A mensagem deve ter entre 10 e 1.000 caracteres";
+
+"Mensagem enviada. Acompanhe a resposta em Minhas mensagens"; "Limite de 5 mensagens por dia atingido. Tente novamente amanhã";
+
+"Informe a resposta para marcar como resolvida";
+
+"Você ainda não enviou mensagens".
+
+**Alteração e exclusão:** O aluno não altera nem exclui a mensagem após o envio. O administrador altera somente a situação e a resposta. Não há exclusão.
+
+**Protótipo: nova tela Fale Conosco e tela Área Administrativa (seção 9).**
+
+## 4. Requisitos não Funcionais
+
+| **ID** | **Requisito** | **Descrição** | **Prioridade** |
 |---|---|---|---|
-| [RNF01] | Usabilidade, facilidade de uso | A interface deve ser intuitiva, com dicas (hint) nos botões, ajuda na tela de questionário e acesso ao dicionário pelo menu. Qualquer tela principal deve ser alcançada em no máximo 3 cliques a partir da plataforma. | Importante |
-| [RNF02] | Usabilidade, mensagens | Toda ação que não puder ser realizada deve exibir mensagem específica junto ao campo ou à ação, sem apagar os dados já preenchidos. | Importante |
-| [RNF03] | Acessibilidade | Todo conteúdo deve ser compreensível sem áudio: os vídeos têm legenda em português e nenhuma informação é transmitida apenas por som ou apenas por cor. A interface segue as WCAG 2.1, nível AA, incluindo contraste, navegação e controle do vídeo pelo teclado e texto alternativo em imagens. | Essencial |
-| [RNF04] | Distribuição, compatibilidade | O sistema é uma aplicação web, sem instalação, compatível com as duas versões mais recentes do Chrome, Firefox, Edge e Safari, em computador e celular, com layout responsivo a partir de 360 px de largura. | Essencial |
-| [RNF05] | Desempenho | As páginas devem carregar em até 3 segundos em conexão de 10 Mbps. | Importante |
-| [RNF06] | Privacidade, adequação à LGPD | O sistema coleta apenas os dados previstos nos requisitos funcionais, permite não informar a deficiência, registra data e hora dos consentimentos (RF001 e RF002), não exibe a deficiência ao administrador (RF016) nem a envia por e-mail (RF011). | Essencial |
-| [RNF07] | Confiabilidade | O banco de dados deve ter cópia de segurança diária, mantida por 7 dias. | Importante |
-| [RNF08] | Hardware e software, usuário | Dispositivo com navegador compatível (NF004) e conexão à internet. | Essencial |
-| [RNF09] | Hardware e software, servidor | Servidor capaz de executar a aplicação web e o banco de dados PostgreSQL, com espaço de armazenamento para os vídeos e arquivos das aulas e do dicionário, serviço de envio de e-mail (RF002, RF004, RF005 e RF011) e agendamento da rotina diária (RF002 e RF011). | Essencial |
+| [**RNF001**] | Usabilidade, facilidade de uso | A interface deve ser intuitiva, com dicas (hint) nos botões, ajuda nas telas de prática e de questionário e acesso ao dicionário pelo menu. Qualquer tela principal deve ser alcançada em no máximo 3 cliques a partir da plataforma. | Importante |
+| [**RNF002**] | Usabilidade, mensagens | Toda ação que não puder ser realizada deve exibir mensagem específica junto ao campo ou à ação, sem apagar os dados já preenchidos. | Importante |
+| [**RNF003**] | Acessibilidade | Todo conteúdo deve ser compreensível sem áudio: os vídeos têm legenda em português e nenhuma informação é transmitida apenas por som ou apenas por cor. A interface segue as WCAG 2.1, nível AA, incluindo contraste, navegação e controle do vídeo pelo teclado e texto alternativo em imagens. | Essencial |
+| [**RNF004**] | Distribuição, compatibilidade | O sistema é uma aplicação web, sem instalação, compatível com as duas versões mais recentes do Chrome, Firefox, Edge e Safari, em computador e celular, com layout responsivo a partir de 360 px de largura. | Essencial |
+| [**RNF005**] | Desempenho | As páginas devem carregar em até 3 segundos em conexão de 10 Mbps. O resultado da prática com câmera (RF008) deve ser exibido em até 2 segundos após o aluno concluir o sinal. | Importante |
+| [**RNF006**] | Privacidade, adequação à LGPD | O sistema coleta apenas os dados previstos nos requisitos funcionais, permite não informar a deficiência, registra data e hora dos consentimentos (RF001 e RF002), não exibe a deficiência ao administrador (RF016) nem a envia por e-mail (RF011), e não grava nem armazena imagens da câmera (RF008). Os dados de alunos desativados são mantidos para preservar o histórico de aprendizagem e os registros exigidos pelos requisitos de segurança. | Essencial |
+| [**RNF007**] | Confiabilidade | O banco de dados deve ter cópia de segurança diária, mantida por 7 dias. | Importante |
+| [**RNF008**] | Hardware e software, usuário | Dispositivo com navegador compatível (RNF004) e conexão à internet. Para a prática com câmera (RF008), o dispositivo precisa de câmera. | Essencial |
+| [**RNF009**] | Hardware e software, servidor | Servidor capaz de executar a aplicação web e o banco de dados PostgreSQL, com espaço de armazenamento para os vídeos e arquivos das aulas e do dicionário, serviço de envio de e-mail (RF002, RF004, RF005 e RF011) e agendamento da rotina diária (RF002 e RF011). | Essencial |
 
-## 5. Requisito de Segurança
+## 5. Requisitos de Segurança
 
-| ID | Perigo | Soluções |
+| **ID** | **Perigo** | **Soluções** |
 |---|---|---|
-| [RS001] | Perigo: ataque de força bruta no login (RF003) para descobrir senhas. | Bloquear por 15 minutos as tentativas para um login após 5 falhas consecutivas e exibir mensagem genérica de erro. |
-| [RS002] | Perigo: enumeração de contas, quando as mensagens do login (RF003) ou da recuperação de senha (RF004) revelam se um e-mail ou CPF está cadastrado. | Exibir a mesma mensagem esteja o login ou o e-mail cadastrado ou não, e exibir “Usuário desativado” somente com a senha correta. |
-| [RS003] | Perigo: vazamento de senhas armazenadas (RF001, RF004 e RF005). | Armazenar senhas somente como hash com salt, nunca em texto puro, e não registrar senhas em logs nem no histórico de alterações. |
-| [RS004] | Perigo: exposição de dados pessoais e sensíveis, como CPF, deficiência e dados de menores e responsáveis (RF001, RF002, RF005, RF012 e RF016). | Permitir a cada aluno acessar apenas os próprios dados, verificando no servidor; usar HTTPS em todas as páginas; exibir o CPF de forma parcial ao administrador; registrar as consultas do administrador; nomear a foto de perfil sem dados pessoais; e separar as permissões do banco de dados por perfil de acesso. |
-| [RS005] | Removido: o perigo de captura de imagens da câmera deixou de existir com a retirada do RF008 ([ADR 0007](adr/0007-plataforma-sem-pratica-com-camera.md)). | Não se aplica. |
-| [RS006] | Perigo: cadastro de menor de idade sem o conhecimento do responsável (RF002). | Exigir o termo de autorização e enviar e-mail de aviso ao responsável no cadastro e a cada alteração dos seus dados. |
-| [RS007] | Perigo: alteração de dados do perfil ou do responsável sem rastreio (RF002 e RF005). | Registrar toda alteração em histórico que não pode ser alterado nem excluído e exigir a senha atual para trocar a senha. |
-| [RS008] | Perigo: reutilização ou interceptação do link de redefinição de senha (RF004). | Usar código aleatório de uso único, válido por 30 minutos e invalidado por nova solicitação, e limitar a 3 solicitações por hora. |
-| [RS009] | Perigo: acesso indevido à área administrativa (RF013 a RF016). | Restringir a área administrativa ao perfil de administrador, sem cadastro público dessas contas, verificar o perfil no servidor a cada requisição e registrar login e logout do administrador com data e hora. |
-| [RS010] | Perigo: uso indevido de sessão aberta em dispositivo compartilhado (RF003). | Expirar a sessão após 30 minutos de inatividade, encerrar a sessão no servidor ao sair e impedir que o botão Voltar reexiba telas autenticadas. |
-| [RS011] | Perigo: tomada de conta pela alteração do e-mail cadastrado (RF005). | Exigir confirmação pelo novo endereço antes de efetivar a troca e avisar o endereço anterior após a alteração. |
-| [RS012] | Perigo: envio de arquivos maliciosos ou fora do padrão (RF005, RF013 e RF015). | Validar o tipo real e o tamanho dos arquivos, salvá-los com nomes gerados pelo sistema e nunca executá-los no servidor. |
+| [**RS001**] | Ataque de força bruta no login (RF003) para descobrir senhas. | Bloquear por 15 minutos as tentativas para um login após 5 falhas consecutivas e exibir mensagem genérica de erro. |
+| [**RS002**] | Enumeração de contas, quando as mensagens do login (RF003) ou da recuperação de senha (RF004) revelam se um e-mail ou CPF está cadastrado. | Exibir a mesma mensagem esteja o login ou o e-mail cadastrado ou não, e exibir “Usuário desativado” somente com a senha correta. |
+| [**RS003**] | Vazamento de senhas armazenadas (RF001, RF004 e RF005). | Armazenar senhas somente como hash com salt, nunca em texto puro, e não registrar senhas em logs nem no histórico de alterações. |
+| [**RS004**] | Exposição de dados pessoais e sensíveis, como CPF, deficiência e dados de menores e responsáveis (RF001, RF002, RF005, RF012, RF016, RF017, RF018, RF019 e RF020). | Permitir a cada aluno acessar apenas os próprios dados, verificando no servidor; usar HTTPS em todas as páginas; exibir o CPF de forma parcial ao administrador; registrar as consultas do administrador; nomear a foto de perfil sem dados pessoais; e separar as permissões do banco de dados por perfil de acesso. |
+| [**RS005**] | Captura ou armazenamento indevido de imagens da câmera (RF008). | Ativar a câmera somente com permissão do usuário e durante a prática, indicar quando está ativa, processar as imagens no navegador e não gravar, enviar nem armazenar imagens. |
+| [**RS006**] | Cadastro de menor de idade sem o conhecimento do responsável (RF002). | Exigir o termo de autorização e enviar e-mail de aviso ao responsável no cadastro e a cada alteração dos seus dados. |
+| [**RS007**] | Alteração de dados do perfil ou do responsável sem rastreio (RF002 e RF005). | Registrar toda alteração em histórico que não pode ser alterado nem excluído e exigir a senha atual para trocar a senha. |
+| [**RS008**] | Reutilização ou interceptação do link de redefinição de senha (RF004). | Usar código aleatório de uso único, válido por 30 minutos e invalidado por nova solicitação, e limitar a 3 solicitações por hora. |
+| [**RS009**] | Acesso indevido à área administrativa (RF013 a RF016). | Restringir a área administrativa ao perfil de administrador, sem cadastro público dessas contas, verificar o perfil no servidor a cada requisição e registrar login e logout do administrador com data e hora. |
+| [**RS010**] | Uso indevido de sessão aberta em dispositivo compartilhado (RF003). | Expirar a sessão após 30 minutos de inatividade, encerrar a sessão no servidor ao sair e impedir que o botão Voltar reexiba telas autenticadas. |
+| [**RS011**] | Tomada de conta pela alteração do e-mail cadastrado (RF005). | Exigir confirmação pelo novo endereço antes de efetivar a troca e avisar o endereço anterior após a alteração. |
+| [**RS012**] | Envio de arquivos maliciosos ou fora do padrão (RF005, RF013 e RF015). | Validar o tipo real e o tamanho dos arquivos, salvá-los com nomes gerados pelo sistema e nunca executá-los no servidor. |
+| [**RS013**] | Inserção de código malicioso nos campos de texto livre exibidos ao administrador ou ao aluno (RF018, RF019 e RF020). | Tratar todo texto como texto puro, escapar o conteúdo na exibição, validar o tamanho máximo no servidor e limitar o envio de mensagens a 5 por dia por aluno. |
 
 ## 6. Matriz de Avaliação de Risco
 
@@ -982,13 +1282,13 @@ Protótipo: tela Área Administrativa (seção 9).
 | Frequente<br>(A) |  |  |  |  |
 | Provável<br>(B) |  |  |  |  |
 | Ocasional<br>(C) | RS004,<br>RS006 | RS001 | RS010 |  |
-| Remoto<br>(D) | RS003 | RS008,<br>RS009,<br>RS011,<br>RS012 | RS007 |  |
-| Improvável<br>(E) | RS002 |  |  |  |
-| Eliminado<br>(F) |  |  |  | RS005 |
+| Remoto<br>(D) | RS003 | RS008,<br>RS009,<br>RS011,<br>RS012,<br>RS013 | RS007 |  |
+| Improvável<br>(E) |  |  | RS002 |  |
+| Eliminado<br>(F) |  | RS005 |  |  |
 
 ## 7. Matriz de Rastreabilidade – Requisito Funcional
 
-| ID de requisitos | RF001 | RF002 | RF003 | RF004 | RF005 | RF006 | RF007 | RF008 (removido) | RF009 | RF010 | RF011 | RF012 | RF013 | RF014 | RF015 | RF016 |
+| ID de requisitos | RF001 | RF002 | RF003 | RF004 | RF005 | RF006 | RF007 | RF008 | RF009 | RF010 | RF011 | RF012 | RF013 | RF014 | RF015 | RF016 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | RF001 |  | D |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | RF002 | D |  |  |  |  |  |  |  |  |  |  |  |  |  |  | R |
@@ -996,74 +1296,80 @@ Protótipo: tela Área Administrativa (seção 9).
 | RF004 | D |  | R |  | R |  |  |  |  |  |  |  |  |  |  | R |
 | RF005 | D | D | D | R |  | R |  |  |  |  |  |  |  |  |  | R |
 | RF006 | D |  | R |  | R |  | D |  |  |  |  |  | D |  |  |  |
-| RF007 | D |  | R |  |  | D |  |  | D |  |  |  | D |  |  |  |
-| RF008 (removido) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| RF007 | D |  | R |  |  | D |  | D | D |  |  |  | D |  |  |  |
+| RF008 |  |  | D |  |  |  | D |  |  | R |  |  | D |  | D |  |
 | RF009 |  |  |  |  |  |  | D |  |  | R |  |  |  | D |  |  |
-| RF010 |  |  | D |  |  |  |  |  | R |  |  |  | R |  | D |  |
+| RF010 |  |  | D |  |  |  |  | R | R |  |  |  | R |  | D |  |
 | RF011 | D | D |  |  | D | D | D |  |  |  |  |  |  |  |  | D |
-| RF012 |  |  | D |  |  |  |  |  | D |  |  |  | R | R |  |  |
+| RF012 |  |  | D |  |  |  |  | D | D |  |  |  | R | R |  |  |
 | RF013 |  |  | D |  |  |  |  |  |  | R |  | R |  | D | D |  |
 | RF014 |  |  | D |  |  |  |  |  |  |  |  | R | D |  | D |  |
 | RF015 |  |  | D |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | RF016 | D | R | D | R | R |  |  |  |  |  |  |  |  |  |  |  |
+| RF017 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| RF018 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| RF019 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| RF020 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+
+D: o requisito da linha depende do requisito da coluna. R: os requisitos estão relacionados, sem dependência.
 
 ## 8. Ponto de função
 
-Para que seja conhecido o tamanho funcional de um software, são realizadas medições da quantidade de funcionalidades que um software possui, ou seja, quantas funcionalidades ele é capaz de fornecer ao seu usuário.
+Para que seja conhecido o tamanho funcional de um software, são realizadas medições da quantidade de funcionalidades que um software possui, ou seja, quantas funcionalidades ele é capaz de fornecer ao seu usuário.
 
-Desse modo, a Análise por Pontos de Função é um método que divide o aplicativo de software em partes menores, sendo realizada a contagem de funcionalidades em cada uma dessas partes, de modo a constatar qual o tamanho total do software analisado.
+Desse modo, a Análise por Pontos de Função é um método que divide o aplicativo de software em partes menores, sendo realizada a contagem de funcionalidades em cada uma dessas partes, de modo a constatar qual o tamanho total do software analisado.
 
-**4.1 Componentes Fundamentais**
+**8.1 Componentes Fundamentais**
 
-Funções do tipo Dado: são aqueles relacionados ao armazenamento de dados, sendo o Arquivo Lógico Interno e o Arquivo Lógico Externo;
+**Funções do tipo Dado**: são aqueles relacionados ao armazenamento de dados, sendo o Arquivo Lógico Interno e o Arquivo Lógico Externo;
 
-Funções do tipo Transação: são aquelas realizadas a atividades de processamento realizadas pelo usuário, englobando a Entrada Externa, Saída Externa e a Consulta Externa.
+**Funções do tipo Transação**: são aquelas realizadas a atividades de processamento realizadas pelo usuário, englobando a Entrada Externa, Saída Externa e a Consulta Externa.
 
-![image2](img/requisitos/image2.png)
+*Imagem disponível no documento original (`.docx`).*
 
 **Arquivo Lógico Interno (ALI)**
 
-O arquivo lógico interno corresponde a um grupo de dados de controle relacionados logicamente, reconhecidos pelos usuários, os quais são armazenados dentro da fronteira de aplicação. Em outras palavras, trata-se de dados mantidos em tabelas em um banco de dados.
+O arquivo lógico interno corresponde a um grupo de dados de controle relacionados logicamente, reconhecidos pelos usuários, os quais **são armazenados dentro da fronteira de aplicação**. Em outras palavras, trata-se de dados mantidos em tabelas em um banco de dados.
 
 **Arquivo de Interface Externa (AIE)**
 
-O arquivo de interface externa é similar ao ALI, sendo também um grupo de dados de controle logicamente relacionados, porém, eles são armazenados do lado externo/fora da fronteira de aplicação, sendo ele mantido por outra aplicação. Desse modo, um arquivo de interface externa de uma aplicação sempre será um arquivo lógico interno de outra aplicação.
+O arquivo de interface externa é similar ao ALI, sendo também um grupo de dados de controle logicamente relacionados, porém, eles **são armazenados do lado externo/fora da fronteira de aplicação, sendo ele mantido por outra aplicação.** Desse modo, um arquivo de interface externa de uma aplicação sempre será um arquivo lógico interno de outra aplicação.
 
 **Entrada Externa (EE)**
 
-Uma entrada externa corresponde ao processamento de dados originados do lado de fora da fronteira de aplicação, ou seja, recebidos externamente. Essas entradas externas podem provocar ou não alterações no comportamento do sistema, através de exclusões, inclusões ou alterações em dados armazenados no ALI.
+Uma entrada externa corresponde ao processamento de dados originados do lado de fora da fronteira de aplicação, ou seja, **recebidos externamente**. Essas entradas externas podem provocar ou não alterações no comportamento do sistema, através de exclusões, inclusões ou alterações em dados armazenados no ALI.
 
 **Saída Externa (SE)**
 
-A saída externa, por sua vez, é realizada quando há o envio de dados de dentro da fronteira de aplicação para o ambiente externo, sendo que ela sempre irá alterar o comportamento do sistema. Em outras palavras, a saída externa exibe ao usuário informações que são obtidas por meio de um processamento lógico de dados, através de cálculos e operações dos dados, não sendo apenas uma mera consulta.
+A saída externa, por sua vez, é realizada quando há o envio de dados de dentro da fronteira de aplicação para o ambiente externo, sendo que ela sempre irá alterar o comportamento do sistema. Em outras palavras, a saída externa **exibe ao usuário informações que são obtidas por meio de um processamento lógico de dados**, através de cálculos e operações dos dados, não sendo apenas uma mera consulta.
 
 **Consulta Externa (SE)**
 
-Ela é similar à saída externa, porém, não há alteração do comportamento do sistema, não há nenhum cálculo ou alteração dos dados, sendo apenas realizada mera consulta/recuperação dos dados dentro da fronteira de aplicação.
+Ela é similar à saída externa, porém, não há alteração do comportamento do sistema, não há nenhum cálculo ou alteração dos dados, sendo apenas realizada mera **consulta/recuperação dos dados dentro da fronteira de aplicação**.
 
-![image3](img/requisitos/image3.png)
+*Imagem disponível no documento original (`.docx`).*
 
 **Determinar o tipo de contagem**
 
-Para esse projeto X, utilizaremos a contagem para projeto em desenvolvimento, que mede a funcionalidade fornecida aos usuários finais do software quando da primeira instalação entregue quando o projeto estiver pronto;
+Para essa Plataforma de Ensino de Libras, utilizaremos a contagem para **projeto em desenvolvimento**, que mede a funcionalidade fornecida aos usuários finais do software quando da primeira instalação entregue quando o projeto estiver pronto;
 
 **Determinar Escopo e Fronteira**
 
-Escolhido o tipo de contagem a ser utilizado, é necessário agora definir qual será o escopo: O sistema realizará a contagem dos requisitos funcionais de todos os módulos que compõem o sistema X, vale salientar que o sistema está limitado aos módulos internos e não integrações com sistemas externos.
+Escolhido o tipo de contagem a ser utilizado, é necessário agora definir qual será o escopo: O sistema realizará a contagem dos requisitos funcionais de todos os módulos que compõem a Plataforma de Ensino de Libras, vale salientar que o sistema está limitado aos módulos internos e não integrações com sistemas externos.
 
 **Calcular pontos de função não-ajustados**
 
-A definição do tamanho funcional de um software, através da medição de cada um dos cinco componentes já informados anteriormente (ALI, AIE, EE, SE e CE).
+*Imagem disponível no documento original (`.docx`).*
 
-![image4](img/requisitos/image4.png)
+A definição do tamanho funcional de um software, através da medição de cada um dos cinco componentes já informados anteriormente (ALI, AIE, EE, SE e CE).
 
-Será utilizada a tabela abaixo para calculo dos pontos de função do sistema X.
+Será utilizada a tabela abaixo para calculo dos pontos de função da Plataforma de Ensino de Libras.
 
-Os valores acima serão utilizados para calcular o número de pontos de função não-ajustados. Multiplicando a quantidade dos componentes pelo valor da complexidade.
+Os valores acima serão utilizados para calcular o número de pontos de função não-ajustados. Multiplicando a quantidade dos componentes pelo valor da complexidade.
 
 **PONTO DE FUNÇÃO – SISTEMA GESTÃO**
 
-| REQUISITO FUNCIONAL | COMPLEXIDADE | ALI | AIE | SE | EE | CE | TOTAL |
+| **REQUISITO FUNCIONAL** | **COMPLEXIDADE** | **ALI** | **AIE** | **SE** | **EE** | **CE** | **TOTAL** |
 |---|---|---|---|---|---|---|---|
 | RF001 | BAIXA | 7 | 0 | 0 | 4 | 0 | 11 |
 | RF002 | MÉDIA | 7 | 0 | 4 | 7 | 0 | 18 |
@@ -1072,7 +1378,7 @@ Os valores acima serão utilizados para calcular o número de pontos de função
 | RF005 | MÉDIA | 7 | 0 | 4 | 12 | 4 | 27 |
 | RF006 | BAIXA | 0 | 0 | 7 | 0 | 0 | 7 |
 | RF007 | MÉDIA | 7 | 0 | 0 | 6 | 4 | 17 |
-| RF008 (removido) | — | 0 | 0 | 0 | 0 | 0 | 0 |
+| RF008 | MÉDIA | 7 | 0 | 5 | 4 | 3 | 19 |
 | RF009 | BAIXA | 7 | 0 | 5 | 0 | 3 | 15 |
 | RF010 | BAIXA | 0 | 0 | 0 | 0 | 7 | 7 |
 | RF011 | MÉDIA | 7 | 0 | 14 | 3 | 0 | 24 |
@@ -1081,7 +1387,15 @@ Os valores acima serão utilizados para calcular o número de pontos de função
 | RF014 | MÉDIA | 7 | 0 | 0 | 16 | 4 | 27 |
 | RF015 | ALTA | 14 | 0 | 0 | 30 | 7 | 51 |
 | RF016 | MÉDIA | 7 | 0 | 5 | 4 | 4 | 20 |
+| RF017 | BAIXA | 7 | 0 | 0 | 6 | 3 | 16 |
+| RF018 | BAIXA | 7 | 0 | 4 | 6 | 3 | 20 |
+| RF019 | BAIXA | 7 | 0 | 0 | 6 | 3 | 16 |
+| RF020 | BAIXA | 7 | 0 | 0 | 6 | 6 | 19 |
+| TOTAL |  | 126 | 0 | 57 | 156 | 62 | 401 |
 
 ## 9. Referências
 
-- Baseado no documento de requisitos disponível em <https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=3&sqi=2&ved=0CCwQFjAC&url=http%3A%2F%2Fdemo.chiliproject.org%2Fattachments%2F169%2FdocumentoRequisitos.doc&ei=kPnfU-WKIs6XyATC5IC4Bw&usg=AFQjCNESjuE4x3e3nXsTuY3tnt4aqobn1A&bvm=bv.72197243,d.b2U&cad=rja>
+- Baseado no documento de requisitos disponível em https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=3&sqi=2&ved=0CCwQFjAC&url=http%3A%2F%2Fdemo.chiliproject.org%2Fattachments%2F169%2FdocumentoRequisitos.doc&ei=kPnfU-WKIs6XyATC5IC4Bw&usg=AFQjCNESjuE4x3e3nXsTuY3tnt4aqobn1A&bvm=bv.72197243,d.b2U&cad=rja
+- Ata de Reunião 1 – Levantamento de Requisitos da Plataforma de Ensino de Libras, 15/10/2026.
+- Brasil. Lei nº 13.709, de 14 de agosto de 2018 – Lei Geral de Proteção de Dados Pessoais (LGPD).
+- W3C. Web Content Accessibility Guidelines (WCAG) 2.1, 2018.

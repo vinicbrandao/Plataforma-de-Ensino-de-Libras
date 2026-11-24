@@ -1,6 +1,6 @@
 # ADR 0007: A plataforma não tem prática de sinais com câmera
 
-- **Status:** Aceito
+- **Status:** Substituído por [ADR 0008](0008-pratica-com-camera-adiada.md)
 - **Data:** 2026-11-22
 
 ## Contexto

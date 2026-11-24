@@ -26,7 +26,7 @@ ORDER BY conta, objeto, privilegio;
 SELECT conta,
        has_schema_privilege(conta, 'public', 'USAGE') AS usa_schema,
        has_schema_privilege(conta, 'public', 'CREATE') AS cria_objetos
-FROM (VALUES ('plataforma_libras'), ('libras_app'), ('libras_relatorio')) AS c(conta);
+FROM (VALUES ('libras_owner'), ('libras_app'), ('libras_relatorio')) AS c(conta);
 
 \echo '== 3. libras_relatorio lê a view =='
 SET ROLE libras_relatorio;

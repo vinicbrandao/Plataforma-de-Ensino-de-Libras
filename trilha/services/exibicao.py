@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 from ..exceptions import AulaNaoEncontrada, AulaRestritaAVisitante
-from ..models import Aula, MaterialComplementar
+from ..models import AnotacaoAula, Aula, AvaliacaoAula, MaterialComplementar
 from .progresso import ProgressoService
 from .trilha import NAO_INICIADA, ROTULOS_DE_STATUS, TrilhaService
 
@@ -18,6 +18,8 @@ class AulaAberta:
     legenda_ativa: bool
     eh_aluno: bool
     eh_visitante: bool
+    anotacao: AnotacaoAula | None = None
+    avaliacao: AvaliacaoAula | None = None
 
     @property
     def rotulo_do_status(self) -> str:
@@ -54,8 +56,12 @@ class ExibicaoAulaService:
         autenticado = usuario.is_authenticated
         eh_aluno = autenticado and not usuario.is_staff
         status = NAO_INICIADA
+        anotacao = avaliacao = None
         if eh_aluno:
             status = ProgressoService.registrar_acesso(usuario, aula).status
+            # Só do próprio aluno (RF018, RF019, RS004).
+            anotacao = AnotacaoAula.objects.filter(aluno=usuario, aula=aula).first()
+            avaliacao = AvaliacaoAula.objects.filter(aluno=usuario, aula=aula).first()
         auditiva = get_user_model().Deficiencia.AUDITIVA
         return AulaAberta(
             aula=aula,
@@ -65,6 +71,8 @@ class ExibicaoAulaService:
             legenda_ativa=eh_aluno and usuario.deficiencia == auditiva,
             eh_aluno=eh_aluno,
             eh_visitante=not autenticado,
+            anotacao=anotacao,
+            avaliacao=avaliacao,
         )
 
     @staticmethod

@@ -2,7 +2,7 @@
 
 - **Status:** Implementado
 - **Requisitos:** RF-16 a RF-33, RF-45 a RF-50, RF-59 e RF-60 do [PRD 0001](../prd/0001-plataforma-libras-v1.md); RNF-02, RNF-03 e RNF-07
-- **Decisões:** [ADR 0001](../adr/0001-mvt-com-camada-de-services.md), [ADR 0003](../adr/0003-django-admin-como-area-administrativa.md), [ADR 0007](../adr/0007-plataforma-sem-pratica-com-camera.md), [ADR 0006](../adr/0006-estruturas-do-banco-em-sql.md)
+- **Decisões:** [ADR 0001](../adr/0001-mvt-com-camada-de-services.md), [ADR 0003](../adr/0003-django-admin-como-area-administrativa.md), [ADR 0008](../adr/0008-pratica-com-camera-adiada.md), [ADR 0006](../adr/0006-estruturas-do-banco-em-sql.md)
 - **Depende de:** [Spec 0001](0001-fundacao-e-contas.md), [Spec 0002](0002-dicionario.md)
 
 ## Divisão com a spec 0004
@@ -22,8 +22,8 @@
 
 | Classe | Conteúdo aceito | Limite |
 |---|---|---|
-| `VideoMp4Validator` | Caixa `ftyp` nos bytes 4 a 8 | 20 MB nos sinais. Nas aulas, o limite é 200 MB, decisão da equipe: o RF013 não fixa um valor |
-| `LegendaVttValidator` | Começa com `WEBVTT`, com ou sem BOM UTF-8 | 2 MB |
+| `VideoMp4Validator` | Caixa `ftyp` nos bytes 4 a 8 | 50 MB nos sinais (RF015). Nas aulas, 200 MB (RF013) |
+| `LegendaVttValidator` | Começa com `WEBVTT`, com ou sem BOM UTF-8 | 1 MB (RF013) |
 | `MaterialValidator` | PDF (`%PDF`), JPG (`FF D8 FF`) ou PNG (`89 50 4E 47`) | 10 MB (RF013 ⁷) |
 
 ## Models

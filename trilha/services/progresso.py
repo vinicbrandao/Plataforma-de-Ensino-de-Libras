@@ -23,7 +23,7 @@ class ProgressoService:
 
     @staticmethod
     def concluir(aluno, aula: Aula) -> ProgressoAula:
-        """Conclui a aula para o aluno. Chamado pelo questionário na aprovação (ADR 0007)."""
+        """Conclui a aula para o aluno. Chamado pelo questionário na aprovação (ADR 0008)."""
         with transaction.atomic():
             progresso, _ = ProgressoAula.objects.select_for_update().get_or_create(
                 aluno=aluno, aula=aula

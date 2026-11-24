@@ -51,3 +51,20 @@ class ArquiteturaTests(SimpleTestCase):
         for padrao in padroes:
             with self.subTest(rota=padrao.name):
                 self.assertTrue(hasattr(padrao.callback, "view_class"))
+
+
+class AbstracaoTests(SimpleTestCase):
+    """As classes base abstratas não podem ser instanciadas sem implementar o método abstrato (POO)."""
+
+    def test_validador_de_arquivo_base_e_abstrato(self):
+        from core.validadores import ArquivoValidator, VideoMp4Validator
+
+        with self.assertRaises(TypeError):
+            ArquivoValidator()
+        self.assertTrue(VideoMp4Validator().conteudo_valido(b"\x00\x00\x00\x18ftypisom"))
+
+    def test_acao_na_aula_exige_executar(self):
+        from trilha.views.participacao import ParticipacaoNaAulaMixin
+
+        with self.assertRaises(TypeError):
+            ParticipacaoNaAulaMixin()

@@ -203,7 +203,7 @@ class HistoricoViewTests(HistoricoMixin, TestCase):
 
         resposta = self.client.get(URL)
 
-        self.assertContains(resposta, "Nenhum questionário respondido até o momento")
+        self.assertContains(resposta, "Nenhuma tentativa registrada até o momento")
         self.assertNotContains(resposta, "Resumo por aula")
 
     def test_lista_tentativas_e_resumo(self):
@@ -256,7 +256,7 @@ class HistoricoViewTests(HistoricoMixin, TestCase):
 
         resposta = self.client.get(URL, {"resultado": "reprovado"})
 
-        self.assertContains(resposta, "Nenhuma tentativa encontrada com esses filtros")
+        self.assertContains(resposta, "Nenhum registro encontrado para os filtros informados")
 
     def test_paginacao_mantem_os_filtros(self):
         for minuto in range(21):

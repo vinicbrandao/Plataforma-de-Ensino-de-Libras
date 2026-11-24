@@ -1,5 +1,7 @@
 # Spec 0001: Fundação e contas
 
+> **Atualização de 24/11/2026:** o bloqueio de menores (RF-61) foi substituído pelo cadastro com responsável legal ([spec 0013](0013-cadastro-de-menor-de-idade.md)).
+
 - **Status:** Implementado
 - **Requisitos:** RF-01 a RF-15, RF-44, RF-56 a RF-61 (parte de contas), RNF-01, RNF-04, RNF-05 e RNF-06 do [PRD 0001](../prd/0001-plataforma-libras-v1.md)
 - **Decisões:** [ADR 0001](../adr/0001-mvt-com-camada-de-services.md), [ADR 0002](../adr/0002-postgresql-como-banco-de-dados.md), [ADR 0003](../adr/0003-django-admin-como-area-administrativa.md)
@@ -112,7 +114,7 @@ As inclusões, alterações e exclusões feitas no Admin continuam no `LogEntry`
 | Método | Regra |
 |---|---|
 | `calcular_idade(nascimento, hoje)` | Anos completos. A idade é completa no dia do aniversário. Quem nasceu em 29/02 completa anos em 01/03 nos anos não bissextos |
-| `cadastrar(dados: DadosCadastro) -> Usuario` | Levanta `CadastroDeMenorIndisponivel` se a idade em `timezone.localdate()` for menor que 18 (RF-61). Levanta `EmailJaCadastrado` ou `CpfJaCadastrado` se já existirem (RF-04). Cria o aluno com `create_user`, `termos_aceitos_em = timezone.now()` e `is_staff = False`, dentro de `transaction.atomic()`. Se a gravação falhar por `IntegrityError` (dois cadastros simultâneos), repete a verificação e levanta a exceção de duplicidade correspondente |
+| `cadastrar(dados: DadosCadastro) -> Usuario` | Para menores de 18 anos em `timezone.localdate()`, exige e grava o responsável legal ([spec 0013](0013-cadastro-de-menor-de-idade.md)); antes disso, recusava com `CadastroDeMenorIndisponivel` (RF-61). Levanta `EmailJaCadastrado` ou `CpfJaCadastrado` se já existirem (RF-04). Cria o aluno com `create_user`, `termos_aceitos_em = timezone.now()` e `is_staff = False`, dentro de `transaction.atomic()`. Se a gravação falhar por `IntegrityError` (dois cadastros simultâneos), repete a verificação e levanta a exceção de duplicidade correspondente |
 
 `DadosCadastro` é uma dataclass imutável com os campos já validados e normalizados pelo form: e-mail em minúsculas, CPF e telefone formatados e `qual_deficiencia` vazio quando a resposta não é `OUTRA`.
 

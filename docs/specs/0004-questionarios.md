@@ -2,7 +2,7 @@
 
 - **Status:** Implementado
 - **Requisitos:** RF-30, RF-34 a RF-38, RF-47, RF-51, RF-52, RF-55, RF-59 e RF-60 do [PRD 0001](../prd/0001-plataforma-libras-v1.md)
-- **Decisões:** [ADR 0001](../adr/0001-mvt-com-camada-de-services.md), [ADR 0003](../adr/0003-django-admin-como-area-administrativa.md), [ADR 0007](../adr/0007-plataforma-sem-pratica-com-camera.md), [ADR 0006](../adr/0006-estruturas-do-banco-em-sql.md)
+- **Decisões:** [ADR 0001](../adr/0001-mvt-com-camada-de-services.md), [ADR 0003](../adr/0003-django-admin-como-area-administrativa.md), [ADR 0008](../adr/0008-pratica-com-camera-adiada.md), [ADR 0006](../adr/0006-estruturas-do-banco-em-sql.md)
 - **Depende de:** [Spec 0002](0002-dicionario.md), [Spec 0003](0003-trilha.md)
 
 Esta spec fecha o ciclo da aula: o aluno aprovado no questionário conclui a aula, e a trilha mostra o progresso.
@@ -78,7 +78,7 @@ Constraints: `tentativa_total_positivo` (`total > 0`) e `tentativa_acertos_valid
 |---|---|
 | `aprovado(acertos, total)` | `acertos * 10 >= total * 7` |
 | `carregar(aula_id, usuario) -> QuestionarioAberto` | Aplica `ExibicaoAulaService.verificar_acesso` e devolve a aula e as questões em ordem de posição, com `select_related("sinal")` e `prefetch_related("alternativas")` |
-| `corrigir(aula_id, usuario, respostas: dict[int, int]) -> Resultado` | Aplica `verificar_acesso` de novo. Recebe um dicionário com o id da questão e o id da alternativa escolhida. Sem questões, levanta `QuestionarioSemQuestoes` ("Esta aula ainda não tem questões"). Exige uma resposta válida para cada questão (`RespostasIncompletas`). Calcula acertos, total e percentual. Aprova com `acertos * 10 >= total * 7`, ou seja, 70% sem arredondamento (RF-36). Para o aluno, grava a `Tentativa` e, na aprovação, chama `ProgressoService.concluir` (RF-30, ADR 0007). Para o visitante e o administrador, não grava nada (RF-38) |
+| `corrigir(aula_id, usuario, respostas: dict[int, int]) -> Resultado` | Aplica `verificar_acesso` de novo. Recebe um dicionário com o id da questão e o id da alternativa escolhida. Sem questões, levanta `QuestionarioSemQuestoes` ("Esta aula ainda não tem questões"). Exige uma resposta válida para cada questão (`RespostasIncompletas`). Calcula acertos, total e percentual. Aprova com `acertos * 10 >= total * 7`, ou seja, 70% sem arredondamento (RF-36). Para o aluno, grava a `Tentativa` e, na aprovação, chama `ProgressoService.concluir` (RF-30, ADR 0008). Para o visitante e o administrador, não grava nada (RF-38) |
 
 `Resultado` é uma dataclass imutável com acertos, total, percentual, se foi aprovado, se a aula foi concluída, a próxima aula e uma `Correcao` por questão: a questão, a alternativa escolhida, a correta e se acertou.
 
@@ -90,7 +90,7 @@ Constraints: `tentativa_total_positivo` (`total > 0`) e `tentativa_acertos_valid
 
 ## Mudança no dicionário (spec 0002)
 
-`SinalService.validar_inativacao(sinal_id, ativo)` levanta `SinalEmUso` ("Este sinal é usado em aulas e não pode ser inativado ou excluído") ao inativar um sinal usado em questão de aula publicada. A consulta é `Sinal.objects.filter(pk=..., questoes__aula__publicada=True)`. O form do Admin chama esse método em `clean_ativo`. A exclusão de sinal usado em questão é barrada pelo `PROTECT` (RF-55).
+`SinalService.validar_inativacao(sinal_id, ativo)` levanta `SinalEmUso` ("Este sinal é usado em aulas ou questões e não pode ser inativado ou excluído") ao inativar um sinal usado em questão de aula publicada. A consulta é `Sinal.objects.filter(pk=..., questoes__aula__publicada=True)`. O form do Admin chama esse método em `clean_ativo`. A exclusão de sinal usado em questão é barrada pelo `PROTECT` (RF-55).
 
 ## Form `QuestionarioForm`
 

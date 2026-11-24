@@ -16,6 +16,7 @@
     {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
     <button type="submit" class="botao">Entrar</button>
   </form>
+  <p><a href="{% url 'contas:esqueci_senha' %}">Esqueci minha senha</a></p>
   <p>Ainda não tem conta? <a href="{% url 'contas:cadastro' %}">Crie a sua</a>.</p>
 </section>
 {% endblock %}

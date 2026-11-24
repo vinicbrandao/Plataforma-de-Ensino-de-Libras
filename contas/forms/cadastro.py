@@ -1,35 +1,36 @@
-import re
 from datetime import date
 
 from django import forms
-from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-from ..documentos import Cpf, Telefone
-from ..models import Usuario
-from ..services import DadosCadastro
+from ..models import Usuario, VinculoResponsavel
+from ..services import CadastroService, DadosCadastro, DadosResponsavel
 from ..validadores import MENSAGEM_SENHA
+from .dados_pessoais import (
+    CAMPO_OBRIGATORIO,
+    DadosPessoaisForm,
+    normalizar_cpf,
+    normalizar_email,
+    normalizar_nome,
+    normalizar_telefone,
+)
+from .senha import ValidacaoDeSenhaMixin
 
-CAMPO_OBRIGATORIO = "Campo obrigatório não preenchido"
-NOME_VALIDO = re.compile(r"(?:[^\W\d_]|[ '’\-])+")
-EMAIL_VALIDO = re.compile(r"[^@\s]+@[^@\s]+\.[^@\s]+")
 IDADE_MAXIMA = 120
-# Erros de senha que o RF001 resume em uma única mensagem.
-CODIGOS_DA_MENSAGEM_DE_SENHA = {
-    "password_too_short",
-    "password_entirely_numeric",
-    "senha_sem_letras_e_numeros",
-}
+CAMPOS_DO_RESPONSAVEL = (
+    "responsavel_nome",
+    "responsavel_vinculo",
+    "responsavel_cpf",
+    "responsavel_email",
+    "responsavel_telefone",
+)
+AUTORIZACAO_OBRIGATORIA = "É necessário confirmar a autorização do responsável"
 
 
-class CadastroForm(forms.Form):
+class CadastroForm(ValidacaoDeSenhaMixin, DadosPessoaisForm):
     """Valida o formato dos dados do cadastro (RF001). As regras de negócio ficam no service."""
 
-    nome_completo = forms.CharField(label="Nome completo", max_length=120)
-    email = forms.CharField(
-        label="E-mail", max_length=200, widget=forms.EmailInput(attrs={"autocomplete": "email"})
-    )
     cpf = forms.CharField(
         label="CPF",
         max_length=14,
@@ -52,28 +53,6 @@ class CadastroForm(forms.Form):
         widget=forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
         input_formats=["%Y-%m-%d", "%d/%m/%Y"],
     )
-    telefone = forms.CharField(
-        label="Telefone celular",
-        max_length=15,
-        help_text="Com DDD, por exemplo (11) 91234-5678.",
-        widget=forms.TextInput(attrs={"inputmode": "tel", "autocomplete": "tel"}),
-    )
-    deficiencia = forms.ChoiceField(
-        label="Possui deficiência?",
-        choices=Usuario.Deficiencia.choices,
-        widget=forms.RadioSelect,
-    )
-    qual_deficiencia = forms.CharField(
-        label="Qual deficiência?",
-        max_length=120,
-        required=False,
-        help_text="Preencha somente se escolheu “Sim, outra”.",
-    )
-    contato_libras = forms.ChoiceField(
-        label="Já teve contato com Libras?",
-        choices=Usuario.ContatoLibras.choices,
-        widget=forms.RadioSelect,
-    )
     aceite_termos = forms.BooleanField(
         label="Li e aceito os termos de uso e a política de privacidade",
         error_messages={
@@ -81,36 +60,54 @@ class CadastroForm(forms.Form):
         },
     )
 
+    # Responsável legal (RF002): opcionais no form; o clean exige para menores de 18 anos.
+    responsavel_nome = forms.CharField(label="Nome do responsável", max_length=120, required=False)
+    responsavel_vinculo = forms.ChoiceField(
+        label="Vínculo", choices=VinculoResponsavel.choices, widget=forms.RadioSelect, required=False
+    )
+    responsavel_cpf = forms.CharField(
+        label="CPF do responsável",
+        max_length=14,
+        required=False,
+        widget=forms.TextInput(attrs={"inputmode": "numeric"}),
+    )
+    responsavel_email = forms.CharField(
+        label="E-mail do responsável", max_length=200, required=False, widget=forms.EmailInput()
+    )
+    responsavel_telefone = forms.CharField(
+        label="Telefone do responsável",
+        max_length=15,
+        required=False,
+        widget=forms.TextInput(attrs={"inputmode": "tel"}),
+    )
+    aceite_responsavel = forms.BooleanField(
+        label="Confirmo que o responsável legal autorizou o cadastro e leu o termo de autorização e consentimento",
+        required=False,
+    )
+
+    campos_com_mensagem_propria = ("aceite_termos",)
+    field_order = [
+        "nome_completo",
+        "email",
+        "cpf",
+        "senha",
+        "confirmacao_senha",
+        "data_nascimento",
+        "telefone",
+        "deficiencia",
+        "qual_deficiencia",
+        "contato_libras",
+        *CAMPOS_DO_RESPONSAVEL,
+        "aceite_responsavel",
+        "aceite_termos",
+    ]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for nome, campo in self.fields.items():
-            if nome != "aceite_termos":
-                campo.error_messages["required"] = CAMPO_OBRIGATORIO
         self.fields["data_nascimento"].error_messages["invalid"] = "Data de nascimento inválida"
 
-    def clean_nome_completo(self) -> str:
-        nome = re.sub(r"\s+", " ", self.cleaned_data["nome_completo"]).strip()
-        if len(nome) < 3 or not NOME_VALIDO.fullmatch(nome):
-            raise ValidationError("Nome inválido")
-        return nome
-
-    def clean_email(self) -> str:
-        email = self.cleaned_data["email"].strip().lower()
-        if not EMAIL_VALIDO.fullmatch(email):
-            raise ValidationError("E-mail inválido")
-        return email
-
     def clean_cpf(self) -> str:
-        try:
-            return Cpf.de_texto(self.cleaned_data["cpf"]).formatado
-        except ValueError as exc:
-            raise ValidationError("CPF inválido") from exc
-
-    def clean_telefone(self) -> str:
-        try:
-            return Telefone.de_texto(self.cleaned_data["telefone"]).formatado
-        except ValueError as exc:
-            raise ValidationError("Telefone inválido") from exc
+        return normalizar_cpf(self.cleaned_data["cpf"])
 
     def clean_data_nascimento(self) -> date:
         nascimento = self.cleaned_data["data_nascimento"]
@@ -126,41 +123,57 @@ class CadastroForm(forms.Form):
         except ValueError:  # 29/02 em ano sem esse dia.
             return hoje.replace(year=hoje.year - IDADE_MAXIMA, day=28)
 
+    # Os campos do responsável são opcionais no form: vazios passam, preenchidos seguem o RF001.
+    def clean_responsavel_nome(self) -> str:
+        texto = self.cleaned_data["responsavel_nome"]
+        return normalizar_nome(texto) if texto.strip() else ""
+
+    def clean_responsavel_cpf(self) -> str:
+        texto = self.cleaned_data["responsavel_cpf"]
+        return normalizar_cpf(texto, "CPF do responsável inválido") if texto.strip() else ""
+
+    def clean_responsavel_email(self) -> str:
+        texto = self.cleaned_data["responsavel_email"]
+        return normalizar_email(texto) if texto.strip() else ""
+
+    def clean_responsavel_telefone(self) -> str:
+        texto = self.cleaned_data["responsavel_telefone"]
+        return normalizar_telefone(texto) if texto.strip() else ""
+
     def clean(self) -> dict:
         dados = super().clean()
-        self._validar_qual_deficiencia(dados)
-        self._validar_senha(dados)
+        usuario = Usuario(email=dados.get("email", ""), nome_completo=dados.get("nome_completo", ""))
+        self.validar_senha_nova(dados, "senha", "confirmacao_senha", usuario)
+        self._validar_responsavel(dados)
         return dados
 
-    def _validar_qual_deficiencia(self, dados: dict) -> None:
-        if dados.get("deficiencia") != Usuario.Deficiencia.OUTRA:
-            dados["qual_deficiencia"] = ""
-            return
-        dados["qual_deficiencia"] = re.sub(r"\s+", " ", dados.get("qual_deficiencia", "")).strip()
-        if not dados["qual_deficiencia"]:
-            self.add_error("qual_deficiencia", CAMPO_OBRIGATORIO)
+    def eh_menor(self) -> bool:
+        nascimento = self.cleaned_data.get("data_nascimento")
+        return nascimento is not None and CadastroService.eh_menor(nascimento)
 
-    def _validar_senha(self, dados: dict) -> None:
-        senha = dados.get("senha")
-        if not senha:
+    def _validar_responsavel(self, dados: dict) -> None:
+        if not self.eh_menor():
+            # Para 18 anos ou mais, os dados do responsável são descartados (RF002).
+            for campo in (*CAMPOS_DO_RESPONSAVEL, "aceite_responsavel"):
+                dados[campo] = False if campo == "aceite_responsavel" else ""
             return
-        if senha != dados.get("confirmacao_senha"):
-            self.add_error("confirmacao_senha", "As senhas informadas não coincidem")
-        usuario = Usuario(email=dados.get("email", ""), nome_completo=dados.get("nome_completo", ""))
-        try:
-            validate_password(senha, user=usuario)
-        except ValidationError as exc:
-            for mensagem in self._mensagens_de_senha(exc):
-                self.add_error("senha", mensagem)
+        for campo in CAMPOS_DO_RESPONSAVEL:
+            if not dados.get(campo) and campo not in self.errors:
+                self.add_error(campo, CAMPO_OBRIGATORIO)
+        if not dados.get("aceite_responsavel"):
+            self.add_error("aceite_responsavel", AUTORIZACAO_OBRIGATORIA)
 
-    @staticmethod
-    def _mensagens_de_senha(exc: ValidationError) -> list[str]:
-        mensagens = []
-        for erro in exc.error_list:
-            mensagem = MENSAGEM_SENHA if erro.code in CODIGOS_DA_MENSAGEM_DE_SENHA else erro.messages[0]
-            if mensagem not in mensagens:
-                mensagens.append(mensagem)
-        return mensagens
+    def responsavel(self) -> DadosResponsavel | None:
+        if not self.eh_menor():
+            return None
+        d = self.cleaned_data
+        return DadosResponsavel(
+            nome=d["responsavel_nome"],
+            vinculo=d["responsavel_vinculo"],
+            cpf=d["responsavel_cpf"],
+            email=d["responsavel_email"],
+            telefone=d["responsavel_telefone"],
+        )
 
     def dados(self) -> DadosCadastro:
         d = self.cleaned_data

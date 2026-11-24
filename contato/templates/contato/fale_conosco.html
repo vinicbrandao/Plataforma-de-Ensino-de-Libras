@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Fale conosco · Plataforma de Ensino de Libras{% endblock %}
+
+{% block content %}
+<h1>Fale conosco</h1>
+<p>Envie dúvidas, sugestões ou relatos de problemas. A resposta aparece em <a href="{% url 'contato:minhas' %}">Minhas mensagens</a>.</p>
+
+<form method="post" class="cartao formulario-contato" novalidate>
+  {% csrf_token %}
+  {% if form.non_field_errors %}
+    <div class="erro-geral" role="alert">{{ form.non_field_errors }}</div>
+  {% endif %}
+  {% for campo in form %}
+    <div class="campo{% if campo.errors %} campo-com-erro{% endif %}">
+      {{ campo.label_tag }}
+      {{ campo }}
+      {% if campo.errors %}
+        <div class="erro" id="{{ campo.auto_id }}_error">{% for erro in campo.errors %}<p>{{ erro }}</p>{% endfor %}</div>
+      {% endif %}
+    </div>
+  {% endfor %}
+  <button type="submit" class="botao">Enviar mensagem</button>
+</form>
+{% endblock %}

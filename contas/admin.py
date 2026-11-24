@@ -3,7 +3,7 @@ from django.contrib.admin import helpers
 from django.template.response import TemplateResponse
 
 from .documentos import Cpf
-from .models import RegistroAuditoria, Usuario
+from .models import RegistroAuditoria, ResponsavelLegal, Usuario
 from .services import AuditoriaService, UsuarioService
 
 CAMPOS_DO_ALUNO = (
@@ -16,9 +16,30 @@ CAMPOS_DO_ALUNO = (
 )
 
 
+class ResponsavelLegalInline(admin.StackedInline):
+    """Responsável do aluno menor, somente para leitura (RF002, RF016)."""
+
+    model = ResponsavelLegal
+    fields = ("nome", "vinculo", "cpf_parcial", "email", "telefone", "termo_aceito_em")
+    readonly_fields = fields
+    can_delete = False
+    extra = 0
+    max_num = 0
+
+    @admin.display(description="CPF")
+    def cpf_parcial(self, obj: ResponsavelLegal) -> str:
+        return Cpf.de_texto(obj.cpf).parcial
+
+    def has_add_permission(self, request, obj=None) -> bool:
+        return False
+
+    def has_change_permission(self, request, obj=None) -> bool:
+        return False
+
+
 @admin.register(Usuario)
 class UsuarioAdmin(admin.ModelAdmin):
-    """Consulta de alunos (RF016). A deficiência nunca é exibida (RNF06)."""
+    """Consulta de alunos (RF016). A deficiência nunca é exibida (RNF006)."""
 
     list_display = CAMPOS_DO_ALUNO
     list_filter = ("is_active",)
@@ -28,6 +49,7 @@ class UsuarioAdmin(admin.ModelAdmin):
     fields = CAMPOS_DO_ALUNO
     readonly_fields = CAMPOS_DO_ALUNO
     actions = ("desativar_selecionados", "reativar_selecionados")
+    inlines = (ResponsavelLegalInline,)
 
     @admin.display(description="CPF")
     def cpf_parcial(self, obj: Usuario) -> str:

@@ -81,6 +81,67 @@
 {% if aula_aberta.proxima and not aula_aberta.concluida %}
   <p class="proxima">Próxima aula: <a href="{% url 'trilha:aula' aula_aberta.proxima.pk %}">{{ aula_aberta.proxima.titulo }}</a></p>
 {% endif %}
+
+{% if aula_aberta.eh_aluno %}
+  <section id="anotacoes" class="cartao anotacoes">
+    <h2>Minhas anotações</h2>
+    <p class="resumo">Só você vê as suas anotações.</p>
+    <form method="post" action="{% url 'trilha:salvar_anotacao' aula.pk %}" novalidate>
+      {% csrf_token %}
+      <div class="campo{% if anotacao_form.texto.errors %} campo-com-erro{% endif %}">
+        {{ anotacao_form.texto.label_tag }}
+        {{ anotacao_form.texto }}
+        <p class="contador" id="contador-anotacao" aria-live="polite" hidden></p>
+        {% if anotacao_form.texto.errors %}
+          <div class="erro" id="{{ anotacao_form.texto.auto_id }}_error">{% for erro in anotacao_form.texto.errors %}<p>{{ erro }}</p>{% endfor %}</div>
+        {% endif %}
+      </div>
+      {% if aula_aberta.anotacao %}
+        <p class="resumo">Última alteração em {{ aula_aberta.anotacao.atualizada_em|date:"d/m/Y H:i" }}.</p>
+      {% endif %}
+      <button type="submit" class="botao">Salvar</button>
+    </form>
+    {% if aula_aberta.anotacao %}
+      <form method="post" action="{% url 'trilha:excluir_anotacao' aula.pk %}" class="excluir-anotacao"
+            data-confirmacao="Deseja realmente excluir esta anotação?">
+        {% csrf_token %}
+        <button type="submit" class="botao-link">Excluir anotação</button>
+      </form>
+    {% endif %}
+  </section>
+
+  <section id="avaliacao" class="cartao avaliacao">
+    <h2>Avalie esta aula</h2>
+    <form method="post" action="{% url 'trilha:avaliar' aula.pk %}" novalidate>
+      {% csrf_token %}
+      {% if avaliacao_form.non_field_errors %}
+        <div class="erro-geral" role="alert">{{ avaliacao_form.non_field_errors }}</div>
+      {% endif %}
+      <fieldset class="estrelas{% if avaliacao_form.nota.errors %} campo-com-erro{% endif %}">
+        <legend>Nota</legend>
+        {% for opcao in avaliacao_form.nota %}
+          <label for="{{ opcao.id_for_label }}">{{ opcao.tag }} <span aria-hidden="true">★</span> {{ opcao.choice_label }}</label>
+        {% endfor %}
+        {% if avaliacao_form.nota.errors %}
+          <div class="erro">{% for erro in avaliacao_form.nota.errors %}<p>{{ erro }}</p>{% endfor %}</div>
+        {% endif %}
+      </fieldset>
+      <div class="campo{% if avaliacao_form.comentario.errors %} campo-com-erro{% endif %}">
+        {{ avaliacao_form.comentario.label_tag }}
+        {{ avaliacao_form.comentario }}
+        {% if avaliacao_form.comentario.errors %}
+          <div class="erro" id="{{ avaliacao_form.comentario.auto_id }}_error">{% for erro in avaliacao_form.comentario.errors %}<p>{{ erro }}</p>{% endfor %}</div>
+        {% endif %}
+      </div>
+      <button type="submit" class="botao">{% if aula_aberta.avaliacao %}Atualizar avaliação{% else %}Enviar avaliação{% endif %}</button>
+    </form>
+  </section>
+{% elif aula_aberta.eh_visitante %}
+  <section id="anotacoes" class="cartao anotacoes">
+    <h2>Minhas anotações</h2>
+    <p class="aviso">Faça login para salvar anotações. <a href="{% url 'contas:entrar' %}?next={{ request.path|urlencode }}">Entrar</a></p>
+  </section>
+{% endif %}
 {% endwith %}
 {% endblock %}
 

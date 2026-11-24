@@ -6,7 +6,7 @@ from django.test import SimpleTestCase, TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from contas.exceptions import CadastroDeMenorIndisponivel, CpfJaCadastrado, EmailJaCadastrado
+from contas.exceptions import CpfJaCadastrado, EmailJaCadastrado, ResponsavelObrigatorio
 from contas.forms import CadastroForm
 from contas.models import RegistroAuditoria, Usuario
 from contas.services import CadastroService
@@ -48,8 +48,8 @@ class CadastroServiceTests(TestCase):
         with self.assertRaises(CpfJaCadastrado):
             CadastroService.cadastrar(dados_cadastro(email="outra@exemplo.com"))
 
-    def test_recusa_quem_tem_17_anos(self, _):
-        with self.assertRaises(CadastroDeMenorIndisponivel):
+    def test_quem_tem_17_anos_precisa_do_responsavel(self, _):
+        with self.assertRaises(ResponsavelObrigatorio):
             CadastroService.cadastrar(dados_cadastro(data_nascimento=date(2008, 11, 23)))
 
     def test_aceita_quem_completa_18_hoje(self, _):
@@ -193,13 +193,14 @@ class CadastroViewTests(TestCase):
         self.assertContains(resposta, 'aria-describedby="id_email_error"')
         self.assertContains(resposta, 'id="id_email_error"')
 
-    def test_menor_de_idade_recebe_mensagem(self):
+    def test_menor_sem_responsavel_recebe_as_mensagens(self):
         hoje = timezone.localdate()
         nascimento = hoje.replace(year=hoje.year - 17).isoformat()
 
         resposta = self.client.post(self.url, dados_form_cadastro(data_nascimento=nascimento))
 
-        self.assertContains(resposta, "O cadastro de menores de 18 anos ainda não está disponível")
+        self.assertContains(resposta, "Campo obrigatório não preenchido")
+        self.assertContains(resposta, "É necessário confirmar a autorização do responsável")
         self.assertFalse(Usuario.objects.exists())
 
     def test_usuario_autenticado_e_redirecionado(self):

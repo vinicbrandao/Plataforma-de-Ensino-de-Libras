@@ -5,7 +5,7 @@
 -- Pode ser executado de novo sem erro: as contas só são criadas se não existirem.
 --
 -- Contas:
---   plataforma_libras  dona das tabelas; roda as migrations (criada no README).
+--   libras_owner       dona do banco e das tabelas; roda as migrations (criada no README).
 --   libras_app         aplicação: lê e grava dados, sem alterar a estrutura.
 --   libras_relatorio   relatórios: só lê a view vw_progresso_modulo.
 --
@@ -36,10 +36,10 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO libras_ap
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO libras_app;
 
 -- libras_app: as mesmas permissões nas tabelas e sequences que as próximas
--- migrations criarem como plataforma_libras.
-ALTER DEFAULT PRIVILEGES FOR ROLE plataforma_libras IN SCHEMA public
+-- migrations criarem como libras_owner.
+ALTER DEFAULT PRIVILEGES FOR ROLE libras_owner IN SCHEMA public
     GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO libras_app;
-ALTER DEFAULT PRIVILEGES FOR ROLE plataforma_libras IN SCHEMA public
+ALTER DEFAULT PRIVILEGES FOR ROLE libras_owner IN SCHEMA public
     GRANT USAGE ON SEQUENCES TO libras_app;
 
 -- libras_relatorio: só a view. A view executa com as permissões da dona, então

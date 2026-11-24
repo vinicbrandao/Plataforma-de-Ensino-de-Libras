@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from contas.tests.fabricas import criar_aluno
+from dicionario.models import Categoria
 from dicionario.services import DicionarioService
 
 from .fabricas import MidiaTemporariaMixin, criar_categoria, criar_sinal
@@ -80,6 +81,23 @@ class BuscaViewTests(MidiaTemporariaMixin, TestCase):
         self.assertContains(
             resposta, "Nenhum sinal encontrado. Revise o termo ou escolha outra categoria"
         )
+
+    def test_sem_busca_e_sem_categoria_nao_lista_sinais(self):
+        self.client.force_login(self.aluno)
+
+        resposta = self.client.get(self.url)
+
+        self.assertIsNone(resposta.context["pagina"])
+        self.assertNotContains(resposta, "<h2>Mãe</h2>", html=True)
+        self.assertContains(resposta, "Digite uma palavra ou escolha uma categoria")
+
+    def test_so_a_categoria_ja_lista_os_sinais(self):
+        self.client.force_login(self.aluno)
+        categoria = Categoria.objects.get(nome="Família")
+
+        resposta = self.client.get(self.url, {"categoria": categoria.pk})
+
+        self.assertContains(resposta, "<h2>Mãe</h2>", html=True)
 
     def test_busca_com_um_caractere_mostra_mensagem(self):
         self.client.force_login(self.aluno)

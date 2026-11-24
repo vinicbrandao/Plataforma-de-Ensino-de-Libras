@@ -4,6 +4,8 @@ Conferem o tamanho e a assinatura real do conteúdo, sem confiar na extensão.
 Não contêm regra de negócio.
 """
 
+from abc import ABC, abstractmethod
+
 from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
 
@@ -11,8 +13,8 @@ MEGABYTE = 1024 * 1024
 BYTES_LIDOS = 16
 
 
-class ArquivoValidator:
-    """Base: as subclasses informam a descrição e implementam `conteudo_valido`."""
+class ArquivoValidator(ABC):
+    """Base abstrata: as subclasses informam a descrição e implementam `conteudo_valido`."""
 
     descricao = "um arquivo"
     tamanho_padrao = 10 * MEGABYTE
@@ -27,8 +29,9 @@ class ArquivoValidator:
             f"{self.tamanho_maximo // MEGABYTE} MB"
         )
 
+    @abstractmethod
     def conteudo_valido(self, cabecalho: bytes) -> bool:
-        raise NotImplementedError
+        """Diz se os primeiros bytes do arquivo são do tipo esperado."""
 
     def __call__(self, arquivo) -> None:
         if arquivo.size > self.tamanho_maximo or not self.conteudo_valido(self._ler_cabecalho(arquivo)):
@@ -49,7 +52,7 @@ class ArquivoValidator:
 @deconstructible
 class VideoMp4Validator(ArquivoValidator):
     descricao = "um vídeo MP4"
-    tamanho_padrao = 20 * MEGABYTE
+    tamanho_padrao = 50 * MEGABYTE
 
     def conteudo_valido(self, cabecalho: bytes) -> bool:
         # Todo MP4 começa com uma caixa "ftyp": 4 bytes de tamanho seguidos de b"ftyp".
@@ -59,7 +62,7 @@ class VideoMp4Validator(ArquivoValidator):
 @deconstructible
 class LegendaVttValidator(ArquivoValidator):
     descricao = "uma legenda WebVTT (.vtt)"
-    tamanho_padrao = 2 * MEGABYTE
+    tamanho_padrao = 1 * MEGABYTE
 
     def conteudo_valido(self, cabecalho: bytes) -> bool:
         return cabecalho.removeprefix(b"\xef\xbb\xbf").startswith(b"WEBVTT")
@@ -80,3 +83,19 @@ class MaterialValidator(ArquivoValidator):
 
     def conteudo_valido(self, cabecalho: bytes) -> bool:
         return self.extensao(cabecalho) is not None
+
+
+@deconstructible
+class ImagemPerfilValidator(ArquivoValidator):
+    """Foto de perfil JPG ou PNG de até 2 MB (RF005)."""
+
+    descricao = "uma imagem JPG ou PNG"
+    tamanho_padrao = 2 * MEGABYTE
+    ASSINATURAS = (b"\xff\xd8\xff", b"\x89PNG")
+
+    @property
+    def mensagem(self) -> str:
+        return f"Arquivo inválido. Envie uma imagem JPG ou PNG de até {self.tamanho_maximo // MEGABYTE} MB"
+
+    def conteudo_valido(self, cabecalho: bytes) -> bool:
+        return cabecalho.startswith(self.ASSINATURAS)

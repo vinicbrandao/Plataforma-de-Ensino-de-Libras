@@ -314,7 +314,7 @@ progress {
 
 .status { color: var(--suave); font-size: 0.9rem; }
 
-/* O status aparece em texto, com ícone e cor (RNF03). */
+/* O status aparece em texto, com ícone e cor (RNF003). */
 .icone-status::before { margin-right: 0.3rem; }
 
 .status-nao_iniciada .icone-status::before { content: "○"; }
@@ -451,3 +451,73 @@ progress {
 .tentativa-aprovada { color: var(--sucesso); font-weight: 600; }
 
 .tentativa-reprovada { color: var(--perigo); font-weight: 600; }
+
+/* Favoritos (RF017) */
+
+.campo-caixa { display: flex; flex: 0 0 auto; gap: 0.4rem; align-items: center; margin-bottom: 1.25rem; }
+
+.favorito { margin: 0 0 0.5rem; }
+
+/* Anotações e avaliação da aula (RF018, RF019) */
+
+.anotacoes textarea,
+.avaliacao textarea {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--borda);
+  border-radius: 0.4rem;
+  color: var(--texto);
+  background: var(--superficie);
+  font: inherit;
+}
+
+.contador { margin: 0.25rem 0 0; color: var(--suave); font-size: 0.875rem; }
+
+.excluir-anotacao { margin-top: 0.75rem; }
+
+.estrelas { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin: 0 0 1rem; padding: 0; border: 0; }
+
+.estrelas legend { margin-bottom: 0.25rem; font-weight: 600; }
+
+.estrelas label { display: inline-flex; gap: 0.3rem; align-items: center; cursor: pointer; }
+
+.estrelas label span { color: var(--destaque); }
+
+/* Fale conosco (RF020) */
+
+.formulario-contato select,
+.formulario-contato textarea {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--borda);
+  border-radius: 0.4rem;
+  color: var(--texto);
+  background: var(--superficie);
+  font: inherit;
+}
+
+.mensagens-contato { display: grid; gap: 1rem; margin: 0; padding: 0; list-style: none; }
+
+.mensagens-contato li { padding: 1rem; }
+
+.resposta-contato { padding-left: 0.75rem; border-left: 3px solid var(--destaque); }
+
+/* Perfil (RF005) */
+
+.foto-perfil { display: block; width: 8rem; height: 8rem; margin-bottom: 1rem; border-radius: 50%; object-fit: cover; }
+
+.dados-fixos { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; margin: 0 0 0.5rem; }
+
+.dados-fixos dt { color: var(--suave); }
+
+.dados-fixos dd { margin: 0; }
+
+.acoes-perfil { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+
+/* Responsável legal no cadastro (RF002) */
+
+.responsavel { margin: 0 0 1rem; padding: 1rem; border: 1px solid var(--borda); border-radius: 0.5rem; }
+
+.responsavel legend { padding: 0 0.25rem; font-weight: 600; }

@@ -6,7 +6,7 @@
 <h1>Histórico de desempenho</h1>
 
 {% if not resumo %}
-  <p class="vazio" role="status">Nenhum questionário respondido até o momento</p>
+  <p class="vazio" role="status">Nenhuma tentativa registrada até o momento</p>
 {% else %}
   <form method="get" action="{% url 'questionarios:historico' %}" class="busca filtros-historico" novalidate>
     {% for campo in form %}
@@ -64,7 +64,7 @@
           </nav>
         {% endif %}
       {% else %}
-        <p class="vazio" role="status">Nenhuma tentativa encontrada com esses filtros</p>
+        <p class="vazio" role="status">Nenhum registro encontrado para os filtros informados</p>
       {% endif %}
     {% endwith %}
   {% endif %}

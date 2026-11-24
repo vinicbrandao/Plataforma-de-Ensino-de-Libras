@@ -23,3 +23,15 @@ class AulaNaoEncontrada(ErroDeTrilha):
 
 class AulaRestritaAVisitante(ErroDeTrilha):
     """O visitante só abre a primeira aula publicada da trilha (RF006)."""
+
+
+class AcaoSomenteDoAluno(ErroDeTrilha):
+    """Anotações e avaliações são do aluno; o administrador não grava (RF018, RF019)."""
+
+    mensagem = "Somente alunos podem fazer isso"
+
+
+class AulaNaoIniciada(ErroDeTrilha):
+    """A avaliação exige a aula Em andamento ou Concluída (RF018)."""
+
+    mensagem = "Abra a aula antes de avaliá-la"

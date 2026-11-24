@@ -4,10 +4,14 @@ Esta pasta guarda os vídeos e as legendas usados por `python manage.py criar_co
 
 Se faltar algum arquivo, o comando cria o que der, deixa não publicada a aula sem vídeo ou legenda, não cria o sinal sem vídeo e lista o que falta. Depois de colocar os arquivos, rode o comando de novo: ele anexa o que faltava e publica as aulas completas, sem duplicar nada.
 
+## Vídeos provisórios (24/11/2026)
+
+Para a entrega de 24/11/2026, o banco local foi carregado com 27 vídeos e legendas provisórios, gerados só para a demonstração: cada vídeo mostra o título da aula ou o termo do sinal e a frase "provisório". Quando os vídeos reais estiverem prontos, troque cada arquivo pelo Django Admin, em Aulas (vídeo e legenda) e em Sinais (vídeo). O comando `criar_conteudo_inicial` não substitui arquivos já anexados.
+
 ## Formatos
 
-- Vídeos: **MP4**. Até 200 MB por aula e 20 MB por sinal. O vídeo de sinal deve ser curto e sem áudio, porque toca em loop no dicionário.
-- Legendas: **WebVTT (.vtt)**, em português, começando com a linha `WEBVTT`. Legendas `.srt` não são aceitas.
+- Vídeos: **MP4**. Até 200 MB por aula e 50 MB por sinal. O vídeo de sinal deve ser curto e sem áudio, porque toca em loop no dicionário.
+- Legendas: **WebVTT (.vtt)**, em português, começando com a linha `WEBVTT`, de até 1 MB. Legendas `.srt` não são aceitas.
 - Os nomes precisam ser exatamente os listados abaixo: minúsculas, sem acentos e com hífen no lugar do espaço.
 
 ## Aulas (`amostras/aulas/`): 12 arquivos

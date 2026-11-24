@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.urls import reverse
+from django.utils.html import format_html, format_html_join
 
 from .forms import AulaAdminForm, ModuloAdminForm
-from .models import Aula, MaterialComplementar, Modulo
-from .services import AulaService, ModuloService
+from .models import Aula, AvaliacoesDaAula, MaterialComplementar, Modulo
+from .services import AulaService, AvaliacaoService, ModuloService
 
 
 @admin.register(Modulo)
@@ -46,3 +47,53 @@ class AulaAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         AulaService.salvar(obj)
+
+
+@admin.register(AvaliacoesDaAula)
+class AvaliacoesDaAulaAdmin(admin.ModelAdmin):
+    """Médias e comentários das avaliações por aula, sem dados do aluno (RF018, RS004)."""
+
+    list_display = ("modulo", "titulo", "publicada", "media_das_notas", "quantidade")
+    list_select_related = ("modulo",)
+    search_fields = ("titulo",)
+    ordering = ("modulo__posicao", "posicao")
+    list_per_page = 20
+    fields = ("modulo", "titulo", "media_das_notas", "quantidade", "comentarios")
+    readonly_fields = fields
+
+    def get_queryset(self, request):
+        return AvaliacaoService.com_resumo(super().get_queryset(request))
+
+    # Não pode se chamar "media": o ModelAdmin já usa esse nome para os arquivos CSS e JS.
+    @admin.display(description="média", ordering="media_avaliacoes")
+    def media_das_notas(self, aula):
+        media = AvaliacaoService.arredondar(getattr(aula, "media_avaliacoes", None))
+        return "—" if media is None else str(media).replace(".", ",")
+
+    @admin.display(description="avaliações", ordering="quantidade_avaliacoes")
+    def quantidade(self, aula):
+        return getattr(aula, "quantidade_avaliacoes", 0)
+
+    @admin.display(description="comentários")
+    def comentarios(self, aula):
+        resumo = AvaliacaoService.resumo(aula)
+        if not resumo.quantidade:
+            return "Esta aula ainda não possui avaliações"
+        if not resumo.comentarios:
+            return "Nenhum comentário"
+        # format_html_join escapa o texto enviado pelos alunos (RS013).
+        itens = format_html_join(
+            "",
+            "<li>{} · {} de 5 · {}</li>",
+            ((data.strftime("%d/%m/%Y"), nota, texto) for data, nota, texto in resumo.comentarios),
+        )
+        return format_html("<ul>{}</ul>", itens)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

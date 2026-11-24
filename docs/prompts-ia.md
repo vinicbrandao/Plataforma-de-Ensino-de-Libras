@@ -343,3 +343,204 @@ Execute do início ao fim, sem parar entre as etapas. Leia AGENTS.md, docs/state
 4. Registre este prompt em docs/prompts-ia.md, regenere entrega-lab-bd.pdf com os prompts atualizados e atualize docs/state.md.
 5. Commit: "Reforça a integridade de domínio e atualiza a entrega de Lab. BD".
 ```
+
+### 31. Encerramento do registro de prompts e retomada do trabalho
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Perfeito. Acredito que não precisamos mais alimente o arquivo que continha os prompts para IA. Vamos continuar nosso trabalho. Por onde paramos?
+```
+
+### 32. Início do RF012 (histórico de desempenho)
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Start RF012
+```
+
+### 33. Andamento do projeto
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+E quanto ao nosso progresso?
+```
+
+### 34. Pergunta sobre o texto do contexto acadêmico
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Os vídeos serão adicionados amanhã. Em relação a "decidir o texto do contexto-academico.md" o que você quer dizer? Pode me fazer uma pergunta para que eu responda aqui mesmo?
+```
+
+### 35. Resposta: atualizar o contexto acadêmico
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+A
+```
+
+## 2026-11-24
+
+### 36. Revisão pelo documento de requisitos de 23/11/2026
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+@"C:\Users\vinic\Downloads\Requisitos_da_Plataforma_de_Ensino_de_Libras_atualizadov23112026.docx"
+
+Anexei o documento de requisitos atualizado da Plataforma de Ensino de Libras (Requisitos_da_Plataforma_de_Ensino_de_Libras_atualizadov23112026.docx). Ele é a fonte da verdade do projeto e agora tem 20 requisitos funcionais (RF001 a RF020), 9 não funcionais (RNF001 a RNF009) e 13 de segurança (RS001 a RS013).
+
+Contexto do projeto:
+- Trabalho acadêmico em dupla, que atende três disciplinas: Engenharia de Software, Laboratório de Programação (POO) e Laboratório de Banco de Dados.
+- Stack: Django + PostgreSQL, arquitetura MVT com camada de services, orientação a objetos obrigatória.
+- A área administrativa é o Django Admin (usuários is_staff, sem cadastro público). Em desenvolvimento, os e-mails saem no console.
+- A entrega exige uma pasta docs com PRD, ADRs, specs e arquitetura.md com diagrama Mermaid.
+
+Escopo da versão 1:
+- Núcleo obrigatório: RF001, RF003, RF006, RF007, RF009, RF010 e RF013.
+- Pelo Django Admin: RF014, RF015 e RF016.
+- Bônus, nesta ordem, se houver tempo: RF017, RF019, RF018, RF020, RF004, RF005 e RF002 (simplificado).
+- Fora da versão 1: RF008 (câmera), RF011 (lembretes) e RF012 (histórico).
+- Sem o RF008, a aula é concluída com a aprovação no questionário, e os sinais da prática não são exigidos para publicar (veja RF007 e RF013).
+
+Laboratório de Banco de Dados: o professor avalia apenas o SQL de construção. Esse SQL deve ter:
+- DDL com as 4 integridades (entidade, domínio, referencial e definida pelo usuário);
+- uma trigger;
+- um campo indexado;
+- contas e permissões;
+- uma view.
+O planejado é:
+- uma trigger no progresso da aula, que registra a data de conclusão e impede que o status regrida de Concluída;
+- um índice no termo do sinal;
+- a view vw_progresso_modulo;
+- os papéis libras_owner, libras_app e libras_relatorio;
+- um índice único parcial que garante uma única alternativa correta por questão.
+Inclua no DDL as tabelas dos RF017 a RF020, mesmo as que não forem implementadas.
+
+O que fazer agora, sem escrever código da aplicação ainda:
+1. Verifique o estado atual do repositório e diga o que já existe.
+2. Converta o docx para Markdown e salve em docs/requisitos.md, preservando todos os RF, RNF, RS e matrizes.
+3. Crie ou atualize docs/prd, docs/adr, docs/specs (uma spec por RF do escopo) e docs/arquitetura.md, com um diagrama Mermaid das classes e do modelo de dados. Tudo deve ser coerente com o documento de requisitos.
+4. Apresente um plano de implementação em etapas pequenas, com a lista de modelos, services e telas de cada etapa e o que muda em relação ao que já existe.
+5. Aponte qualquer inconsistência ou ambiguidade que encontrar nos requisitos antes de seguir.
+
+Pare depois do plano e espere minha aprovação. Se precisar escolher algo que o documento não define, prefira a solução mais simples e registre a decisão em um ADR.
+```
+
+### 37. Aprovação do plano com as decisões recomendadas
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Approve as recommended
+```
+
+### 38. Senha do usuário postgres (omitida neste registro)
+
+- **Modelo:** Claude Opus 5.5
+
+- **Observação:** a senha foi omitida deste registro.
+
+```text
+a senha do postgres é "[senha omitida]"
+```
+
+### 39. Senha digitada no terminal
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Digitei a senha.
+```
+
+### 40. Início do RF004 (recuperação de senha)
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Sim, seguir
+```
+
+### 41. Início do RF005 (atualização de perfil)
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Sim, seguir
+```
+
+### 42. Início do RF002 (cadastro de menor de idade)
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Sim, seguir
+```
+
+### 43. Relatório de progresso para a entrega
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Claude, quero que me envie o progresso do nosso projeto até então. Preciso entrega-lo ainda hoje.
+```
+
+### 44. Plano e execução da entrega final
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+A entrega do projeto é daqui algumas horas, quais demandas precisam ser feitas para finalizarmos hoje? Quero que planeje e execute o resto dos processos. Revise os requisitos que cada matéria (Engenharia de Software, POO e Lab BD) requer e confirme sua entrega.
+```
+
+### 45. Resposta: gerar vídeos provisórios
+
+- **Modelo:** Claude Opus 5.5
+
+- **Observação:** resposta escolhida numa pergunta do Claude Code.
+
+```text
+Pergunta: O banco está vazio e a pasta amostras/ não tem os 27 vídeos e legendas. Como resolvemos o conteúdo para a entrega de hoje?
+Resposta escolhida: Gerar vídeos provisórios
+```
+
+### 46. Resposta: completar o registro de prompts
+
+- **Modelo:** Claude Opus 5.5
+
+- **Observação:** resposta escolhida numa pergunta do Claude Code.
+
+```text
+Pergunta: O PDF de Lab. BD diz que todos os prompts estão transcritos, mas o registro parou no prompt 30. Como deixamos o PDF?
+Resposta escolhida: Completar o registro (Recomendado)
+```
+
+### 47. Validação dos critérios de avaliação de POO (AV03)
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+@"C:\Users\vinic\Downloads\AV03.pdf"
+Aqui está um pdf dos critérios de avaliação da matéria de POO. Leia o PDF e valide os critérios com o que temos pronto.
+```
+
+### 48. Criação do docs/prd.md
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Sim, criar
+```
+
+### 49. Imagens dos protótipos removidas de propósito
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Apaguei de propósito
+```

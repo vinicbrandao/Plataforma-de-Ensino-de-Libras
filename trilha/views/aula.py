@@ -5,7 +5,35 @@ from django.shortcuts import render
 from django.views import View
 
 from ..exceptions import AulaNaoEncontrada, AulaRestritaAVisitante
-from ..services import ExibicaoAulaService
+from ..forms import AnotacaoForm, AvaliacaoForm
+from ..services import AulaAberta, ExibicaoAulaService
+
+
+def pedir_login(request, mensagem: str = "Faça login para acessar esta aula"):
+    messages.info(request, mensagem)
+    return redirect_to_login(request.get_full_path())
+
+
+def renderizar_aula(
+    request,
+    aula_aberta: AulaAberta,
+    anotacao_form: AnotacaoForm | None = None,
+    avaliacao_form: AvaliacaoForm | None = None,
+):
+    """Monta a tela da aula. Os forms com erro vêm das views de anotação e avaliação."""
+    if anotacao_form is None:
+        texto = aula_aberta.anotacao.texto if aula_aberta.anotacao else ""
+        anotacao_form = AnotacaoForm(initial={"texto": texto})
+    if avaliacao_form is None:
+        avaliacao = aula_aberta.avaliacao
+        inicial = {"nota": avaliacao.nota, "comentario": avaliacao.comentario} if avaliacao else {}
+        avaliacao_form = AvaliacaoForm(initial=inicial)
+    contexto = {
+        "aula_aberta": aula_aberta,
+        "anotacao_form": anotacao_form,
+        "avaliacao_form": avaliacao_form,
+    }
+    return render(request, "trilha/aula.html", contexto)
 
 
 class AulaView(View):
@@ -17,6 +45,5 @@ class AulaView(View):
         except AulaNaoEncontrada as exc:
             raise Http404 from exc
         except AulaRestritaAVisitante:
-            messages.info(request, "Faça login para acessar esta aula")
-            return redirect_to_login(request.get_full_path())
-        return render(request, "trilha/aula.html", {"aula_aberta": aula_aberta})
+            return pedir_login(request)
+        return renderizar_aula(request, aula_aberta)

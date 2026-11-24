@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Link inválido · Plataforma de Ensino de Libras{% endblock %}
+
+{% block content %}
+<section class="cartao cartao-estreito">
+  <h1>Link inválido</h1>
+  <div class="erro-geral" role="alert"><p>{{ mensagem }}</p></div>
+  <p><a href="{% url 'inicio' %}">Voltar à plataforma</a></p>
+</section>
+{% endblock %}

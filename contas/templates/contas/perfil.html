@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Perfil · Plataforma de Ensino de Libras{% endblock %}
+
+{% block content %}
+<h1>Meu perfil</h1>
+
+<section class="cartao perfil-foto">
+  <h2>Foto de perfil</h2>
+  {% if user.foto %}
+    <img src="{{ user.foto.url }}" alt="Foto de perfil de {{ user.nome_completo }}" class="foto-perfil">
+  {% else %}
+    <p class="resumo">Você ainda não enviou uma foto.</p>
+  {% endif %}
+  <form method="post" action="{% url 'contas:foto' %}" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% with campo=foto_form.foto %}{% include "contas/_campo.html" %}{% endwith %}
+    <button type="submit" class="botao">Enviar foto</button>
+  </form>
+</section>
+
+<section class="cartao">
+  <h2>Meus dados</h2>
+  <dl class="dados-fixos">
+    <dt>CPF</dt><dd>{{ user.cpf }}</dd>
+    <dt>Data de nascimento</dt><dd>{{ user.data_nascimento|date:"d/m/Y" }}</dd>
+  </dl>
+  <p class="resumo">CPF e data de nascimento não podem ser alterados.</p>
+  <form method="post" action="{% url 'contas:perfil' %}" novalidate>
+    {% csrf_token %}
+    {% if perfil_form.errors %}
+      <div class="erro-geral" role="alert">Revise os campos destacados.</div>
+    {% endif %}
+    {% for campo in perfil_form %}
+      {% include "contas/_campo.html" %}
+    {% endfor %}
+    <p class="acoes-perfil">
+      <button type="submit" class="botao">Salvar</button>
+      <a href="{% url 'inicio' %}" data-confirmacao="Deseja realmente cancelar? Os dados não salvos serão perdidos">Cancelar</a>
+    </p>
+  </form>
+</section>
+
+{% if responsavel %}
+  <section class="cartao">
+    <h2>Responsável legal</h2>
+    {% if responsavel_form %}
+      <p class="resumo">Enquanto você for menor de 18 anos, mantenha estes dados atualizados. O responsável recebe um aviso a cada alteração.</p>
+      <form method="post" action="{% url 'contas:responsavel' %}" novalidate>
+        {% csrf_token %}
+        {% for campo in responsavel_form %}
+          {% include "contas/_campo.html" %}
+        {% endfor %}
+        <button type="submit" class="botao">Salvar responsável</button>
+      </form>
+    {% else %}
+      <p class="resumo">Você já tem 18 anos: estes dados ficam só para consulta.</p>
+      <dl class="dados-fixos">
+        <dt>Nome</dt><dd>{{ responsavel.nome }}</dd>
+        <dt>Vínculo</dt><dd>{{ responsavel.get_vinculo_display }}</dd>
+        <dt>CPF</dt><dd>{{ responsavel.cpf }}</dd>
+        <dt>E-mail</dt><dd>{{ responsavel.email }}</dd>
+        <dt>Telefone</dt><dd>{{ responsavel.telefone }}</dd>
+      </dl>
+    {% endif %}
+  </section>
+{% endif %}
+
+<section class="cartao">
+  <h2>Senha</h2>
+  <p><a href="{% url 'contas:trocar_senha' %}">Trocar senha</a></p>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/cadastro.js' %}" defer></script>
+<script src="{% static 'js/perfil.js' %}" defer></script>
+{% endblock %}
