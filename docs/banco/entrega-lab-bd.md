@@ -306,3 +306,4 @@ A análise do documento de requisitos, o planejamento da versão 1 e a redação
 | 47 | 24/11/2026 | Validação dos critérios de avaliação de POO |
 | 48 | 24/11/2026 | Criação do `docs/prd.md` |
 | 49 | 24/11/2026 | Imagens dos protótipos fora do repositório |
+| 50 | 24/11/2026 | Conferência do commit da entrega |

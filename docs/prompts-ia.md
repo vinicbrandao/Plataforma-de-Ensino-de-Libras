@@ -544,3 +544,11 @@ Sim, criar
 ```text
 Apaguei de propósito
 ```
+
+### 50. Conferência do commit da entrega
+
+- **Modelo:** Claude Opus 5.5
+
+```text
+Fiz o commit, você consegue enxerga-lo?
+```
